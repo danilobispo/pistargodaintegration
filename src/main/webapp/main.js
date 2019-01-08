@@ -5,4 +5,5 @@ $(document).ready(function(){
     ui.defineInteractions();
     examples.pistarIntro();
     ui.setupUi();
+
 });
