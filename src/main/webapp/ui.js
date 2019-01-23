@@ -533,6 +533,14 @@ $('#helpArea').on('show.bs.collapse', function () {
 $('#helpArea').on('hide.bs.collapse', function () {
     $('#helpButton').removeClass('active');
 });
+$('#personaArea').on('show.bs.collapse', function () {
+    $('#personaButton').addClass('active');
+});
+$('#personaArea').on('hide.bs.collapse', function () {
+    $('#personaButton').removeClass('active');
+});
+
+
 $('#feedbackArea').on('show.bs.collapse', function () {
     $('#feedbackButton').addClass('active');
 });
