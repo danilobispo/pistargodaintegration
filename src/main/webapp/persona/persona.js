@@ -17,6 +17,14 @@ function alterarControlesDaUI(){
 function restaurarControlesDaUI() {
     $('li[parent="#addActorDropdown"]:has(a[id="addRole"])').show();
     $('li[parent="#addActorDropdown"]:has(a[id="addAgent"])').show();
+};
+
+/**
+ * Limpa o diagrama atual, garantindo que o usuário não utilize um diagrama PiStar que pode conter
+ * elementos não previstos no modelo CGM de Persona-Based Modelling
+ */
+function removerDiagramaAtual() {
+    istar.clearModel();
 }
 
 
