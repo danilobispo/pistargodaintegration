@@ -535,9 +535,11 @@ $('#helpArea').on('hide.bs.collapse', function () {
 });
 $('#personaArea').on('show.bs.collapse', function () {
     $('#personaButton').addClass('active');
+    alterarControlesDaUI();
 });
 $('#personaArea').on('hide.bs.collapse', function () {
     $('#personaButton').removeClass('active');
+    restaurarControlesDaUI();
 });
 
 
