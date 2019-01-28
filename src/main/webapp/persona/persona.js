@@ -82,5 +82,8 @@ function montarArvoreCGM(model) {
     }
 }
 
+$('[data-toggle=offcanvas]').click(function () {
+    $('.row-offcanvas').toggleClass('active');
+});
 
 
