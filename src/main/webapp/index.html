@@ -27,6 +27,10 @@
 <nav class="navbar navbar-default navbar-fixed-top navbar-xs">
     <div class="container">
         <div class="navbar-header">
+            <button type="button" id="sidebarCollapse" class="btn btn-info navbar-btn">
+                <i class="glyphicon glyphicon-align-left"></i>
+                <span>Toggle Sidebar</span>
+            </button>
             <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar"
                     aria-expanded="false" aria-controls="navbar"><span class="sr-only">Toggle navigation</span><span
                     class="icon-bar"></span><span class="icon-bar"></span><span class="icon-bar"></span></button>
@@ -116,10 +120,51 @@
     </ul>
 </div>
 
-<div id="addToolbar" class="container-fluid">
-    <div class="row">
-        <strong>&nbsp;&nbsp;ADD: </strong>
-        <span class="dropdown">
+<div class="wrapper">
+    <!-- Sidebar Holder -->
+    <nav id="sidebar">
+        <div class="sidebar-header">
+            <h3>Bootstrap Sidebar</h3>
+        </div>
+
+        <ul class="list-unstyled components">
+            <p>Dummy Heading</p>
+            <li class="active">
+                <a href="#homeSubmenu" data-toggle="collapse" aria-expanded="false">Home</a>
+                <ul class="collapse list-unstyled" id="homeSubmenu">
+                    <li><a href="#">Home 1</a></li>
+                    <li><a href="#">Home 2</a></li>
+                    <li><a href="#">Home 3</a></li>
+                </ul>
+            </li>
+            <li>
+                <a href="#">About</a>
+                <a href="#pageSubmenu" data-toggle="collapse" aria-expanded="false">Pages</a>
+                <ul class="collapse list-unstyled" id="pageSubmenu">
+                    <li><a href="#">Page 1</a></li>
+                    <li><a href="#">Page 2</a></li>
+                    <li><a href="#">Page 3</a></li>
+                </ul>
+            </li>
+            <li>
+                <a href="#">Portfolio</a>
+            </li>
+            <li>
+                <a href="#">Contact</a>
+            </li>
+        </ul>
+
+        <ul class="list-unstyled CTAs">
+            <li><a href="https://bootstrapious.com/p/bootstrap-sidebar" class="article">Back to the article</a></li>
+        </ul>
+    </nav>
+
+    <!-- Page Content Holder -->
+    <div id="content">
+        <div id="addToolbar" class="container-fluid">
+            <div class="row">
+                <strong>&nbsp;&nbsp;ADD: </strong>
+                <span class="dropdown">
             <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenuActor" data-toggle="dropdown"
                     aria-haspopup="true" aria-expanded="true" title="Add Role, Agent, or Actor">
                 <img src="images/Actor.svg" height="25px"/><br/>
@@ -129,7 +174,7 @@
             <ul id="addActorDropdown" class="dropdown-menu" aria-labelledby="dropdownMenuActor"></ul>
         </span>
 
-        <span class="dropdown">
+                <span class="dropdown">
             <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenuActorLink"
                     data-toggle="dropdown" aria-haspopup="true" aria-expanded="true"
                     title="Add is-a or participates-in link between actors">
@@ -140,7 +185,7 @@
             <ul id="addActorLinkDropdown" class="dropdown-menu" aria-labelledby="dropdownMenuActorLink"></ul>
         </span>
 
-        <span class="dropdown">
+                <span class="dropdown">
             <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenuDependencyLink"
                     data-toggle="dropdown" aria-haspopup="true" aria-expanded="true" title="Add dependency link">
                 <img src="images/DependencyLink.svg" height="25px"/><br/>
@@ -150,7 +195,7 @@
             <ul id="addDependencyDropdown" class="dropdown-menu" aria-labelledby="dropdownMenuDependencyLink"></ul>
         </span>
 
-        <span class="dropdown">
+                <span class="dropdown">
             <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenuContributionLink"
                     data-toggle="dropdown" aria-haspopup="true" aria-expanded="true"
                     title="Add contribution link (make, help, hurt or break)">
@@ -161,71 +206,74 @@
             <ul id="addContributionDropdown" class="dropdown-menu" aria-labelledby="dropdownMenuContributionLink"></ul>
         </span>
 
-        <span id="addToolbarButtons"></span>
-        <div>
+                <span id="addToolbarButtons"></span>
+                <div>
             <span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                 <i id="status"></em>
             </span>
-        </div>
+                </div>
 
-    </div>
-</div>
-
-<div id="diagramOuter">
-    <div id="diagram"></div>
-</div>
-
-
-<div class="container-fluid toolbar" id="extraOptions">
-    <div class="row">
-        <div id="propertiesPanel" class="col-md-8">
-            <div>
-                <table class="table table-bordered table-condensed" id="propertyTable">
-                    <thead>
-                    <tr>
-                        <th>Property Name</th>
-                        <th>Property Value</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    </tbody>
-                </table>
-            </div>
-            <div id="cellButtons">
             </div>
         </div>
 
-        <div id="appToolbar" class="col-md-3">
-            <button type="button" id="saveImageButton"><span class="glyphicon glyphicon-picture"
-                                                             aria-hidden="true"></span> Save Image
-            </button>
-            <span id="saveImage" class="toolbarGroup"></span>
+        <div id="diagramOuter">
+            <div id="diagram"></div>
+        </div>
+        <div class="container-fluid toolbar" id="extraOptions">
+            <div class="row">
+                <div id="propertiesPanel" class="col-md-8">
+                    <div>
+                        <table class="table table-bordered table-condensed" id="propertyTable">
+                            <thead>
+                            <tr>
+                                <th>Property Name</th>
+                                <th>Property Value</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div id="cellButtons">
+                    </div>
+                </div>
 
-            <button type="button" id="saveModelButton"><span class="glyphicon glyphicon-floppy-save"
-                                                             aria-hidden="true"></span> Save Model
-            </button>
-            <span id="saveModel" class="toolbarGroup"></span>
+                <div id="appToolbar" class="col-md-3">
+                    <button type="button" id="saveImageButton"><span class="glyphicon glyphicon-picture"
+                                                                     aria-hidden="true"></span> Save Image
+                    </button>
+                    <span id="saveImage" class="toolbarGroup"></span>
 
-            <button type="button" id="loadModelButton" data-toggle="modal" data-target="#loadModelModal"
-                    title="Load a goal model from a JSON file created with this tool"><span
-                    class="glyphicon glyphicon-floppy-open" aria-hidden="true"></span> Load model
-            </button>
-            <button type="button" id="diagramOptionsModalButton" data-toggle="modal" data-target="#diagramOptions"
-                    title="Change diagram settings"><span class="glyphicon glyphicon-blackboard"
-                                                          aria-hidden="true"></span> Diagram options
-            </button>
-            <button type="button" id="clearButton"><span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
-                Clear
-            </button>
-            <button type="button" id="runPRISMButton"><span class="glyphicon glyphicon-refresh"
-                                                            aria-hidden="true"></span> Generate PRISM DTMC Code
-            </button>
-            <button type="button" id="runPARAMButton"><span class="glyphicon glyphicon-refresh"
-                                                            aria-hidden="true"></span> Parametric Formula Generation
-            </button>
+                    <button type="button" id="saveModelButton"><span class="glyphicon glyphicon-floppy-save"
+                                                                     aria-hidden="true"></span> Save Model
+                    </button>
+                    <span id="saveModel" class="toolbarGroup"></span>
+
+                    <button type="button" id="loadModelButton" data-toggle="modal" data-target="#loadModelModal"
+                            title="Load a goal model from a JSON file created with this tool"><span
+                            class="glyphicon glyphicon-floppy-open" aria-hidden="true"></span> Load model
+                    </button>
+                    <button type="button" id="diagramOptionsModalButton" data-toggle="modal" data-target="#diagramOptions"
+                            title="Change diagram settings"><span class="glyphicon glyphicon-blackboard"
+                                                                  aria-hidden="true"></span> Diagram options
+                    </button>
+                    <button type="button" id="clearButton"><span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
+                        Clear
+                    </button>
+                    <button type="button" id="runPRISMButton"><span class="glyphicon glyphicon-refresh"
+                                                                    aria-hidden="true"></span> Generate PRISM DTMC Code
+                    </button>
+                    <button type="button" id="runPARAMButton"><span class="glyphicon glyphicon-refresh"
+                                                                    aria-hidden="true"></span> Parametric Formula Generation
+                    </button>
+                </div>
+            </div>
         </div>
     </div>
 </div>
+
+
+
 
 <!-- backbone templates -->
 <script type="text/template" id="addButtonTemplate">
