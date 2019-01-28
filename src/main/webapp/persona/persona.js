@@ -32,7 +32,7 @@ function restaurarControlesDaUI() {
     $('#dropdownMenuContributionLink').show();
 
     if($("#sidebar").hasClass('')){
-        $("#sidebar").toggleClass("active")
+        $("#sidebar").toggleClass("active");
     }
 }
 
