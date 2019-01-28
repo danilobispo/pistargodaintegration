@@ -19,8 +19,7 @@ function alterarControlesDaUI(){
     //Contribution Link (softgoals podem entrar novamente, só não serão considerados no CGM
     // o famoso "peso morto")
     $('#dropdownMenuContributionLink').hide();
-
-};
+}
 
 /**
  * Responsável por restaurar os controles da UI quando o Persona-based modelling não estiver ativo
@@ -31,7 +30,11 @@ function restaurarControlesDaUI() {
 
     $('#dropdownMenuActorLink').show();
     $('#dropdownMenuContributionLink').show();
-};
+
+    if($("#sidebar").hasClass('')){
+        $("#sidebar").toggleClass("active")
+    }
+}
 
 /**
  * Limpa o diagrama atual, garantindo que o usuário não utilize um diagrama PiStar que pode conter
