@@ -1,45 +1,54 @@
+import * as Backbone from "../istarcore/lib/backbone.min";
+
 var Contexts = Backbone.Model.extend({
     defaults: {
-        contextName: '',
-        facts: '',
-        stock: 0
+        facts: Facts,
+        personaType: PersonaType
     }
 });
 
-var Context = Backbone.Model.extend({
+// List<FactTypes>
+var Facts = Backbone.Collection.extend({
+    model: Fact
+});
+
+//Fact Model
+var Fact = Backbone.Model.extend({
     defaults: {
-        factTypes: FactType,
-        personaTypes: PersonaType,
+        factTypes: FactTypes,
+        decompositionTypes: DecompositionTypes,
     }
 });
 
-var FactType = Backbone.Model.extend({
-    defaults: {
-        HasDiabetes: false,
-        HasHBP: false,
-        Cardiac: false,
-        HasRheumatiod: false,
-        ProneToFalling: false,
-        HasOsteoporosis: false,
-        DifficultyInWalking: false,
-        HasAWheelChair: false,
-        DontLikeTecnology: false,
-        HasBadExperiencesWithTecnology: false,
-        WantsToAvoidFrustatingExperiencesWithTecnologies: false,
-        LivesWithHisOrHersChildrens: false,
-        HasANurse: false,
-        LivesInAnAsylum: false,
-        HasAnAssistedLivingDevice: false,
-        WalksOrRunsAsAPhysicalActivity: false,
-        HasCellPhone: false,
-        HasInternet: false,
-        HasAmbulanceAccess: false
-    }
-});
+var PersonaType = {
+    PATIENT: 1,
+    DOCTOR: 2
+};
 
-var PersonaType = Backbone.Model.extend({
-    defaults: {
-        patient: true,
-        doctor: false
-    }
-});
+var DecompositionTypes = {
+    AND: 1,
+    OR: 2,
+    LEAF: 3
+};
+
+var FactTypes = {
+    HasDiabetes: 1,
+    HasHBP: 2,
+    Cardiac: 3,
+    HasRheumatoid: 4,
+    ProneToFalling: 5,
+    HasOsteoporosis: 6,
+    DifficultyInWalking: 7,
+    HasAWheelChair: 8,
+    DontLikeTechnology: 9,
+    HasBadExperiencesWithTechnology: 10,
+    WantsToAvoidFrustratingExperiencesWithTechnologies: 11,
+    LivesWithHisOrHersChildren: 12,
+    HasANurse: 13,
+    LivesInAnAsylum: 14,
+    HasAnAssistedLivingDevice: 15,
+    WalksOrRunsAsAPhysicalActivity: 16,
+    HasCellPhone: 17,
+    HasInternet: 18,
+    HasAmbulanceAccess: 19
+};
