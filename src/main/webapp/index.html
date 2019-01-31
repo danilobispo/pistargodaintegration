@@ -136,24 +136,8 @@
         <div class="sidebar-header">
             <h3>Is your persona a:</h3>
             <ul>
-                <li>
-                    <div class="sidebar-persona-option">
-                        Patient
-                        <label class="switch">
-                            <input type="checkbox" id="patientCheckbox" checked data-toggle="toggle">
-                            <span class="slider round"></span>
-                        </label>
-                    </div>
-                </li>
-                <li>
-                    <div class="sidebar-persona-option">
-                        Doctor
-                        <label class="switch">
-                            <input type="checkbox" id="doctorCheckbox" disabled data-toggle="toggle">
-                            <span class="slider round"></span>
-                        </label>
-                    </div>
-                </li>
+                <li><input type="radio" name="personatype" value="patient"> Patient </input></li>
+                <li><input type="radio" name="personatype" value="doctor"> Doctor </input></li>
             </ul>
         </div>
 
@@ -162,7 +146,9 @@
             <li class="active">
                 <a href="#homeSubmenu" data-toggle="collapse" aria-expanded="false">Home</a>
                 <ul class="collapse list-unstyled" id="homeSubmenu">
-                    <li><button class="btn"</li>
+                    <li>
+                        <button class="btn"/>
+                    </li>
                     <li><a href="#">Home 2</a></li>
                     <li><a href="#">Home 3</a></li>
                 </ul>
