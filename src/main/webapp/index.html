@@ -299,7 +299,16 @@
             src="images/<%- name %>.svg" height="25px"/><br/><%- label %>
     </button>
 </script>
-
+<script type="text/template" id="addPersonaFactTemplate">
+    <button
+            id="add<%- viewName %>"
+            title="<%- tooltip %>"
+            class="btn btn-xs persona-fact-button"
+            data-toggle="button"
+            aria-pressed="false"><%- viewName %>
+    </button>
+    <i id="factDecomposition">OR</i>
+</script>
 <script type="text/template" id="addDropdownButtonTemplate">
     <a id="add<%- label %>" title="<%- tooltip %>" href="#"><img src="images/<%- name %>.svg" height="35px"/> <%- label
         %></a>
