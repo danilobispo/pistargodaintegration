@@ -1,6 +1,9 @@
 import * as Backbone from "../istarcore/lib/backbone.min";
 
-var Contexts = Backbone.Model.extend({
+var Context = Backbone.Model.extend({
+    initialize: function(){
+
+    },
     defaults: {
         facts: Facts,
         personaType: PersonaType
@@ -10,6 +13,7 @@ var Contexts = Backbone.Model.extend({
 // List<FactTypes>
 var Facts = Backbone.Collection.extend({
     model: Fact
+
 });
 
 //Fact Model
@@ -52,3 +56,8 @@ var FactTypes = {
     HasInternet: 18,
     HasAmbulanceAccess: 19
 };
+
+var HealthRiskContext = new Facts({
+});
+
+var mary: Context = new Context

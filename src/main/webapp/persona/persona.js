@@ -90,5 +90,16 @@ $("#sidebarCollapse").on("click", function() {
     $(this).toggleClass("active");
 });
 
+$('.persona-fact-button').click(function () {
+    $(this).toggleClass('highlight')
+});
+// USE LATER
+/*if($("#patientRadioOption").attr("checked",true)) {
+    console.log("KKKKKK PATIENT");
+
+} else if($("#doctorRadioOption").attr("checked",true)) {
+    console.log("KKKKKK DOCTOR");
+}*/
+
 
 
