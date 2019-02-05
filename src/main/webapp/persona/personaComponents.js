@@ -23,9 +23,10 @@ var Facts = Backbone.Collection.extend({
 //Fact Model
 var Fact = Backbone.Model.extend({
     defaults: {
-        viewName: "",
+        factTypesNames: "",
         factTypes: FactTypes,
         decompositionTypes: DecompositionTypes,
+        decompositionTypesNames: DecompositionTypesNames
     }
 });
 
@@ -86,41 +87,153 @@ var FactTypesNames = {
     HasAnAssistedLivingDevice: "HasAnAssistedLivingDevice",
     WalksOrRunsAsAPhysicalActivity: "WalksOrRunsAsAPhysicalActivity",
     HasCellPhone: "HasCellPhone",
-    HasInternet:"HasInternet",
+    HasInternet: "HasInternet",
     HasAmbulanceAccess: "HasAmbulanceAccess"
 };
 
 var HealthRiskContext = new Facts([
     new Fact({
-        viewName: FactTypesNames.HasDiabetes,
+        factTypesNames: FactTypesNames.HasDiabetes,
         factTypes: FactTypes.HasDiabetes,
-        decompositionTypes: DecompositionTypes.OR
+        decompositionTypes: DecompositionTypes.OR,
+        decompositionTypesNames: DecompositionTypesNames.OR
     }),
     new Fact({
-        viewName: FactTypesNames.HasHBP,
+        factTypesNames: FactTypesNames.HasHBP,
         factTypes: FactTypes.HasHBP,
-        decompositionTypes: DecompositionTypes.OR
+        decompositionTypes: DecompositionTypes.OR,
+        decompositionTypesNames: DecompositionTypesNames.OR
     }),
     new Fact({
-        viewName: FactTypesNames.Cardiac,
+        factTypesNames: FactTypesNames.Cardiac,
         factTypes: FactTypes.Cardiac,
-        decompositionTypes: DecompositionTypes.OR
+        decompositionTypes: DecompositionTypes.OR,
+        decompositionTypesNames: DecompositionTypesNames.OR
     }),
     new Fact({
-        viewName: FactTypesNames.HasRheumatoid,
+        factTypesNames: FactTypesNames.HasRheumatoid,
         factTypes: FactTypes.HasRheumatoid,
-        decompositionTypes: DecompositionTypes.OR
+        decompositionTypes: DecompositionTypes.OR,
+        decompositionTypesNames: DecompositionTypesNames.OR
     }),
     new Fact({
-        viewName: FactTypesNames.ProneToFalling,
+        factTypesNames: FactTypesNames.ProneToFalling,
         factTypes: FactTypes.ProneToFalling,
-        decompositionTypes: DecompositionTypes.OR
+        decompositionTypes: DecompositionTypes.OR,
+        decompositionTypesNames: DecompositionTypesNames.OR
     }),
     new Fact({
-        viewName: FactTypesNames.HasOsteoporosis,
+        factTypesNames: FactTypesNames.HasOsteoporosis,
         factTypes: FactTypes.HasOsteoporosis,
-        decompositionTypes: DecompositionTypes.OR
+        decompositionTypes: DecompositionTypes.OR,
+        decompositionTypesNames: DecompositionTypesNames.OR
     }),
+]);
+
+var TechnologyAversionContext = new Facts([
+    new Fact({
+        factTypesNames: FactTypesNames.DontLikeTechnology,
+        factTypes: FactTypes.DontLikeTechnology,
+        decompositionTypes: DecompositionTypes.OR,
+        decompositionTypesNames: DecompositionTypesNames.OR
+    }),
+    new Fact({
+        factTypesNames: FactTypesNames.HasBadExperiencesWithTechnology,
+        factTypes: FactTypes.HasBadExperiencesWithTechnology,
+        decompositionTypes: DecompositionTypes.OR,
+        decompositionTypesNames: DecompositionTypesNames.OR
+    }),
+    new Fact({
+        factTypesNames: FactTypesNames.WantsToAvoidFrustratingExperiencesWithTechnologies,
+        factTypes: FactTypes.WantsToAvoidFrustratingExperiencesWithTechnologies,
+        decompositionTypes: DecompositionTypes.OR,
+        decompositionTypesNames: DecompositionTypesNames.OR
+    })
+]);
+
+var MobilityIssue = new Facts([
+    new Fact({
+        factTypesNames: FactTypesNames.DifficultyInWalking,
+        factTypes: FactTypes.DifficultyInWalking,
+        decompositionTypes: DecompositionTypes.OR,
+        decompositionTypesNames: DecompositionTypesNames.OR
+    }),
+    new Fact({
+        factTypesNames: FactTypesNames.HasAWheelChair,
+        factTypes: FactTypes.HasAWheelChair,
+        decompositionTypes: DecompositionTypes.OR,
+        decompositionTypesNames: DecompositionTypesNames.OR
+    })
+]);
+
+var HomeAssistanceContext = new Facts([
+    new Fact({
+        factTypesNames: FactTypesNames.LivesWithHisOrHersChildren,
+        factTypes: FactTypes.LivesWithHisOrHersChildren,
+        decompositionTypes: DecompositionTypes.OR,
+        decompositionTypesNames: DecompositionTypesNames.OR
+    }),
+    new Fact({
+        factTypesNames: FactTypesNames.HasANurse,
+        factTypes: FactTypes.HasANurse,
+        decompositionTypes: DecompositionTypes.OR,
+        decompositionTypesNames: DecompositionTypesNames.OR
+    }),
+    new Fact({
+        factTypesNames: FactTypesNames.LivesInAnAsylum,
+        factTypes: FactTypes.LivesInAnAsylum,
+        decompositionTypes: DecompositionTypes.OR,
+        decompositionTypesNames: DecompositionTypesNames.OR
+    }),
+    new Fact({
+        factTypesNames: FactTypesNames.HasAnAssistedLivingDevice,
+        factTypes: FactTypes.HasAnAssistedLivingDevice,
+        decompositionTypes: DecompositionTypes.OR,
+        decompositionTypesNames: DecompositionTypesNames.OR
+    })
+]);
+
+var PhysicalActivityContext = new Facts([
+    new Fact({
+        factTypesNames: FactTypesNames.WalksOrRunsAsAPhysicalActivity,
+        factTypes: FactTypes.WalksOrRunsAsAPhysicalActivity,
+        decompositionTypes: DecompositionTypes.OR,
+        decompositionTypesNames: DecompositionTypesNames.OR
+    })
+]);
+
+var MeansOfCommunication = new Facts([
+    new Fact({
+        factTypesNames: FactTypesNames.HasCellPhone,
+        factTypes: FactTypes.HasCellPhone,
+        decompositionTypes: DecompositionTypes.OR,
+        decompositionTypesNames: DecompositionTypesNames.OR
+    }),
+    new Fact({
+        factTypesNames: FactTypesNames.HasInternet,
+        factTypes: FactTypes.HasInternet,
+        decompositionTypes: DecompositionTypes.OR,
+        decompositionTypesNames: DecompositionTypesNames.OR
+    })
+]);
+
+
+var MeansOfInformation = new Facts([
+    new Fact({
+        factTypesNames: FactTypesNames.HasCellPhone,
+        factTypes: FactTypes.HasCellPhone,
+        decompositionTypes: DecompositionTypes.OR,
+        decompositionTypesNames: DecompositionTypesNames.OR
+    })
+]);
+
+var MeansOfHelping = new Facts([
+    new Fact({
+        factTypesNames: FactTypesNames.HasAmbulanceAccess,
+        factTypes: FactTypes.HasAmbulanceAccess,
+        decompositionTypes: DecompositionTypes.OR,
+        decompositionTypesNames: DecompositionTypesNames.OR
+    })
 ]);
 
 // var Book = Backbone.Model.extend({
@@ -212,9 +325,9 @@ var FactView = Backbone.View.extend({
     },
 
     render: function () {
-        if(this.model.attributes.decompositionTypes !== DecompositionTypes.LEAF){
+        if (this.model.attributes.decompositionTypes !== DecompositionTypes.LEAF) {
             this.$el.html(this.template(this.model.attributes) +
-                '<i id="factDecomposition">'+this.model.attributes.decompositionTypes.toString()+'</i>');
+                '<i id="factDecomposition">' + this.model.attributes.decompositionTypes.toString() + '</i>');
             return this;
         } else {
             this.$el.html(this.template(this.model.attributes));
