@@ -136,7 +136,8 @@
         <div class="sidebar-header">
             <h3>Is your persona a:</h3>
             <ul>
-                <li><input type="radio" name="personatype" id="patientRadioOption" value="patient"> Patient </input></li>
+                <li><input type="radio" name="personatype" id="patientRadioOption" value="patient"> Patient </input>
+                </li>
                 <li><input type="radio" name="personatype" id="doctorRadioOption" value="doctor"> Doctor </input></li>
             </ul>
         </div>
@@ -147,12 +148,35 @@
                 <a href="#homeSubmenu" data-toggle="collapse" aria-expanded="false">Home</a>
                 <ul class="collapse list-unstyled" id="homeSubmenu">
                     <li>
+                        <button id="personaFact" class="btn btn-xs persona-fact-button" data-toggle="button"
+                                aria-pressed="false"> kkkkkkkkkk eae
+                        </button>
+                        <i id="factDecomposition">OR</i>
+                    </li>
+                    <li>
+                        <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1"
+                                data-toggle="dropdown">
+                            Books <span class="caret"></span>
+                        </button>
+                        <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1" id="bookDropDown">
+                        </ul>
+                    </li>
+                    <li>
+                        <div>
+                            <ul id="bookList">
+
+                            </ul>
+                        </div>
+                    </li>
+                </ul>
+                <!--<ul class="collapse list-unstyled" id="homeSubmenu">
+                    <li>
                         <button id="personaFact" class="btn btn-xs persona-fact-button" data-toggle="button" aria-pressed="false"> kkkkkkkkkk eae </button>
                         <i id="factDecomposition">OR</i>
                     </li>
                     <li><a href="#">Home 2</a></li>
                     <li><a href="#">Home 3</a></li>
-                </ul>
+                </ul>-->
             </li>
             <li>
                 <a href="#">About</a>
@@ -302,13 +326,18 @@
 <script type="text/template" id="addPersonaFactTemplate">
     <button
             id="add<%- viewName %>"
-            title="<%- tooltip %>"
             class="btn btn-xs persona-fact-button"
             data-toggle="button"
-            aria-pressed="false"><%- viewName %>
+            aria-pressed="false">
+        <%- viewName %>
     </button>
     <i id="factDecomposition">OR</i>
 </script>
+
+<script type="text/template" id="bookItem">
+    <li role="presentation"><a role="menuitem" tabindex="-1" href="#"> <%= BookName %> </a></li>
+</script>
+
 <script type="text/template" id="addDropdownButtonTemplate">
     <a id="add<%- label %>" title="<%- tooltip %>" href="#"><img src="images/<%- name %>.svg" height="35px"/> <%- label
         %></a>
@@ -439,6 +468,7 @@
 
 <!-- Persona core -->
 <script src="persona/persona.js"></script>
+<script src="persona/personaComponents.js"></script>
 
 <!-- insert your plugin(s) here, after this line -->
 <script src="main.js"></script>
