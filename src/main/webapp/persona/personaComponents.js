@@ -1,7 +1,7 @@
 var personaUi = {};
 
 var Context = Backbone.Model.extend({
-    initialize: function(){
+    initialize: function () {
 
     },
     defaults: {
@@ -12,7 +12,7 @@ var Context = Backbone.Model.extend({
 
 // List<FactTypes>
 var Facts = Backbone.Collection.extend({
-    initialize: function(models, options){
+    initialize: function (models, options) {
 
     },
     defaults: {
@@ -40,6 +40,12 @@ var DecompositionTypes = {
     LEAF: 3
 };
 
+var DecompositionTypesNames = {
+    AND: "AND",
+    OR: "OR",
+    LEAF: "LEAF"
+};
+
 var FactTypes = {
     HasDiabetes: 1,
     HasHBP: 2,
@@ -62,144 +68,228 @@ var FactTypes = {
     HasAmbulanceAccess: 19
 };
 
-/*Facts = new List<Fact>() {
-    new Fact(FactTypes.HasDiabetes , DecompositionTypes.OR),
-        new Fact(FactTypes.HasHBP , DecompositionTypes.OR),
-        new Fact(FactTypes.Cardiac , DecompositionTypes.OR),
-        new Fact(FactTypes.HasRheumatiod , DecompositionTypes.OR),
-        new Fact(FactTypes.ProneToFalling , DecompositionTypes.OR),
-        new Fact(FactTypes.HasOsteoporosis , DecompositionTypes.OR),*/
+var FactTypesNames = {
+    HasDiabetes: "HasDiabetes",
+    HasHBP: "HasHBP",
+    Cardiac: "Cardiac",
+    HasRheumatoid: "HasRheumatoid",
+    ProneToFalling: "ProneToFalling",
+    HasOsteoporosis: "HasOsteoporosis",
+    DifficultyInWalking: "DifficultyInWalking",
+    HasAWheelChair: "HasAWheelChair",
+    DontLikeTechnology: "DontLikeTechnology",
+    HasBadExperiencesWithTechnology: "HasBadExperiencesWithTechnology",
+    WantsToAvoidFrustratingExperiencesWithTechnologies: "WantsToAvoidFrustratingExperiencesWithTechnologies",
+    LivesWithHisOrHersChildren: "LivesWithHisOrHersChildren",
+    HasANurse: "HasANurse",
+    LivesInAnAsylum: "LivesInAnAsylum",
+    HasAnAssistedLivingDevice: "HasAnAssistedLivingDevice",
+    WalksOrRunsAsAPhysicalActivity: "WalksOrRunsAsAPhysicalActivity",
+    HasCellPhone: "HasCellPhone",
+    HasInternet:"HasInternet",
+    HasAmbulanceAccess: "HasAmbulanceAccess"
+};
 
 var HealthRiskContext = new Facts([
-    new Fact({viewName: FactTypes.HasDiabetes.toString(), factTypes: FactTypes.HasDiabetes, decompositionTypes: DecompositionTypes.OR }),
-    new Fact({viewName: FactTypes.HasHBP.toString(), factTypes: FactTypes.HasHBP, decompositionTypes: DecompositionTypes.OR }),
-    new Fact({viewName: FactTypes.Cardiac.toString(), factTypes: FactTypes.Cardiac, decompositionTypes: DecompositionTypes.OR }),
-    new Fact({viewName: FactTypes.HasRheumatoid.toString(), factTypes: FactTypes.HasRheumatoid, decompositionTypes: DecompositionTypes.OR }),
-    new Fact({viewName: FactTypes.ProneToFalling.toString(), factTypes: FactTypes.ProneToFalling, decompositionTypes: DecompositionTypes.OR }),
-    new Fact({viewName: FactTypes.HasOsteoporosis.toString(), factTypes: FactTypes.HasOsteoporosis, decompositionTypes: DecompositionTypes.OR }),
+    new Fact({
+        viewName: FactTypesNames.HasDiabetes,
+        factTypes: FactTypes.HasDiabetes,
+        decompositionTypes: DecompositionTypes.OR
+    }),
+    new Fact({
+        viewName: FactTypesNames.HasHBP,
+        factTypes: FactTypes.HasHBP,
+        decompositionTypes: DecompositionTypes.OR
+    }),
+    new Fact({
+        viewName: FactTypesNames.Cardiac,
+        factTypes: FactTypes.Cardiac,
+        decompositionTypes: DecompositionTypes.OR
+    }),
+    new Fact({
+        viewName: FactTypesNames.HasRheumatoid,
+        factTypes: FactTypes.HasRheumatoid,
+        decompositionTypes: DecompositionTypes.OR
+    }),
+    new Fact({
+        viewName: FactTypesNames.ProneToFalling,
+        factTypes: FactTypes.ProneToFalling,
+        decompositionTypes: DecompositionTypes.OR
+    }),
+    new Fact({
+        viewName: FactTypesNames.HasOsteoporosis,
+        factTypes: FactTypes.HasOsteoporosis,
+        decompositionTypes: DecompositionTypes.OR
+    }),
 ]);
 
-var Book = Backbone.Model.extend({
-    defaults: {
-        ID: "",
-        BookName: ""
-    },
-    idAttribute: "ID",
-    initialize: function () {
-        console.log('Book has been initialized');
-        this.on("invalid", function (model, error) {
-            console.log("Houston, we have a problem: " + error)
-        });
-    },
-    constructor: function (attributes, options) {
-        console.log('Book\'s constructor had been called');
-        Backbone.Model.apply(this, arguments);
-    },
-    validate: function (attr) {
-        if (attr.ID <= 0) {
-            return "Invalid value for ID supplied."
-        }
-    }/*,
-    urlRoot: 'http://localhost:51377/api/Books'*/
-});
+// var Book = Backbone.Model.extend({
+//     defaults: {
+//         ID: "",
+//         BookName: "",
+//         BookAge: 23
+//     },
+//     idAttribute: "ID",
+//     initialize: function () {
+//         console.log('Book has been initialized');
+//         this.on("invalid", function (model, error) {
+//             console.log("Houston, we have a problem: " + error)
+//         });
+//     },
+//     constructor: function (attributes, options) {
+//         console.log('Book\'s constructor had been called');
+//         Backbone.Model.apply(this, arguments);
+//     },
+//     validate: function (attr) {
+//         if (attr.ID <= 0) {
+//             return "Invalid value for ID supplied."
+//         }
+//     }/*,
+//     urlRoot: 'http://localhost:51377/api/Books'*/
+// });
+//
+// var BooksCollection = Backbone.Collection.extend({
+//     model: Book,
+//     initialize: function () {
+//
+//         // This will be called when an item is added. pushed or unshifted
+//         this.on('add', function (model) {
+//             console.log('something got added');
+//         });
+//         // This will be called when an item is removed, popped or shifted
+//         this.on('remove', function (model) {
+//             console.log('something got removed');
+//         });
+//         // This will be called when an item is updated
+//         this.on('change', function (model) {
+//             console.log('something got changed');
+//         });
+//     },
+// });
 
-var BooksCollection = Backbone.Collection.extend({
-    model: Book,
-    initialize: function () {
+//
+// var bookView = Backbone.View.extend({
+//     tagname: "div",
+//     model: Book,
+//     render: function () {
+//         this.$el.html(
+//             '<li>' + this.model.get("BookName") + '</li>' +
+//             '<span>' + this.model.get("ID") + '</span>' + '<br>' +
+//             '<span>' + this.model.get("BookAge") + '</span>');
+//         return this;
+//     }
+// });
+//
+// var bookListView = Backbone.View.extend({
+//     model: BooksCollection,
+//
+//     render: function () {
+//         this.$el.html(); // lets render this view
+//
+//         var self = this;
+//
+//         for (var i = 0; i < this.model.length; ++i) {
+//             // lets create a book view to render
+//             var m_bookView = new bookView({model: this.model.at(i)});
+//
+//             // lets add this book view to this list view
+//             this.$el.append(m_bookView.$el);
+//             m_bookView.render(); // lets render the book
+//         }
+//
+//         return this;
+//     },
+// });
 
-        // This will be called when an item is added. pushed or unshifted
-        this.on('add', function(model) {
-            console.log('something got added');
-        });
-        // This will be called when an item is removed, popped or shifted
-        this.on('remove',  function(model) {
-            console.log('something got removed');
-        });
-        // This will be called when an item is updated
-        this.on('change', function(model) {
-            console.log('something got changed');
-        });
-    },
-});
 
-var bookView = Backbone.View.extend({
-    tagname: "li",
-    model: Book,
-    render: function (){
-        this.$el.html('<li>' + this.model.get("BookName") + '</li>');
-        return this;
-    }
-});
-
-var bookListView = Backbone.View.extend({
-    model: BooksCollection,
-
-    render: function() {
-        this.$el.html(); // lets render this view
-
-        var self = this;
-
-        for(var i = 0; i < this.model.length; ++i) {
-            // lets create a book view to render
-            var m_bookView = new bookView({model: this.model.at(i)});
-
-            // lets add this book view to this list view
-            this.$el.append(m_bookView.$el);
-            m_bookView.render(); // lets render the book
-        }
-
-        return this;
-    },
-});
-
-var bookView2 = Backbone.View.extend({
-
-    model: Book,
-    tagName: 'li',
+var FactView = Backbone.View.extend({
+    model: Fact,
+    tagName: 'div',
     template: '',
 
-    initialize: function() {
-        this.template = _.template($('#bookItem').html());
+    initialize: function () {
+        this.template = _.template($('#addPersonaFactTemplate').html());
     },
 
-    render: function() {
-        this.$el.html(this.template(this.model.attributes));
-        return this;
+    render: function () {
+        if(this.model.attributes.decompositionTypes !== DecompositionTypes.LEAF){
+            this.$el.html(this.template(this.model.attributes) +
+                '<i id="factDecomposition">'+this.model.attributes.decompositionTypes.toString()+'</i>');
+            return this;
+        } else {
+            this.$el.html(this.template(this.model.attributes));
+            return this;
+        }
     }
 });
 
-var bookListView2 = Backbone.View.extend({
-    model: BooksCollection,
+var FactListView = Backbone.View.extend({
+    model: Facts,
 
-    render: function() {
-        this.$el.html(); // lets render this view
+    render: function () {
+        // lets create a book view to render
+        for (var i = 0; i < this.model.length; i++) {
 
-        for(var i = 0; i < this.model.length; ++i) {
-            // lets create a book view to render
-            var m_bookView = new bookView2({model: this.model.at(i)});
+            var m_factView = new FactView({model: this.model.at(i)});
 
             // lets add this book view to this list view
-            this.$el.append(m_bookView.$el);
-            m_bookView.render(); // lets render the book
+            this.$el.append(m_factView.$el);
+            m_factView.render(); // lets render the book
         }
-
-        return this;
-    },
+    }
 });
 
-var book1 = new Book({ ID: 1, BookName: "Book 1" });
-var book2 = new Book({ ID: 2, BookName: "Book 2" });
-var book3 = new Book({ ID: 3, BookName: "Book 3" });
-var book4 = new Book({ ID: 4, BookName: "Book 4" });
-var book5 = new Book({ ID: 5, BookName: "Book 5" });
-var bookCollection = new BooksCollection([book1, book2, book3, book4, book5]);
-var bookList = null;
+// var bookView2 = Backbone.View.extend({
+//
+//     model: Book,
+//     tagName: 'li',
+//     template: '',
+//
+//     initialize: function () {
+//         this.template = _.template($('#bookItem').html());
+//     },
+//
+//     render: function () {
+//         this.$el.html(this.template(this.model.attributes));
+//         return this;
+//     }
+// });
+//
+// var bookListView2 = Backbone.View.extend({
+//     model: BooksCollection,
+//
+//     render: function () {
+//         this.$el.html(); // lets render this view
+//
+//         for (var i = 0; i < this.model.length; ++i) {
+//             // lets create a book view to render
+//             var m_bookView = new bookView2({model: this.model.at(i)});
+//
+//             // lets add this book view to this list view
+//             this.$el.append(m_bookView.$el);
+//             m_bookView.render(); // lets render the book
+//         }
+//
+//         return this;
+//     },
+// });
+//
+// var book1 = new Book({ID: 1, BookName: "Book 1"});
+// var book2 = new Book({ID: 2, BookName: "Book 2"});
+// var book3 = new Book({ID: 3, BookName: "Book 3"});
+// var book4 = new Book({ID: 4, BookName: "Book 4"});
+// var book5 = new Book({ID: 5, BookName: "Book 5"});
+// var bookCollection = new BooksCollection([book1, book2, book3, book4, book5]);
+// var bookList = null;
+//
+// bookList = new bookListView({el: $("#bookList"), model: bookCollection});
+// bookList.render();
+//
+// var bookList2 = new bookListView2({el: $("#bookDropDown"), model: bookCollection});
+// bookList2.render();
 
-bookList = new bookListView({ el: $("#bookList"), model: bookCollection });
-bookList.render();
-
-var bookList2 = new bookListView2({ el: $("#bookDropDown"), model: bookCollection });
-bookList2.render();
+var factListView = new FactListView({el: $("#healthRiskContextFacts"), model: HealthRiskContext});
+factListView.render();
 
 
 // uiC.PersonaButtonView = Backbone.View.extend({

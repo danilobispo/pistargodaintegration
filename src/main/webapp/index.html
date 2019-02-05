@@ -148,25 +148,11 @@
                 <a href="#homeSubmenu" data-toggle="collapse" aria-expanded="false">Home</a>
                 <ul class="collapse list-unstyled" id="homeSubmenu">
                     <li>
-                        <button id="personaFact" class="btn btn-xs persona-fact-button" data-toggle="button"
-                                aria-pressed="false"> kkkkkkkkkk eae
-                        </button>
-                        <i id="factDecomposition">OR</i>
+                        <div id="healthRiskContextFacts"></div>
                     </li>
                     <li>
-                        <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1"
-                                data-toggle="dropdown">
-                            Books <span class="caret"></span>
-                        </button>
-                        <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1" id="bookDropDown">
-                        </ul>
                     </li>
                     <li>
-                        <div>
-                            <ul id="bookList">
-
-                            </ul>
-                        </div>
                     </li>
                 </ul>
                 <!--<ul class="collapse list-unstyled" id="homeSubmenu">
@@ -323,19 +309,29 @@
             src="images/<%- name %>.svg" height="25px"/><br/><%- label %>
     </button>
 </script>
+
 <script type="text/template" id="addPersonaFactTemplate">
-    <button
-            id="add<%- viewName %>"
-            class="btn btn-xs persona-fact-button"
-            data-toggle="button"
-            aria-pressed="false">
-        <%- viewName %>
-    </button>
-    <i id="factDecomposition">OR</i>
+    <div id="personaFactDiv">
+        <button
+                id="add<%- viewName %>"
+                class="btn btn-xs persona-fact-button"
+                data-toggle="button"
+                aria-pressed="false">
+            <%- viewName %>
+        </button>
+    </div>
 </script>
 
-<script type="text/template" id="bookItem">
-    <li role="presentation"><a role="menuitem" tabindex="-1" href="#"> <%= BookName %> </a></li>
+<script type="text/template" id="addPersonaFactTemplate">
+    <div id="personaFactDiv">
+        <button
+                id="add<%- viewName %>"
+                class="btn btn-xs persona-fact-button"
+                data-toggle="button"
+                aria-pressed="false">
+            <%- viewName %>
+        </button>
+    </div>
 </script>
 
 <script type="text/template" id="addDropdownButtonTemplate">
