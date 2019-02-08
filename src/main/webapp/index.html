@@ -121,9 +121,6 @@
         <li>
             <button id="loadCGMButton">Load CGM from JSON</button>
         </li>
-        <li>
-            <button id="finishCGMButton">CGM is done! Generate Facts and Attributes for persona</button>
-        </li>
     </ul>
 </div>
 
@@ -141,32 +138,83 @@
                 <li><input type="radio" name="personatype" id="doctorRadioOption" value="doctor"> Doctor </input></li>
             </ul>
         </div>
+        <ul class="list-unstyled components">
+            <li class="active">
+                <div id="contextContainer">
+
+                </div>
+            </li>
+        </ul>
 
         <ul class="list-unstyled components">
-            <p>Dummy Heading</p>
             <li class="active">
-                <a href="#homeSubmenu" data-toggle="collapse" aria-expanded="false">Home</a>
-                <ul class="collapse list-unstyled" id="homeSubmenu">
+                <a href="#healthRiskSubmenu" data-toggle="collapse" aria-expanded="false" id="#healthRiskMenu">Health Risk Context</a>
+                <ul class="collapse list-unstyled" id="healthRiskSubmenu">
                     <li>
-                        <div id="healthRiskContextFacts"></div>
-                    </li>
-                    <li>
-                    </li>
-                    <li>
+                        <div id="healthRiskFacts"></div>
                     </li>
                 </ul>
-                <!--<ul class="collapse list-unstyled" id="homeSubmenu">
-                    <li>
-                        <button id="personaFact" class="btn btn-xs persona-fact-button" data-toggle="button" aria-pressed="false"> kkkkkkkkkk eae </button>
-                        <i id="factDecomposition">OR</i>
-                    </li>
-                    <li><a href="#">Home 2</a></li>
-                    <li><a href="#">Home 3</a></li>
-                </ul>-->
             </li>
             <li>
-                <a href="#">About</a>
-                <a href="#pageSubmenu" data-toggle="collapse" aria-expanded="false">Pages</a>
+                <a href="#technologyAversionSubmenu" data-toggle="collapse" aria-expanded="false" id="#technologyAversionMenu">Technology Aversion Context</a>
+                <ul class="collapse list-unstyled" id="technologyAversionSubmenu">
+                    <li>
+                        <div id="technologyAversionFacts"></div>
+                    </li>
+                </ul>
+            </li>
+            <li>
+                <a href="#mobilityIssueSubmenu" data-toggle="collapse" aria-expanded="false" id="#mobilityIssueMenu">Mobility Issue Context</a>
+                <ul class="collapse list-unstyled" id="mobilityIssueSubmenu">
+                    <li>
+                        <div id="mobilityIssueFacts"></div>
+                    </li>
+                </ul>
+            </li>
+            <li>
+                <a href="#homeAssistanceSubmenu" data-toggle="collapse" aria-expanded="false" id="homeAssistanceMenu">Home Assistance Context</a>
+                <ul class="collapse list-unstyled" id="homeAssistanceSubmenu">
+                    <li>
+                        <div id="homeAssistanceFacts"></div>
+                    </li>
+                </ul>
+            </li>
+            <li>
+                <a href="#physicalActivitySubmenu" data-toggle="collapse" aria-expanded="false" id="physicalActivityMenu">Physical Activity Context</a>
+                <ul class="collapse list-unstyled" id="physicalActivitySubmenu">
+                    <li>
+                        <div id="physicalActivityFacts"></div>
+                    </li>
+                </ul>
+            </li>
+            <li>
+                <a href="#meansOfCommunicationSubmenu" data-toggle="collapse" aria-expanded="false" id="meansOfCommunicationMenu">Means of Communication Context</a>
+                <ul class="collapse list-unstyled" id="meansOfCommunicationSubmenu">
+                    <li>
+                        <div id="meansOfCommunicationFacts"></div>
+                    </li>
+                </ul>
+            </li>
+            <li>
+                <a href="#meansOfInformationSubmenu" data-toggle="collapse" aria-expanded="false" id="meansOfInfomationMenu">Means of Information Context</a>
+                <ul class="collapse list-unstyled" id="meansOfInformationSubmenu">
+                    <li>
+                        <div id="meansOfInformationFacts"></div>
+                    </li>
+                </ul>
+            </li>
+            <li>
+                <a href="#meansOfHelpingSubmenu" data-toggle="collapse" aria-expanded="false" id="meansOfHelpingMenu">Means of Helping Context</a>
+                <ul class="collapse list-unstyled" id="meansOfHelpingSubmenu">
+                    <li>
+                        <div id="meansOfHelpingFacts"></div>
+                    </li>
+                </ul>
+            </li>
+            <!-- Might need it later
+            <li>
+                <a href="#">Dummy link 0</a>
+                <a href="#pageSubmenu" data-toggle="collapse" aria-expanded="false">Dummy menu</a>
                 <ul class="collapse list-unstyled" id="pageSubmenu">
                     <li><a href="#">Page 1</a></li>
                     <li><a href="#">Page 2</a></li>
@@ -174,15 +222,11 @@
                 </ul>
             </li>
             <li>
-                <a href="#">Portfolio</a>
+                <a href="#">Dummy link</a>
             </li>
             <li>
-                <a href="#">Contact</a>
-            </li>
-        </ul>
-
-        <ul class="list-unstyled CTAs">
-            <li><a href="https://bootstrapious.com/p/bootstrap-sidebar" class="article">Back to the article</a></li>
+                <a href="#">Dummy link also</a>
+            </li>-->
         </ul>
     </nav>
 
@@ -311,26 +355,31 @@
 </script>
 
 <script type="text/template" id="addPersonaFactTemplate">
-    <div id="personaFactDiv">
+    <div id="<%= factTypesNames %>Div">
         <button
-                id="add<%- factTypesNames %>"
+                id="add<%= factTypesNames %>"
                 class="btn btn-xs persona-fact-button"
                 data-toggle="button"
                 aria-pressed="false">
-            <%- factTypesNames %>
+            <%= factTypesNames %>
         </button>
     </div>
 </script>
 
-<script type="text/template" id="addPersonaFactTemplate">
-    <div id="personaFactDiv">
-        <button
-                id="add<%- viewName %>"
-                class="btn btn-xs persona-fact-button"
-                data-toggle="button"
-                aria-pressed="false">
-            <%- viewName %>
-        </button>
+<script type="text/template" id="addPersonaContextTemplate">
+    <div id="personaContext">
+        <a href="#<%=facts.factTypesNames %>" data-toggle="collapse" aria-expanded="false"><%= contextName %></a>
+        <ul class="collapse list-unstyled" id="<%=contextName %>">
+            <li>
+                <button
+                        id="add"
+                        class="btn btn-xs persona-fact-button"
+                        data-toggle="button"
+                        aria-pressed="false">
+                    kkkkkkkkkk
+                </button>
+            </li>
+        </ul>
     </div>
 </script>
 
