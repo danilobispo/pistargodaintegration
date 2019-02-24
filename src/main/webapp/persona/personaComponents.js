@@ -1,4 +1,129 @@
-var personaUi = {};
+var app = app || {};
+
+app.Facts = Backbone.Model.extend({
+   defaults: {
+           factName: ""
+       }
+});
+
+var FactCollection = Backbone.Collection.extend({
+    // Reference to this collection's model.
+    model: app.Facts,
+    localStorage: true
+});
+
+app.FactCollection = new FactCollection();
+
+app.FactsModalView = Backbone.View.extend({
+    el: '#factsModal',
+    events: {
+        'keypress .fact-input': 'addFact',
+        'click .show-fact-button': 'showList',
+        'click .close-modal': 'saveChangesAndExit'
+    },
+    initialize :function () {
+        this.$input = this.$('.fact-input');
+    },
+    addFact: function (e) {
+        if (e.which === 13 && this.$input.val().trim()) {
+            app.FactCollection.add(this.newAttributes());
+            this.$input.val('');
+            console.log(app.FactCollection);
+        }
+    },
+    newAttributes: function () {
+        return {
+            factName: this.$input.val().trim()
+        };
+    },
+    showList: function () {
+        console.log("kkk eae men");
+    },
+    saveChangesAndExit: function () {
+        if(app.FactCollection.length > 0){
+            this.$el.modal('toggle');
+            $("#stepOneDone").css("color", "#00FF00");
+            $("#stepOneLabel").html("Step 1: Edit facts for contexts");
+        } else {
+            if (confirm("Not enough facts to create contexts from(you need at least 1)!\n" +
+                "Do you really want to leave?")){
+                this.$el.modal('toggle');
+            }
+        }
+    }
+});
+new app.FactsModalView();
+
+app.FactItemView = Backbone.View.extend({
+    tagName: 'li',
+    initialize: function (options) {
+        // Ensure our methods keep the `this` reference to the view itself
+        _.bindAll(this,'render');
+        // If the model changes we need to re-render
+        this.model.bind('change', this.render);
+        this.render();
+    },
+    render: function () {
+        // Clear existing row data if needed
+        this.$el.empty();
+
+        this.$el.append($('<span>' + this.model.get('factName') + '</span>'));
+        return this;
+    },
+});
+
+
+app.FactListView = Backbone.View.extend({
+    collection: app.FactCollection,
+    template: '',
+    tagName: 'ul',
+
+    el: '#factsList',
+
+    events:{
+        'click .destroy': 'clear'
+    },
+
+    initialize:function () {
+        this.template = _.template($('#showFactsListTemplate').html());
+        this.listenTo(this.collection, "change", this.render);
+        _.bindAll(this, 'render'); // Bind this to all view functions
+
+        // Bind collection changes to re-rendering
+        this.collection.bind('reset', this.render);
+        this.collection.bind('add', this.render);
+        this.collection.bind('remove', this.render);
+
+        this.collection.on('reset', this.render); // bind the collection reset event to render this view
+        this.render();
+    },
+    render: function() {
+        var element = this.$el;
+        // Clear potential old entries first
+        element.empty();
+
+
+        // Go through the collection items
+        this.collection.forEach(function(item) {
+
+            // Instantiate a PeopleItem view for each
+            var itemView = new app.FactItemView({
+                model: item
+            });
+
+            // Render the PeopleView, and append its element
+            // to the table
+            element.append(itemView.render().$el);
+        });
+
+        return this;
+    },
+    clear: function () {
+        this.model.destroy();
+    }
+});
+
+
 
 var Context = Backbone.Model.extend({
     initialize: function () {
@@ -435,7 +560,7 @@ var ContextView = Backbone.View.extend({
     }
 });
 
-var ContextListView = Backbone.View.extend({
+/*var ContextListView = Backbone.View.extend({
     model: ListOfContexts,
     render: function () {
         for (var i = 0; i < this.model.length; i++) {
@@ -450,7 +575,7 @@ var ContextListView = Backbone.View.extend({
             contextView.render(); // lets render the book
         }
     }
-});
+});*/
 
 // var bookView2 = Backbone.View.extend({
 //
@@ -538,8 +663,8 @@ factListView8.render();
 //     $("#meansOfHelpingMenu").show();
 // }
 
-var contextListView = new ContextListView({el: $("#contextContainer"), model: DefaultContextList});
-contextListView.render();
+// var contextListView = new ContextListView({el: $("#contextContainer"), model: DefaultContextList});
+// contextListView.render();
 
 
 // uiC.PersonaButtonView = Backbone.View.extend({

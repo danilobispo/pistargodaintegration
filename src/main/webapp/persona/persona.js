@@ -93,6 +93,12 @@ $("#sidebarCollapse").on("click", function() {
 $('.persona-fact-button').click(function () {
     $(this).toggleClass('highlight')
 });
+
+$("#showFactsLink").click(function () {
+    console.log("ear bls");
+    new app.FactListView();
+    $("#showFactsLink").innerText = "Hide List";
+});
 // USE LATER
 /*if($("#patientRadioOption").attr("checked",true)) {
     console.log("KKKKKK PATIENT");
@@ -100,6 +106,5 @@ $('.persona-fact-button').click(function () {
 } else if($("#doctorRadioOption").attr("checked",true)) {
     console.log("KKKKKK DOCTOR");
 }*/
-
 
 

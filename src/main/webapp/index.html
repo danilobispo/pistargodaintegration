@@ -114,9 +114,14 @@
     <ul>
         <li><h5>Persona-based modelling activated</h5></li>
         <li>
-            <button type="button" id="firstStepPersona" class="btn btn-info navbar-btn">
-                <span>Step 1: Define facts for context</span>
+
+            <button class="btn btn-group"
+                    type="button" id="defineFactsButton" data-toggle="modal"
+                    data-target="#factsModal"
+                    title="Define facts for contexts">
+                <span id="stepOneLabel">Step 1: Define facts for contexts</span>
             </button>
+            <span id="stepOneDone" class="glyphicon glyphicon-ok"></span>
         </li>
         <li>
             <button type="button" id="secondStepPersona" class="btn btn-info navbar-btn">
@@ -155,9 +160,11 @@
         <div class="sidebar-header">
             <h3>Is your persona a:</h3>
             <ul>
-                <li><input type="radio" name="personatype" id="patientRadioOption" value="patient"> Patient </input>
+                <li><label for="patientRadioOption">
+                </label><input type="radio" name="personatype" id="patientRadioOption" value="patient"> Patient </input>
                 </li>
-                <li><input type="radio" name="personatype" id="doctorRadioOption" value="doctor"> Doctor </input></li>
+                <li><label for="doctorRadioOption">
+                </label><input type="radio" name="personatype" id="doctorRadioOption" value="doctor"> Doctor </input></li>
             </ul>
         </div>
         <ul class="list-unstyled components">
@@ -170,7 +177,9 @@
 
         <ul class="list-unstyled components">
             <li class="active">
-                <a href="#healthRiskSubmenu" data-toggle="collapse" aria-expanded="false" id="#healthRiskMenu">Health Risk Context</a>
+                <a href="#healthRiskSubmenu" data-toggle="collapse" aria-expanded="false" id="#healthRiskMenu"
+                   class="sidebar-list">Health
+                    Risk Context</a>
                 <ul class="collapse list-unstyled" id="healthRiskSubmenu">
                     <li>
                         <div id="healthRiskFacts"></div>
@@ -178,7 +187,8 @@
                 </ul>
             </li>
             <li>
-                <a href="#technologyAversionSubmenu" data-toggle="collapse" aria-expanded="false" id="#technologyAversionMenu">Technology Aversion Context</a>
+                <a href="#technologyAversionSubmenu" data-toggle="collapse" aria-expanded="false"
+                   id="#technologyAversionMenu" class="sidebar-list">Technology Aversion Context</a>
                 <ul class="collapse list-unstyled" id="technologyAversionSubmenu">
                     <li>
                         <div id="technologyAversionFacts"></div>
@@ -186,7 +196,9 @@
                 </ul>
             </li>
             <li>
-                <a href="#mobilityIssueSubmenu" data-toggle="collapse" aria-expanded="false" id="#mobilityIssueMenu">Mobility Issue Context</a>
+                <a href="#mobilityIssueSubmenu" data-toggle="collapse" aria-expanded="false" id="#mobilityIssueMenu"
+                   class="sidebar-list">Mobility
+                    Issue Context</a>
                 <ul class="collapse list-unstyled" id="mobilityIssueSubmenu">
                     <li>
                         <div id="mobilityIssueFacts"></div>
@@ -194,7 +206,9 @@
                 </ul>
             </li>
             <li>
-                <a href="#homeAssistanceSubmenu" data-toggle="collapse" aria-expanded="false" id="homeAssistanceMenu">Home Assistance Context</a>
+                <a href="#homeAssistanceSubmenu" data-toggle="collapse" aria-expanded="false" id="homeAssistanceMenu"
+                   class="sidebar-list">Home
+                    Assistance Context</a>
                 <ul class="collapse list-unstyled" id="homeAssistanceSubmenu">
                     <li>
                         <div id="homeAssistanceFacts"></div>
@@ -202,7 +216,8 @@
                 </ul>
             </li>
             <li>
-                <a href="#physicalActivitySubmenu" data-toggle="collapse" aria-expanded="false" id="physicalActivityMenu">Physical Activity Context</a>
+                <a href="#physicalActivitySubmenu" data-toggle="collapse" aria-expanded="false"
+                   id="physicalActivityMenu" class="sidebar-list">Physical Activity Context</a>
                 <ul class="collapse list-unstyled" id="physicalActivitySubmenu">
                     <li>
                         <div id="physicalActivityFacts"></div>
@@ -210,7 +225,8 @@
                 </ul>
             </li>
             <li>
-                <a href="#meansOfCommunicationSubmenu" data-toggle="collapse" aria-expanded="false" id="meansOfCommunicationMenu">Means of Communication Context</a>
+                <a href="#meansOfCommunicationSubmenu" data-toggle="collapse" aria-expanded="false"
+                   id="meansOfCommunicationMenu" class="sidebar-list">Means of Communication Context</a>
                 <ul class="collapse list-unstyled" id="meansOfCommunicationSubmenu">
                     <li>
                         <div id="meansOfCommunicationFacts"></div>
@@ -218,7 +234,8 @@
                 </ul>
             </li>
             <li>
-                <a href="#meansOfInformationSubmenu" data-toggle="collapse" aria-expanded="false" id="meansOfInfomationMenu">Means of Information Context</a>
+                <a href="#meansOfInformationSubmenu" data-toggle="collapse" aria-expanded="false"
+                   id="meansOfInfomationMenu" class="sidebar-list">Means of Information Context</a>
                 <ul class="collapse list-unstyled" id="meansOfInformationSubmenu">
                     <li>
                         <div id="meansOfInformationFacts"></div>
@@ -226,7 +243,9 @@
                 </ul>
             </li>
             <li>
-                <a href="#meansOfHelpingSubmenu" data-toggle="collapse" aria-expanded="false" id="meansOfHelpingMenu">Means of Helping Context</a>
+                <a href="#meansOfHelpingSubmenu" data-toggle="collapse" aria-expanded="false" id="meansOfHelpingMenu"
+                   class="sidebar-list">Means
+                    of Helping Context</a>
                 <ul class="collapse list-unstyled" id="meansOfHelpingSubmenu">
                     <li>
                         <div id="meansOfHelpingFacts"></div>
@@ -342,7 +361,7 @@
                     </button>
                     <span id="saveModel" class="toolbarGroup"></span>
 
-                    <button type="button" id="loadModelButton" data-toggle="modal" data-target="#loadModelModal"
+                    <button type="button" id="loadModelButton" data-toggle="modal" data-target="#loadMo'delModal"
                             title="Load a goal model from a JSON file created with this tool"><span
                             class="glyphicon glyphicon-floppy-open" aria-hidden="true"></span> Load model
                     </button>
@@ -403,6 +422,14 @@
             </li>
         </ul>
     </div>
+</script>
+
+<script type="text/template" id="showFactsListTemplate">
+    <div class="view">
+        <label><%- factName %></label>
+        <button class="destroy"></button>
+    </div>
+    <input class="edit" value="<%- factName %>">
 </script>
 
 <script type="text/template" id="addDropdownButtonTemplate">
@@ -502,6 +529,50 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!--Persona modals-->
+    <div class="modal fade" id="factsModal" tabindex="-1" role="dialog" aria-labelledby="defineFactsLabel">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close btn-close" data-dismiss="modal" aria-label="Close"><span
+                            aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="defineFactsModalTitle">Define facts for context</h4>
+                </div>
+                <div class="modal-body">
+                    <ul>
+                        <li>
+                            <input class='fact-input' title="Define a fact by name" placeholder="Choose a fact name!"
+                                   autofocus="">
+                        </li>
+                        <li>
+                            <div class="panel-heading">
+                                <h4 class="panel-title">
+                                    <a id="show-facts-button" class="show-facts" data-toggle="collapse"
+                                       href="#showFactsList">
+                                        Show facts list
+                                    </a>
+                                </h4>
+                            </div>
+                            <div id="showFactsList" class="panel-collapse collapse">
+                                <ul class="list-group">
+                                    <li class="list-group-item">Fact One
+                                        <span class="close">&times;</span></li>
+                                    <li class="list-group-item">Fact Two
+                                        <span class="close">&times;</span></li>
+                                    <li class="list-group-item">Fact Three
+                                        <span class="close">&times;</span></li>
+                                </ul>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn close-modal" aria-label="Close">Close</button>
                 </div>
             </div>
         </div>

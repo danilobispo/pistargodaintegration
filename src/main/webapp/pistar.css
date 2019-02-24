@@ -185,17 +185,17 @@ button:focus{
 }
 
 #sidebar ul li.active > a,
-a[aria-expanded="true"] {
+a.sidebar-list[aria-expanded="true"] {
     color: #fff;
     background: #6d7fcc;
 }
 
-a[data-toggle="collapse"] {
+a.sidebar-list[data-toggle="collapse"] {
     position: relative;
 }
 
-a[aria-expanded="false"]::before,
-a[aria-expanded="true"]::before {
+a.sidebar-list[aria-expanded="false"]::before,
+a.sidebar-list[aria-expanded="true"]::before {
     content: '\e259';
     display: block;
     position: absolute;
@@ -204,11 +204,11 @@ a[aria-expanded="true"]::before {
     font-size: 0.6em;
 }
 
-a[aria-expanded="true"]::before {
+a.sidebar-list[aria-expanded="true"]::before {
     content: '\e260';
 }
 
-ul ul a {
+ul ul a.sidebar-list {
     font-size: 0.9em !important;
     padding-left: 30px !important;
     background: #6d7fcc;
@@ -267,71 +267,6 @@ a.article:hover {
     }
 }
 
-/*Slider*/
-/* The switch - the box around the slider */
-.switch {
-    position: absolute;
-    display: inline-block;
-    width: 30px;
-    height: 17px;
-    margin: 1px 1px 1px 4px;
-}
-
-/* Hide default HTML checkbox */
-.switch input {
-    opacity: 0;
-    width: 0;
-    height: 0;
-}
-
-/* The slider */
-.slider {
-    position: absolute;
-    cursor: pointer;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background-color: #ccc;
-    -webkit-transition: .4s;
-    transition: .4s;
-}
-
-.slider:before {
-    position: absolute;
-    content: "";
-    height: 13px;
-    width: 13px;
-    left: 2px;
-    bottom: 2px;
-    background-color: white;
-    -webkit-transition: .4s;
-    transition: .4s;
-}
-
-input:checked + .slider {
-    background-color: #2196F3;
-}
-
-input:focus + .slider {
-    box-shadow: 0 0 1px #2196F3;
-}
-
-input:checked + .slider:before {
-    -webkit-transform: translateX(13px);
-    -ms-transform: translateX(13px);
-    transform: translateX(13px);
-}
-
-/* Rounded sliders */
-.slider.round {
-    border-radius: 17px;
-}
-
-.slider.round:before {
-    border-radius: 50%;
-}
-
 .sidebar-persona-option{
     display: inline-block;
     align-content: baseline;
@@ -362,3 +297,5 @@ input:checked + .slider:before {
 .persona-fact-button.highlight {
     background:rgb(26, 255, 0);
 }
+
+
