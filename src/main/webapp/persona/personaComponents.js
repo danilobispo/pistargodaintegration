@@ -18,11 +18,13 @@ app.FactsModalView = Backbone.View.extend({
     el: '#factsModal',
     events: {
         'keypress .fact-input': 'addFact',
-        'click .show-fact-button': 'showList',
+        'click .show-facts': 'showList',
         'click .close-modal': 'saveChangesAndExit'
     },
     initialize :function () {
         this.$input = this.$('.fact-input');
+        this.$showFactsButton = this.$('.show-facts');
+        this.$showFactsButton.text("Show facts list");
     },
     addFact: function (e) {
         if (e.which === 13 && this.$input.val().trim()) {
@@ -37,7 +39,9 @@ app.FactsModalView = Backbone.View.extend({
         };
     },
     showList: function () {
-        console.log("kkk eae men");
+        this.$showFactsButton.text() === 'Show facts list' ?
+            this.$showFactsButton.text('Hide facts list') :
+            this.$showFactsButton.text('Show facts list');
     },
     saveChangesAndExit: function () {
         if(app.FactCollection.length > 0){
