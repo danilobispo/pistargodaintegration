@@ -124,7 +124,10 @@
             <span id="stepOneDone" class="glyphicon glyphicon-ok"></span>
         </li>
         <li>
-            <button type="button" id="secondStepPersona" class="btn btn-info navbar-btn">
+            <button type="button" id="secondStepPersona" class="btn btn-info navbar-btn"
+                    data-toggle="modal"
+                    data-target="#contextAndFactsModal"
+                    title="Define contexts and associate then with facts created in step 1">
                 <span>Step 2: Define contexts </span>
             </button>
         </li>
@@ -572,6 +575,25 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn close-modal" aria-label="Close">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!--Persona modals-->
+    <div class="modal fade" id="contextAndFactsModal" tabindex="-1" role="dialog" aria-labelledby="defineContextsLabel">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close btn-close close-modal-context" data-dismiss="modal" aria-label="Close"><span
+                            aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="defineContextsModalTitle">Define facts for context</h4>
+                </div>
+                <div class="modal-body">
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn close-modal-context" aria-label="Close">Close</button>
                 </div>
             </div>
         </div>

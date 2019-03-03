@@ -58,6 +58,17 @@ app.FactsModalView = Backbone.View.extend({
 });
 new app.FactsModalView();
 
+app.ContextModalView = Backbone.View.extend({
+    el: '#contextAndFactsModal',
+    events: {
+
+    },
+    initialize :function () {
+
+    },
+});
+new app.ContextModalView();
+
 app.FactItemView = Backbone.View.extend({
     tagName: 'li',
     initialize: function (options) {
