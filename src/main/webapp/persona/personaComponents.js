@@ -58,18 +58,137 @@ app.FactsModalView = Backbone.View.extend({
 });
 new app.FactsModalView();
 
+app.Context = Backbone.Model.extend({
+    defaults: {
+        id:'0',
+        factName: ""
+    }
+});
+
+app.ContextList = Backbone.Collection.extend({
+    model: app.Context,
+    localStorage: true
+});
+
+var ComboBox = Backbone.View.extend({
+    el: $('#selectContext'),
+    template: _.template('<option value="<%= id%>" ><%= factName %></option>'),
+
+    // Na inicialização unimos a coleção e a visão e
+    // também definimos o evento `add` para executar
+    // o callback `this.render`
+    initialize: function () {
+        this.collection = new app.ContextList(null, this);
+        this.collection.on('add', this.render, this);
+    },
+    events: {
+        'click option': 'change',
+    },
+    add: function(option){
+        this.collection.add(option);
+    },
+    render: function (model) {
+        this.$el.append(this.template(model.attributes));
+    },
+    // Este método é executado a cada click na combo (select).
+    // Com as informações obtidas poderíamos, inclusive,
+    // realizar uma requisação AJAX, por exemplo.
+    change: function () {
+        var index = this.el.selectedIndex;
+        var value = this.el.options[index].value;
+        var text  = this.el.options[index].text;
+        console.log("index: " + index+ ",  value: " + value + ", text: " + text);
+    }
+});
+
+app.comboBox = new ComboBox();
+
 app.ContextModalView = Backbone.View.extend({
     el: '#contextAndFactsModal',
     events: {
-
+        'click input[name="createOrEdit"]': 'createOrEditContextEvent',
+        'keypress .context-input': 'addContext'
     },
-    initialize :function () {
-
+    initialize: function() {
+      this.$input = this.$('.context-input');
+    },
+    createOrEditContextEvent: function(e) {
+        $this = $(e.target);
+        this.$('.createContext')[$this.val() === 'create' ? 'show' : 'hide']();
+        this.$('.editContext')[$this.val() === 'edit' ? 'show' : 'hide']();
+    },
+    addContext: function (e) {
+        if (e.which === 13 && this.$input.val().trim()) {
+            app.comboBox.add(new Context(this.newAttributes()));
+            this.$input.val('');
+            alert("Done, now go edit your context!");
+            console.log(app.comboBox.collection);
+        }
+    },
+    newAttributes: function () {
+        return {
+            id: app.comboBox.collection.length,
+            factName: this.$input.val().trim()
+        };
     },
 });
+
 new app.ContextModalView();
 
-app.FactItemView = Backbone.View.extend({
+
+Option = Backbone.Model.extend({
+    defaults: {
+        id: 0,
+        label: ""
+    }
+});
+
+Options = Backbone.Collection.extend();
+
+var Combo = Backbone.View.extend({
+    el: $('#optionsTest'),
+    template: _.template('<option value="<%= id%>" ><%= label %></option>'),
+
+    // Na inicialização unimos a coleção e a visão e
+    // também definimos o evento `add` para executar
+    // o callback `this.render`
+    initialize: function () {
+        this.collection = new Options(null, this);
+        this.collection.on('add', this.render, this);
+    },
+    events: {
+        'click option':   'change',
+    },
+    add: function(option){
+        this.collection.add(option);
+    },
+    render: function (model) {
+        this.$el.append(this.template(model.attributes));
+    },
+    // Este método é executado a cada click na combo (select).
+    // Com as informações obtidas poderíamos, inclusive,
+    // realizar uma requisação AJAX, por exemplo.
+    change: function () {
+        var index = this.el.selectedIndex;
+        var value = this.el.options[index].value;
+        var text  = this.el.options[index].text;
+        console.log("index: " + index+ ",  value: " + value + ", text: " + text);
+    }
+});
+
+//
+// Criando a combobox (select)
+//
+var combo = new Combo();
+combo.add(new Option());
+combo.add(new Option({id: 'bra', label: "Brasil"}));
+combo.add(new Option({id: 'chl', label: "Chile"}));
+combo.add(new Option({id: 'arg', label: "Argentina"}));
+
+
+
+// TODO: Fix below
+/*app.FactItemView = Backbone.View.extend({
     tagName: 'li',
     initialize: function (options) {
         // Ensure our methods keep the `this` reference to the view itself
@@ -136,7 +255,7 @@ app.FactListView = Backbone.View.extend({
     clear: function () {
         this.model.destroy();
     }
-});
+});*/
 
 
 

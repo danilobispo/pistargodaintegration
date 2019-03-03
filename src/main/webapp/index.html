@@ -150,6 +150,7 @@
             <button type="button" id="sidebarCollapse" class="btn btn-info navbar-btn">
                 <span>Add Facts and Attributes and/or Contexts</span>
             </button>
+            <select id="optionsTest"></select>
         </li>
     </ul>
 </div>
@@ -167,7 +168,8 @@
                 </label><input type="radio" name="personatype" id="patientRadioOption" value="patient"> Patient </input>
                 </li>
                 <li><label for="doctorRadioOption">
-                </label><input type="radio" name="personatype" id="doctorRadioOption" value="doctor"> Doctor </input></li>
+                </label><input type="radio" name="personatype" id="doctorRadioOption" value="doctor"> Doctor </input>
+                </li>
             </ul>
         </div>
         <ul class="list-unstyled components">
@@ -440,6 +442,10 @@
         %></a>
 </script>
 
+<script type="text/template" id="addOptionContextTemplate">
+
+</script>
+
 <script type="text/template" id="propertyTemplate">
     <tr>
         <td class="propertyName"><%- propertyName %></td>
@@ -542,7 +548,8 @@
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <button type="button" class="close btn-close close-modal" data-dismiss="modal" aria-label="Close"><span
+                    <button type="button" class="close btn-close close-modal" data-dismiss="modal"
+                            aria-label="Close"><span
                             aria-hidden="true">&times;</span></button>
                     <h4 class="modal-title" id="defineFactsModalTitle">Define facts for context</h4>
                 </div>
@@ -585,11 +592,23 @@
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <button type="button" class="close btn-close close-modal-context" data-dismiss="modal" aria-label="Close"><span
+                    <button type="button" class="close btn-close close-modal-context" data-dismiss="modal"
+                            aria-label="Close"><span
                             aria-hidden="true">&times;</span></button>
                     <h4 class="modal-title" id="defineContextsModalTitle">Define facts for context</h4>
                 </div>
                 <div class="modal-body">
+                    <input type="radio" name="createOrEdit" value="create">Create a new context
+                    <br/>
+                    <input type="radio" name="createOrEdit" value="edit">Edit existing context
+                    <div class="modal-separator"></div>
+                        <div class="createContext" hidden>
+                            <input type="text" class="context-input" placeholder="Insert a name for the new context">
+                        </div>
+                        <div class="editContext" hidden>
+                            <select id="selectContext"></select>
+                        </div>
+
 
                 </div>
                 <div class="modal-footer">
