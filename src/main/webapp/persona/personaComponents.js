@@ -1,9 +1,9 @@
 var app = app || {};
 
 app.Facts = Backbone.Model.extend({
-   defaults: {
-           factName: ""
-       }
+    defaults: {
+        factName: ""
+    }
 });
 
 var FactCollection = Backbone.Collection.extend({
@@ -21,7 +21,7 @@ app.FactsModalView = Backbone.View.extend({
         'click .show-facts': 'showList',
         'click .close-modal': 'saveChangesAndExit'
     },
-    initialize :function () {
+    initialize: function () {
         this.$input = this.$('.fact-input');
         this.$showFactsButton = this.$('.show-facts');
         this.$showFactsButton.text("Show facts list");
@@ -44,13 +44,13 @@ app.FactsModalView = Backbone.View.extend({
             this.$showFactsButton.text('Show facts list');
     },
     saveChangesAndExit: function () {
-        if(app.FactCollection.length > 0){
+        if (app.FactCollection.length > 0) {
             this.$el.modal('toggle');
             $("#stepOneDone").css("color", "#00FF00");
             $("#stepOneLabel").html("Step 1: Edit facts for contexts");
         } else {
             if (confirm("Not enough facts to create contexts from(you need at least 1)!\n" +
-                "Do you really want to leave?")){
+                "Do you really want to leave?")) {
                 this.$el.modal('toggle');
             }
         }
@@ -60,7 +60,6 @@ new app.FactsModalView();
 
 app.Context = Backbone.Model.extend({
     defaults: {
-        id:'0',
         factName: ""
     }
 });
@@ -72,7 +71,7 @@ app.ContextList = Backbone.Collection.extend({
 
 var ComboBox = Backbone.View.extend({
     el: $('#selectContext'),
-    template: _.template('<option value="<%= id%>" ><%= factName %></option>'),
+    template: _.template('<option data-id="${id}" value="<%= id%>" ><%= factName %></option>'),
 
     // Na inicialização unimos a coleção e a visão e
     // também definimos o evento `add` para executar
@@ -80,15 +79,19 @@ var ComboBox = Backbone.View.extend({
     initialize: function () {
         this.collection = new app.ContextList(null, this);
         this.collection.on('add', this.render, this);
+        this.collection.on('remove', this.unrender, this);
     },
     events: {
         'click option': 'change',
     },
-    add: function(option){
+    add: function (option) {
         this.collection.add(option);
     },
     render: function (model) {
         this.$el.append(this.template(model.attributes));
+    },
+    unrender: function () {
+        $('#selectContext option:selected').remove();
     },
     // Este método é executado a cada click na combo (select).
     // Com as informações obtidas poderíamos, inclusive,
@@ -96,8 +99,12 @@ var ComboBox = Backbone.View.extend({
     change: function () {
         var index = this.el.selectedIndex;
         var value = this.el.options[index].value;
-        var text  = this.el.options[index].text;
-        console.log("index: " + index+ ",  value: " + value + ", text: " + text);
+        var text = this.el.options[index].text;
+        console.log("index: " + index + ",  value: " + value + ", text: " + text);
+    },
+    remove: function (option) {
+        this.collection.remove(option);
+        console.log(this.collection);
     }
 });
 
@@ -107,12 +114,13 @@ app.ContextModalView = Backbone.View.extend({
     el: '#contextAndFactsModal',
     events: {
         'click input[name="createOrEdit"]': 'createOrEditContextEvent',
-        'keypress .context-input': 'addContext'
+        'keypress .context-input': 'addContext',
+        'click #removeContext': 'removeContext'
     },
-    initialize: function() {
-      this.$input = this.$('.context-input');
+    initialize: function () {
+        this.$input = this.$('.context-input');
     },
-    createOrEditContextEvent: function(e) {
+    createOrEditContextEvent: function (e) {
         $this = $(e.target);
         this.$('.createContext')[$this.val() === 'create' ? 'show' : 'hide']();
         this.$('.editContext')[$this.val() === 'edit' ? 'show' : 'hide']();
@@ -131,6 +139,11 @@ app.ContextModalView = Backbone.View.extend({
             factName: this.$input.val().trim()
         };
     },
+    removeContext: function (e) {
+        console.log(app.comboBox.el.value);
+        app.comboBox.collection.remove(app.comboBox.el.value);
+        console.log(app.comboBox.collection);
+    }
 });
 
 new app.ContextModalView();
@@ -157,9 +170,9 @@ var Combo = Backbone.View.extend({
         this.collection.on('add', this.render, this);
     },
     events: {
-        'click option':   'change',
+        'click option': 'change',
     },
-    add: function(option){
+    add: function (option) {
         this.collection.add(option);
     },
     render: function (model) {
@@ -171,8 +184,8 @@ var Combo = Backbone.View.extend({
     change: function () {
         var index = this.el.selectedIndex;
         var value = this.el.options[index].value;
-        var text  = this.el.options[index].text;
-        console.log("index: " + index+ ",  value: " + value + ", text: " + text);
+        var text = this.el.options[index].text;
+        console.log("index: " + index + ",  value: " + value + ", text: " + text);
     }
 });
 
@@ -184,7 +197,6 @@ combo.add(new Option());
 combo.add(new Option({id: 'bra', label: "Brasil"}));
 combo.add(new Option({id: 'chl', label: "Chile"}));
 combo.add(new Option({id: 'arg', label: "Argentina"}));
-
 
 
 // TODO: Fix below
@@ -256,7 +268,6 @@ app.FactListView = Backbone.View.extend({
         this.model.destroy();
     }
 });*/
-
 
 
 var Context = Backbone.Model.extend({

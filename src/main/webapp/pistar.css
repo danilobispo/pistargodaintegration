@@ -299,8 +299,8 @@ a.article:hover {
 }
 
 .modal-separator {
-    padding-bottom: 5px;
-    padding-top: 5px;
+    padding-bottom: 10px;
+    padding-top: 10px;
     border-bottom:1px solid #e5e5e5
 }
 
