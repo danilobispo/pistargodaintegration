@@ -1,17 +1,5 @@
 var app = app || {};
 
-app.Facts = Backbone.Model.extend({
-    defaults: {
-        factName: ""
-    }
-});
-
-var FactCollection = Backbone.Collection.extend({
-    // Reference to this collection's model.
-    model: app.Facts,
-    localStorage: true
-});
-
 app.FactCollection = new FactCollection();
 
 app.FactsModalView = Backbone.View.extend({
@@ -58,16 +46,6 @@ app.FactsModalView = Backbone.View.extend({
 });
 new app.FactsModalView();
 
-app.Context = Backbone.Model.extend({
-    defaults: {
-        factName: ""
-    }
-});
-
-app.ContextList = Backbone.Collection.extend({
-    model: app.Context,
-    localStorage: true
-});
 
 var ComboBox = Backbone.View.extend({
     el: $('#selectContext'),
@@ -100,7 +78,8 @@ var ComboBox = Backbone.View.extend({
         var index = this.el.selectedIndex;
         var value = this.el.options[index].value;
         var text = this.el.options[index].text;
-        console.log("index: " + index + ",  value: " + value + ", text: " + text);
+        // DEBUG
+        // console.log("index: " + index + ",  value: " + value + ", text: " + text);
     },
     remove: function (option) {
         this.collection.remove(option);
@@ -109,6 +88,11 @@ var ComboBox = Backbone.View.extend({
 });
 
 app.comboBox = new ComboBox();
+var editContextOption = $("input[value=edit]");
+app.comboBox.collection.bind("add remove change reset", function () {
+    app.comboBox.collection.length <= 0 ?
+        editContextOption.attr('disabled', true) : editContextOption.attr('disabled', false);
+});
 
 app.ContextModalView = Backbone.View.extend({
     el: '#contextAndFactsModal',
@@ -118,7 +102,10 @@ app.ContextModalView = Backbone.View.extend({
         'click #removeContext': 'removeContext'
     },
     initialize: function () {
+        this.$editContextOption = $("input[value=edit]");
         this.$input = this.$('.context-input');
+        app.comboBox.collection.length <= 0 ?
+            this.$editContextOption.attr('disabled', true): this.$editContextOption.attr('disabled', false)
     },
     createOrEditContextEvent: function (e) {
         $this = $(e.target);
@@ -149,54 +136,116 @@ app.ContextModalView = Backbone.View.extend({
 new app.ContextModalView();
 
 
-Option = Backbone.Model.extend({
-    defaults: {
-        id: 0,
-        label: ""
-    }
-});
-
-Options = Backbone.Collection.extend();
-
-var Combo = Backbone.View.extend({
-    el: $('#optionsTest'),
-    template: _.template('<option value="<%= id%>" ><%= label %></option>'),
-
-    // Na inicialização unimos a coleção e a visão e
-    // também definimos o evento `add` para executar
-    // o callback `this.render`
-    initialize: function () {
-        this.collection = new Options(null, this);
-        this.collection.on('add', this.render, this);
-    },
+app.AggregatorItemView = Backbone.View.extend({
+    tagName: 'div',
+    template: _.template($('#aggregator-item-template').html()),
     events: {
-        'click option': 'change',
+        'click .toggle': 'toggleCompleted',
+        'dblclick label': 'edit',
+        'click .destroy': 'clear',
+        'keypress .edit': 'updateOnEnter',
+        'keydown .edit': 'revertOnEscape',
+        'blur .edit': 'close'
     },
-    add: function (option) {
-        this.collection.add(option);
+
+
+    // The TodoView listens for changes to its model, re-rendering. Since
+    // there's a one-to-one correspondence between a **Todo** and a
+    // **TodoView** in this app, we set a direct reference on the model for
+    // convenience.
+    initialize: function () {
+        this.listenTo(this.model, 'change', this.render);
+        this.listenTo(this.model, 'destroy', this.remove);
+        this.listenTo(this.model, 'visible', this.toggleVisible);
     },
-    render: function (model) {
-        this.$el.append(this.template(model.attributes));
+
+    // Re-render the titles of the todo item.
+    render: function () {
+        // Backbone LocalStorage is adding `id` attribute instantly after
+        // creating a model.  This causes our TodoView to render twice. Once
+        // after creating a model and once on `id` change.  We want to
+        // filter out the second redundant render, which is caused by this
+        // `id` change.  It's known Backbone LocalStorage bug, therefore
+        // we've to create a workaround.
+        // https://github.com/tastejs/todomvc/issues/469
+        if (this.model.changed.id !== undefined) {
+            return;
+        }
+
+        this.$el.html(this.template(this.model.toJSON()));
+        this.$el.toggleClass('completed', this.model.get('completed'));
+        this.toggleVisible();
+        this.$input = this.$('.edit');
+        return this;
     },
-    // Este método é executado a cada click na combo (select).
-    // Com as informações obtidas poderíamos, inclusive,
-    // realizar uma requisação AJAX, por exemplo.
-    change: function () {
-        var index = this.el.selectedIndex;
-        var value = this.el.options[index].value;
-        var text = this.el.options[index].text;
-        console.log("index: " + index + ",  value: " + value + ", text: " + text);
+
+    toggleVisible: function () {
+        this.$el.toggleClass('hidden', this.isHidden());
+    },
+
+    isHidden: function () {
+        return this.model.get('completed') ?
+            app.TodoFilter === 'active' :
+            app.TodoFilter === 'completed';
+    },
+
+    // Toggle the `"completed"` state of the model.
+    toggleCompleted: function () {
+        this.model.toggle();
+    },
+
+    // Switch this view into `"editing"` mode, displaying the input field.
+    edit: function () {
+        var textLength = this.$input.val().length;
+        this.$el.addClass('editing');
+        this.$input.focus();
+        this.$input[0].setSelectionRange(textLength, textLength);
+    },
+
+    // Close the `"editing"` mode, saving changes to the todo.
+    close: function () {
+        var value = this.$input.val();
+        var trimmedValue = value.trim();
+
+        // We don't want to handle blur events from an item that is no
+        // longer being edited. Relying on the CSS class here has the
+        // benefit of us not having to maintain state in the DOM and the
+        // JavaScript logic.
+        if (!this.$el.hasClass('editing')) {
+            return;
+        }
+
+        if (trimmedValue) {
+            this.model.save({ title: trimmedValue });
+        } else {
+            this.clear();
+        }
+
+        this.$el.removeClass('editing');
+    },
+
+    // If you hit `enter`, we're through editing the item.
+    updateOnEnter: function (e) {
+        if (e.which === ENTER_KEY) {
+            this.close();
+        }
+    },
+
+    // If you're pressing `escape` we revert your change by simply leaving
+    // the `editing` state.
+    revertOnEscape: function (e) {
+        if (e.which === ESC_KEY) {
+            this.$el.removeClass('editing');
+            // Also reset the hidden input back to the original value.
+            this.$input.val(this.model.get('title'));
+        }
+    },
+    // Remove the item, destroy the model from *localStorage* and delete its view.
+    clear: function () {
+        this.model.destroy();
     }
 });
 
-//
-// Criando a combobox (select)
-//
-var combo = new Combo();
-combo.add(new Option());
-combo.add(new Option({id: 'bra', label: "Brasil"}));
-combo.add(new Option({id: 'chl', label: "Chile"}));
-combo.add(new Option({id: 'arg', label: "Argentina"}));
 
 
 // TODO: Fix below

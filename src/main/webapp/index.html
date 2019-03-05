@@ -150,7 +150,6 @@
             <button type="button" id="sidebarCollapse" class="btn btn-info navbar-btn">
                 <span>Add Facts and Attributes and/or Contexts</span>
             </button>
-            <select id="optionsTest"></select>
         </li>
     </ul>
 </div>
@@ -469,6 +468,15 @@
     </ul>
 </script>
 
+<script type="text/template" id="item-template">
+    <div class="view">
+        <input class="toggle" type="checkbox" <%= completed ? 'checked' : '' %> >
+        <label><%- title %></label>
+        <button class="destroy"></button>
+    </div>
+    <input class="edit" value="<%- title %>">
+</script>
+
 
 <div id="modals">
 
@@ -601,7 +609,6 @@
                     <input type="radio" name="createOrEdit" value="create">Create a new context
                     <br/>
                     <input type="radio" name="createOrEdit" value="edit">Edit existing context
-                    <div class="modal-separator"></div>
                     <div class="createContext" hidden>
                         <input type="text" class="context-input" placeholder="New context name">
                     </div>
@@ -694,8 +701,11 @@
 
 
 <!-- Persona core -->
+<script src="persona/personaModels.js"></script>
+<script src="persona/personaCollections.js"></script>
 <script src="persona/persona.js"></script>
 <script src="persona/personaComponents.js"></script>
+
 
 <!-- insert your plugin(s) here, after this line -->
 <script src="main.js"></script>
