@@ -137,7 +137,9 @@
             </button>
         </li>
         <li>
-            <button type="button" id="fourthStepPersona" class="btn btn-info navbar-btn">
+            <button type="button" id="fourthStepPersona" class="btn btn-info navbar-btn"
+                    data-toggle="modal"
+                    data-target="#personaCreationModal">
                 <span>Step 4: Define personas </span>
             </button>
         </li>
@@ -151,6 +153,21 @@
                 <span>Add Facts and Attributes and/or Contexts</span>
             </button>
         </li>
+        <li>
+            <div id="header"><h1>Backbone Cellar</h1></div>
+
+            <div id="seila"></div>
+
+            <div id="content">
+                <h2>Welcome to Backbone Cellar</h2>
+                <p>
+                    This is a sample application part of of three-part tutorial showing how to build a CRUD application
+                    with Backbone.js.
+                </p>
+            </div>
+        </li>
+
+
     </ul>
 </div>
 
@@ -164,10 +181,10 @@
             <h3>Is your persona a:</h3>
             <ul>
                 <li><label for="patientRadioOption">
-                </label><input type="radio" name="personatype" id="patientRadioOption" value="patient"> Patient </input>
+                </label><input type="radio" name="personatype" id="patientRadioOption" value="patient"> Patient
                 </li>
                 <li><label for="doctorRadioOption">
-                </label><input type="radio" name="personatype" id="doctorRadioOption" value="doctor"> Doctor </input>
+                </label><input type="radio" name="personatype" id="doctorRadioOption" value="doctor"> Doctor
                 </li>
             </ul>
         </div>
@@ -468,13 +485,57 @@
     </ul>
 </script>
 
-<script type="text/template" id="item-template">
-    <div class="view">
-        <input class="toggle" type="checkbox" <%= completed ? 'checked' : '' %> >
-        <label><%- title %></label>
-        <button class="destroy"></button>
+<script type="text/template" id="tpl-header">
+    <span class="title">Backbone Cellar</span>
+    <button class="new">New Wine</button>
+</script>
+
+<script type="text/template" id="tpl-wine-list-item">
+    <a href='#wines/<%= id %>'><%= name %></a>
+
+    <div class="btn-group mr-2" role="group" aria-label="Second group">
+        <button id="<%= id %>" data-toggle="button" aria-pressed="false" autocomplete="off"><%=name %></button>
+        <button id="#removeElementButton" type="button" class="close" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
     </div>
-    <input class="edit" value="<%- title %>">
+</script>
+
+<script type="text/template" id="tpl-aggregator-list-item">
+    <div class="btn-group mr-2" role="group" aria-label="Second group">
+        <button id="buttonFor<%= name %>" data-toggle="button" aria-pressed="false" autocomplete="off"><%=name %></button>
+        <button id="#removeElementButton" type="button" class="close" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+</script>
+
+<script type="text/template" id="tpl-wine-details">
+
+    <div class="form-left-col">
+        <label>Id:</label>
+        <input type="text" id="wineId" name="id" value="<%= id %>" disabled/>
+        <label>Name:</label>
+        <input type="text" id="name" name="name" value="<%= name %>" required/>
+        <label>Grapes:</label>
+        <input type="text" id="grapes" name="grapes" value="<%= grapes %>"/>
+        <label>Country:</label>
+        <input type="text" id="country" name="country" value="<%= country %>"/>
+        <label>Region:</label>
+        <input type="text" id="region" name="region" value="<%= region %>"/>
+        <label>Year:</label>
+        <input type="text" id="year" name="year" value="<%= year %>"/>
+        <button class="save">Save</button>
+        <button class="delete">Delete</button>
+        <button class="sair">Hide</button>
+    </div>
+
+    <div class="form-right-col">
+        <img height="300" src="../pics/<%= picture %>"/>
+        <label>Notes:</label>
+        <textarea id="description" name="description"><%= description %></textarea>
+    </div>
+
 </script>
 
 
@@ -617,16 +678,10 @@
                         <button id="removeContext">Remove selected context</button>
                     </div>
                     <h4>Create new aggregator of facts</h4>
-                    <input type="text" placeholder="New aggregator name">
-                    <button id="newAggregator" type="button" class="btn" data-toggle="button" aria-pressed="false"
-                            autocomplete="off">
-                        New aggregator
-                    </button>
-                    <h4>Select an aggregation</h4>
-                    <div class="btn-group" role="group" aria-label="aggregationTypes">
-                        <button type="button" class="btn btn-default">AND</button>
-                        <button type="button" class="btn btn-default">OR</button>
-                    </div>
+                    <a data-toggle="modal" data-target="#aggregatorModal">New aggregator</a>
+                    <h4>Aggregator List</h4>
+                    <div id="aggrList"></div>
+
                     <h4>Select the facts</h4>
                     <div class="btn-group col-xs-12" data-toggle="buttons">
                         <label class="btn btn-default">
@@ -667,12 +722,66 @@
                         </label>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn close-modal-context" aria-label="Close">Close</button>
+                        <button type="button" class="btn close-modal-context" data-dismiss="modal" aria-label="Close">Close</button>
                     </div>
                 </div>
             </div>
         </div>
     </div>
+
+    <div class="modal fade" id="aggregatorModal" tabindex="-1" role="dialog" aria-labelledby="aggregatorModalLabel">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close btn-close"
+                            data-dismiss="modal"
+                            aria-label="Close"><span
+                            aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="aggregatorModalTitle">Choose your aggregator name and type</h4>
+                </div>
+                <div class="modal-body">
+                    <input id="aggregatorNameInput" type="text" placeholder="New aggregator name" maxlength="30">
+                    <h4>Select an aggregation type</h4>
+                    <div class="radio-inline" role="group" aria-label="aggregationTypes">
+                        <input id="aggregatorAndOptionRadio"
+                               type="radio" value="and" name="aggrType" title="AND" PLACEHOLDER="AND"> AND
+                        <br/>
+                        <input id="aggregatorOrOptionRadio"
+                               type="radio" value="or" name="aggrType" title="OR" placeholder="OR"> OR
+                        <br/>
+                    </div>
+                    <br/>
+                    <button id="aggregatorCreatorButton" class="btn"> Create!</button>
+                    <span id="successAggregatorMessage" hidden>Aggregator created!</span>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn" aria-label="Close" data-dismiss="modal" >Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="personaCreationModal" tabindex="-1" role="dialog" aria-labelledby="personaCreationModalLabel">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close btn-close"
+                            data-dismiss="modal"
+                            aria-label="Close"><span
+                            aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="personaCreationModalTitle">Choose your aggregator name and type</h4>
+                </div>
+                <div class="modal-body">
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn" aria-label="Close" data-dismiss="modal" >Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
 
 </div>
 </body>

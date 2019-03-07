@@ -18,3 +18,19 @@ app.Aggregator = Backbone.Model.extend({
         aggregatorType: ""
     }
 });
+
+// Models
+window.Wine = Backbone.Model.extend({
+    defaults:{
+        "id":null,
+        "name":"",
+        "grapes":"",
+        "country":"USA",
+        "region":"California",
+        "year":"",
+        "description":"",
+        "picture":""
+    }
+});
+
+

@@ -18,3 +18,7 @@ app.AggregatorList = Backbone.Collection.extend({
     model: app.Aggregator,
     localStorage: true,
 });
+
+// window.WineCollection = Backbone.Collection.extend({
+//     model:Wine
+// });

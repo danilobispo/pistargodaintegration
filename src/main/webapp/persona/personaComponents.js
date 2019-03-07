@@ -105,7 +105,7 @@ app.ContextModalView = Backbone.View.extend({
         this.$editContextOption = $("input[value=edit]");
         this.$input = this.$('.context-input');
         app.comboBox.collection.length <= 0 ?
-            this.$editContextOption.attr('disabled', true): this.$editContextOption.attr('disabled', false)
+            this.$editContextOption.attr('disabled', true) : this.$editContextOption.attr('disabled', false);
     },
     createOrEditContextEvent: function (e) {
         $this = $(e.target);
@@ -135,117 +135,287 @@ app.ContextModalView = Backbone.View.extend({
 
 new app.ContextModalView();
 
+app.aggregatorList = new app.AggregatorList();
 
-app.AggregatorItemView = Backbone.View.extend({
-    tagName: 'div',
-    template: _.template($('#aggregator-item-template').html()),
+app.AggregatorModalView = Backbone.View.extend({
+    el: '#aggregatorModal',
     events: {
-        'click .toggle': 'toggleCompleted',
-        'dblclick label': 'edit',
-        'click .destroy': 'clear',
-        'keypress .edit': 'updateOnEnter',
-        'keydown .edit': 'revertOnEscape',
-        'blur .edit': 'close'
+        'click button#aggregatorCreatorButton': 'checkDataAndSubmit'
     },
-
-
-    // The TodoView listens for changes to its model, re-rendering. Since
-    // there's a one-to-one correspondence between a **Todo** and a
-    // **TodoView** in this app, we set a direct reference on the model for
-    // convenience.
     initialize: function () {
-        this.listenTo(this.model, 'change', this.render);
-        this.listenTo(this.model, 'destroy', this.remove);
-        this.listenTo(this.model, 'visible', this.toggleVisible);
+        this.$name = this.$("#aggregatorNameInput");
+        this.$andAggregator = this.$("#aggregatorAndOptionRadio");
+        this.$orAggregator = this.$("#aggregatorOrOptionRadio");
+        this.$success = this.$('#successAggregatorMessage');
     },
-
-    // Re-render the titles of the todo item.
-    render: function () {
-        // Backbone LocalStorage is adding `id` attribute instantly after
-        // creating a model.  This causes our TodoView to render twice. Once
-        // after creating a model and once on `id` change.  We want to
-        // filter out the second redundant render, which is caused by this
-        // `id` change.  It's known Backbone LocalStorage bug, therefore
-        // we've to create a workaround.
-        // https://github.com/tastejs/todomvc/issues/469
-        if (this.model.changed.id !== undefined) {
-            return;
+    checkData: function () {
+        if (this.$name.val().length > 0) {
+            // DEBUG
+            // console.log("and:", this.$andAggregator.is(':checked'));
+            // console.log("Or:" , this.$orAggregator.is(':checked'));
+            if (this.$andAggregator.is(':checked') || this.$orAggregator.is(':checked')) {
+                //Animação para mostrar mensagem e depois apagar
+                this.$success.show();
+                setTimeout(function () {
+                    $('#successAggregatorMessage').hide();
+                    }, 3000
+                );
+                return true;
+            } else {
+                alert('Choose an aggregator type!');
+                return false;
+            }
+        } else {
+            alert('You must type a name!');
+            return false;
+        }
+    },
+    checkDataAndSubmit: function () {
+        if (this.checkData()) {
+            app.aggregatorList.add(this.newAttributes());
+            console.log(app.aggregatorList)
         }
 
-        this.$el.html(this.template(this.model.toJSON()));
-        this.$el.toggleClass('completed', this.model.get('completed'));
-        this.toggleVisible();
-        this.$input = this.$('.edit');
+    },
+    newAttributes: function () {
+        return {
+            name: this.$name.val(),
+            aggregatorType: this.$andAggregator.is(':checked') ? "AND" : "OR"
+        }
+    }
+
+});
+
+new app.AggregatorModalView();
+
+app.AggregatorListView = Backbone.View.extend({
+    tagName:'div',
+
+    initialize:function () {
+        this.model.bind("reset", this.render, this);
+        var self = this;
+        this.model.bind("add", function (aggregator) {
+            $(self.el).append(new app.AggregatorListItemView({model:aggregator}).render().el);
+        });
+    },
+
+    render:function (eventName) {
+        _.each(this.model.models, function (aggregator) {
+            $(this.el).append(new app.AggregatorListItemView({model:aggregator}).render().el);
+        }, this);
+        return this;
+    }
+});
+
+app.AggregatorListItemView = Backbone.View.extend({
+
+    tagName:"span",
+
+    events: {
+        'click .close': 'destroyItem'
+    },
+
+    template:_.template($('#tpl-aggregator-list-item').html()),
+
+    initialize:function () {
+        this.model.bind("change", this.render, this);
+        this.model.bind("destroy", this.close, this);
+    },
+
+    render:function (eventName) {
+        $(this.el).html(this.template(this.model.toJSON()));
         return this;
     },
 
-    toggleVisible: function () {
-        this.$el.toggleClass('hidden', this.isHidden());
+    close:function () {
+        $(this.el).unbind();
+        $(this.el).remove();
     },
 
-    isHidden: function () {
-        return this.model.get('completed') ?
-            app.TodoFilter === 'active' :
-            app.TodoFilter === 'completed';
-    },
-
-    // Toggle the `"completed"` state of the model.
-    toggleCompleted: function () {
-        this.model.toggle();
-    },
-
-    // Switch this view into `"editing"` mode, displaying the input field.
-    edit: function () {
-        var textLength = this.$input.val().length;
-        this.$el.addClass('editing');
-        this.$input.focus();
-        this.$input[0].setSelectionRange(textLength, textLength);
-    },
-
-    // Close the `"editing"` mode, saving changes to the todo.
-    close: function () {
-        var value = this.$input.val();
-        var trimmedValue = value.trim();
-
-        // We don't want to handle blur events from an item that is no
-        // longer being edited. Relying on the CSS class here has the
-        // benefit of us not having to maintain state in the DOM and the
-        // JavaScript logic.
-        if (!this.$el.hasClass('editing')) {
-            return;
-        }
-
-        if (trimmedValue) {
-            this.model.save({ title: trimmedValue });
-        } else {
-            this.clear();
-        }
-
-        this.$el.removeClass('editing');
-    },
-
-    // If you hit `enter`, we're through editing the item.
-    updateOnEnter: function (e) {
-        if (e.which === ENTER_KEY) {
-            this.close();
-        }
-    },
-
-    // If you're pressing `escape` we revert your change by simply leaving
-    // the `editing` state.
-    revertOnEscape: function (e) {
-        if (e.which === ESC_KEY) {
-            this.$el.removeClass('editing');
-            // Also reset the hidden input back to the original value.
-            this.$input.val(this.model.get('title'));
-        }
-    },
-    // Remove the item, destroy the model from *localStorage* and delete its view.
-    clear: function () {
+    destroyItem: function () {
+        $(this.el).unbind();
+        $(this.el).remove();
         this.model.destroy();
     }
 });
 
+app.aggregatorListView = new app.AggregatorListView({model:app.aggregatorList});
+$('#aggrList').html(app.aggregatorListView.render().el);
+
+
+// Views
+window.WineListView = Backbone.View.extend({
+
+    tagName:'div',
+
+    initialize:function () {
+        this.model.bind("reset", this.render, this);
+        var self = this;
+        this.model.bind("add", function (wine) {
+            $(self.el).append(new WineListItemView({model:wine}).render().el);
+        });
+    },
+
+    render:function (eventName) {
+        _.each(this.model.models, function (wine) {
+            $(this.el).append(new WineListItemView({model:wine}).render().el);
+        }, this);
+        return this;
+    }
+});
+
+window.WineListItemView = Backbone.View.extend({
+
+    tagName:"span",
+
+    events: {
+        'click .close': 'destroyItem'
+    },
+
+    template:_.template($('#tpl-wine-list-item').html()),
+
+    initialize:function () {
+        this.model.bind("change", this.render, this);
+        this.model.bind("destroy", this.close, this);
+    },
+
+    render:function (eventName) {
+        $(this.el).html(this.template(this.model.toJSON()));
+        return this;
+    },
+
+    close:function () {
+        $(this.el).unbind();
+        $(this.el).remove();
+    },
+
+    destroyItem: function () {
+        $(this.el).unbind();
+        $(this.el).remove();
+        this.model.destroy();
+    }
+});
+
+app.wineList = new WineCollection();
+app.wineListView = new WineListView({model:app.wineList});
+$('#seila').html(app.wineListView.render().el);
+
+// For reference
+// window.WineView = Backbone.View.extend({
+//
+//     template:_.template($('#tpl-wine-details').html()),
+//
+//     initialize:function () {
+//         this.model.bind("change", this.render, this);
+//     },
+//
+//     render:function (eventName) {
+//         $(this.el).html(this.template(this.model.toJSON()));
+//         return this;
+//     },
+//
+//     events:{
+//         "change input":"change",
+//         "click .save":"saveWine",
+//         "click .delete":"deleteWine"
+//     },
+//
+//     change:function (event) {
+//         var target = event.target;
+//         console.log('changing ' + target.id + ' from: ' + target.defaultValue + ' to: ' + target.value);
+//         // You could change your model on the spot, like this:
+//         // var change = {};
+//         // change[target.name] = target.value;
+//         // this.model.set(change);
+//     },
+//
+//     saveWine:function () {
+//         this.model.set({
+//             name:$('#name').val(),
+//             grapes:$('#grapes').val(),
+//             country:$('#country').val(),
+//             region:$('#region').val(),
+//             year:$('#year').val(),
+//             description:$('#description').val()
+//         });
+//         if (this.model.isNew()) {
+//             app.wineList.add(this.model);
+//             console.log(app.wineList);
+//         } else {
+//             this.model.save();
+//         }
+//         return false;
+//     },
+//
+//     deleteWine:function () {
+//         this.model.destroy({
+//             success:function () {
+//                 alert('Wine deleted successfully');
+//             }
+//         });
+//         return false;
+//     },
+//
+//     close:function () {
+//         $(this.el).unbind();
+//         $(this.el).empty();
+//     }
+// });
+//
+// window.HeaderView = Backbone.View.extend({
+//
+//     template:_.template($('#tpl-header').html()),
+//
+//     initialize:function () {
+//         this.render();
+//     },
+//
+//     render:function (eventName) {
+//         $(this.el).html(this.template());
+//         return this;
+//     },
+//
+//     events:{
+//         "click .new":"newWine"
+//     },
+//
+//     newWine:function (event) {
+//         if (app.wineView) app.wineView.close();
+//         app.wineView = new WineView({model:new Wine()});
+//         $('#content').html(app.wineView.render().el);
+//         return false;
+//     }
+// });
+//
+// var AppRouter = Backbone.Router.extend({
+//
+//     routes:{
+//         "":"list",
+//         "wines/:id":"wineDetails"
+//     },
+//
+//     initialize:function () {
+//         $('#header').html(new HeaderView().render().el);
+//     },
+//
+//     list:function () {
+//         this.wineList = new WineCollection();
+//         this.wineListView = new WineListView({model:this.wineList});
+//         // this.wineList.fetch();
+//         $('#sidebar').html(this.wineListView.render().el);
+//     },
+//
+//     wineDetails:function (id) {
+//         this.wine = this.wineList.get(id);
+//         if (app.wineView) app.wineView.close();
+//         this.wineView = new WineView({model:this.wine});
+//         $('#content').html(this.wineView.render().el);
+//     }
+//
+// });
+//
+// var router = new AppRouter();
+// Backbone.history.start();
 
 
 // TODO: Fix below
