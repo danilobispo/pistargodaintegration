@@ -485,58 +485,60 @@
     </ul>
 </script>
 
-<script type="text/template" id="tpl-header">
-    <span class="title">Backbone Cellar</span>
-    <button class="new">New Wine</button>
-</script>
+<!--<script type="text/template" id="tpl-header">-->
+    <!--<span class="title">Backbone Cellar</span>-->
+    <!--<button class="new">New Wine</button>-->
+<!--</script>-->
 
-<script type="text/template" id="tpl-wine-list-item">
-    <a href='#wines/<%= id %>'><%= name %></a>
+<!--For reference-->
+<!--<script type="text/template" id="tpl-wine-list-item">-->
+    <!--<a href='#wines/<%= id %>'><%= name %></a>-->
 
-    <div class="btn-group mr-2" role="group" aria-label="Second group">
-        <button id="<%= id %>" data-toggle="button" aria-pressed="false" autocomplete="off"><%=name %></button>
-        <button id="#removeElementButton" type="button" class="close" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-        </button>
-    </div>
-</script>
+    <!--<div class="btn-group mr-2" role="group" aria-label="Second group">-->
+        <!--<button id="<%= id %>" data-toggle="button" aria-pressed="false" autocomplete="off"><%=name %></button>-->
+        <!--<button id="#removeElementButton" type="button" class="close" aria-label="Close">-->
+            <!--<span aria-hidden="true">&times;</span>-->
+        <!--</button>-->
+    <!--</div>-->
+<!--</script>-->
 
 <script type="text/template" id="tpl-aggregator-list-item">
     <div class="btn-group mr-2" role="group" aria-label="Second group">
-        <button id="buttonFor<%= name %>" data-toggle="button" aria-pressed="false" autocomplete="off"><%=name %></button>
+        <button id="buttonFor<%= name %>" data-toggle="button" aria-pressed="false" autocomplete="off"><%=name %>
+        </button>
         <button id="#removeElementButton" type="button" class="close" aria-label="Close">
             <span aria-hidden="true">&times;</span>
         </button>
     </div>
 </script>
 
-<script type="text/template" id="tpl-wine-details">
+<!--<script type="text/template" id="tpl-wine-details">-->
 
-    <div class="form-left-col">
-        <label>Id:</label>
-        <input type="text" id="wineId" name="id" value="<%= id %>" disabled/>
-        <label>Name:</label>
-        <input type="text" id="name" name="name" value="<%= name %>" required/>
-        <label>Grapes:</label>
-        <input type="text" id="grapes" name="grapes" value="<%= grapes %>"/>
-        <label>Country:</label>
-        <input type="text" id="country" name="country" value="<%= country %>"/>
-        <label>Region:</label>
-        <input type="text" id="region" name="region" value="<%= region %>"/>
-        <label>Year:</label>
-        <input type="text" id="year" name="year" value="<%= year %>"/>
-        <button class="save">Save</button>
-        <button class="delete">Delete</button>
-        <button class="sair">Hide</button>
-    </div>
+    <!--<div class="form-left-col">-->
+        <!--<label>Id:</label>-->
+        <!--<input type="text" id="wineId" name="id" value="<%= id %>" disabled/>-->
+        <!--<label>Name:</label>-->
+        <!--<input type="text" id="name" name="name" value="<%= name %>" required/>-->
+        <!--<label>Grapes:</label>-->
+        <!--<input type="text" id="grapes" name="grapes" value="<%= grapes %>"/>-->
+        <!--<label>Country:</label>-->
+        <!--<input type="text" id="country" name="country" value="<%= country %>"/>-->
+        <!--<label>Region:</label>-->
+        <!--<input type="text" id="region" name="region" value="<%= region %>"/>-->
+        <!--<label>Year:</label>-->
+        <!--<input type="text" id="year" name="year" value="<%= year %>"/>-->
+        <!--<button class="save">Save</button>-->
+        <!--<button class="delete">Delete</button>-->
+        <!--<button class="sair">Hide</button>-->
+    <!--</div>-->
 
-    <div class="form-right-col">
-        <img height="300" src="../pics/<%= picture %>"/>
-        <label>Notes:</label>
-        <textarea id="description" name="description"><%= description %></textarea>
-    </div>
+    <!--<div class="form-right-col">-->
+        <!--<img height="300" src="../pics/<%= picture %>"/>-->
+        <!--<label>Notes:</label>-->
+        <!--<textarea id="description" name="description"><%= description %></textarea>-->
+    <!--</div>-->
 
-</script>
+<!--</script>-->
 
 
 <div id="modals">
@@ -722,7 +724,9 @@
                         </label>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn close-modal-context" data-dismiss="modal" aria-label="Close">Close</button>
+                        <button type="button" class="btn close-modal-context" data-dismiss="modal" aria-label="Close">
+                            Close
+                        </button>
                     </div>
                 </div>
             </div>
@@ -755,7 +759,7 @@
                     <span id="successAggregatorMessage" hidden>Aggregator created!</span>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn" aria-label="Close" data-dismiss="modal" >Close</button>
+                    <button type="button" class="btn" aria-label="Close" data-dismiss="modal">Close</button>
                 </div>
             </div>
         </div>
@@ -769,18 +773,55 @@
                             data-dismiss="modal"
                             aria-label="Close"><span
                             aria-hidden="true">&times;</span></button>
-                    <h4 class="modal-title" id="personaCreationModalTitle">Choose your aggregator name and type</h4>
+                    <h4 class="modal-title" id="personaCreationModalTitle">Create a persona!</h4>
                 </div>
                 <div class="modal-body">
+                    <div id="personaForm">
+                        <input type="text"
+                               placeholder="Persona name"
+                               id="personaCreationName">
+                        <input type="file"
+                               title="Persona photo(optional)"
+                               placeholder="Persona photo(optional)"
+                               id="personaCreationPhoto">
+                        <textarea id="personaCreationDescription" autofocus="" rows="5" cols="30"
+                                  placeholder="Set a description(optional)"></textarea>
+                        <h4>Select facts about this persona</h4>
+                        <div class="btn-group col-xs-12" data-toggle="buttons">
+                            <label class="btn btn-default">
+                                <input type="checkbox" name="fact-group" id="" value="fact_1">Fact 1
+                            </label>
+                            <label class="btn btn-default">
+                                <input type="checkbox" name="fact-group" id="" value="fact_1">Fact 2
+                            </label>
+                            <label class="btn btn-default">
+                                <input type="checkbox" name="fact-group" id="" value="fact_1">Fact 3
+                            </label>
+                        </div>
+
+                        <h4>OR select contexts directly</h4>
+                        <div class="btn-group col-xs-12" data-toggle="buttons">
+                            <label class="btn btn-default">
+                                <input type="checkbox" name="fact-group" id="" value="context_1">Context 1
+                            </label>
+                            <label class="btn btn-default">
+                                <input type="checkbox" name="fact-group" id="" value="context_2">Context 2
+                            </label>
+                            <label class="btn btn-default">
+                                <input type="checkbox" name="fact-group" id="" value="context_3">Context 3
+                            </label>
+                        </div>
+
+                        <button id="createPersonaButton" class="btn-success">Finish and create persona!</button>
+                    </div>
 
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn" aria-label="Close" data-dismiss="modal" >Close</button>
+                    <button type="button" class="btn" aria-label="Close" data-dismiss="modal">Close</button>
                 </div>
             </div>
         </div>
     </div>
-
 
 
 </div>

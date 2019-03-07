@@ -19,6 +19,12 @@ app.AggregatorList = Backbone.Collection.extend({
     localStorage: true,
 });
 
+// List of personas
+app.PersonaList = Backbone.Collection.extend({
+    model: app.Persona,
+    localStorage: true,
+});
+
 // window.WineCollection = Backbone.Collection.extend({
 //     model:Wine
 // });

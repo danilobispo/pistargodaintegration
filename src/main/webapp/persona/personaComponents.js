@@ -242,63 +242,92 @@ app.AggregatorListItemView = Backbone.View.extend({
 app.aggregatorListView = new app.AggregatorListView({model:app.aggregatorList});
 $('#aggrList').html(app.aggregatorListView.render().el);
 
+app.PersonaModalView = Backbone.View.extend({
+    el: '#personaCreationModal',
+    events: {
+    },
+    initialize: function () {
+        this.$name = this.$("#personaCreationName");
+        this.$photo = this.$("#personaCreationPhoto");
+        this.$description = this.$("#personaCreationDescription");
+    },
+    checkData: function () {
+        if (this.$name.val().length > 0) {
+            //TODO: Check all fields
+            return true;
+        } else return false;
+    },
+    checkDataAndSubmit: function () {
+        if (this.checkData()) {
+            app.aggregatorList.add(this.newAttributes());
+            console.log(app.aggregatorList)
+        }
+    },
+    newAttributes: function () {
+        return {
+            name: this.$name.val(),
+            aggregatorType: this.$andAggregator.is(':checked') ? "AND" : "OR"
+        }
+    }
+});
+
 
 // Views
-window.WineListView = Backbone.View.extend({
+// window.WineListView = Backbone.View.extend({
+//
+//     tagName:'div',
+//
+//     initialize:function () {
+//         this.model.bind("reset", this.render, this);
+//         var self = this;
+//         this.model.bind("add", function (wine) {
+//             $(self.el).append(new WineListItemView({model:wine}).render().el);
+//         });
+//     },
+//
+//     render:function (eventName) {
+//         _.each(this.model.models, function (wine) {
+//             $(this.el).append(new WineListItemView({model:wine}).render().el);
+//         }, this);
+//         return this;
+//     }
+// });
 
-    tagName:'div',
+// window.WineListItemView = Backbone.View.extend({
+//
+//     tagName:"span",
+//
+//     events: {
+//         'click .close': 'destroyItem'
+//     },
+//
+//     template:_.template($('#tpl-wine-list-item').html()),
+//
+//     initialize:function () {
+//         this.model.bind("change", this.render, this);
+//         this.model.bind("destroy", this.close, this);
+//     },
+//
+//     render:function (eventName) {
+//         $(this.el).html(this.template(this.model.toJSON()));
+//         return this;
+//     },
+//
+//     close:function () {
+//         $(this.el).unbind();
+//         $(this.el).remove();
+//     },
+//
+//     destroyItem: function () {
+//         $(this.el).unbind();
+//         $(this.el).remove();
+//         this.model.destroy();
+//     }
+// });
 
-    initialize:function () {
-        this.model.bind("reset", this.render, this);
-        var self = this;
-        this.model.bind("add", function (wine) {
-            $(self.el).append(new WineListItemView({model:wine}).render().el);
-        });
-    },
-
-    render:function (eventName) {
-        _.each(this.model.models, function (wine) {
-            $(this.el).append(new WineListItemView({model:wine}).render().el);
-        }, this);
-        return this;
-    }
-});
-
-window.WineListItemView = Backbone.View.extend({
-
-    tagName:"span",
-
-    events: {
-        'click .close': 'destroyItem'
-    },
-
-    template:_.template($('#tpl-wine-list-item').html()),
-
-    initialize:function () {
-        this.model.bind("change", this.render, this);
-        this.model.bind("destroy", this.close, this);
-    },
-
-    render:function (eventName) {
-        $(this.el).html(this.template(this.model.toJSON()));
-        return this;
-    },
-
-    close:function () {
-        $(this.el).unbind();
-        $(this.el).remove();
-    },
-
-    destroyItem: function () {
-        $(this.el).unbind();
-        $(this.el).remove();
-        this.model.destroy();
-    }
-});
-
-app.wineList = new WineCollection();
-app.wineListView = new WineListView({model:app.wineList});
-$('#seila').html(app.wineListView.render().el);
+// app.wineList = new WineCollection();
+// app.wineListView = new WineListView({model:app.wineList});
+// $('#seila').html(app.wineListView.render().el);
 
 // For reference
 // window.WineView = Backbone.View.extend({

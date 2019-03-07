@@ -19,18 +19,28 @@ app.Aggregator = Backbone.Model.extend({
     }
 });
 
-// Models
-window.Wine = Backbone.Model.extend({
-    defaults:{
-        "id":null,
-        "name":"",
-        "grapes":"",
-        "country":"USA",
-        "region":"California",
-        "year":"",
-        "description":"",
-        "picture":""
+app.Persona = Backbone.Model.extend({
+    defaults: {
+        name: "",
+        photo: "",
+        description: "",
+        contexts: [],
+        facts: []
     }
 });
+
+// // Models
+// window.Wine = Backbone.Model.extend({
+//     defaults:{
+//         "id":null,
+//         "name":"",
+//         "grapes":"",
+//         "country":"USA",
+//         "region":"California",
+//         "year":"",
+//         "description":"",
+//         "picture":""
+//     }
+// });
 
 
