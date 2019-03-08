@@ -23,9 +23,9 @@ app.Persona = Backbone.Model.extend({
     defaults: {
         name: "",
         photo: "",
-        description: "",
-        contexts: [],
-        facts: []
+        description: ""
+        // contexts: [""],
+        // facts: [""]
     }
 });
 

@@ -242,9 +242,13 @@ app.AggregatorListItemView = Backbone.View.extend({
 app.aggregatorListView = new app.AggregatorListView({model:app.aggregatorList});
 $('#aggrList').html(app.aggregatorListView.render().el);
 
+
+app.personaList = new app.PersonaList();
+
 app.PersonaModalView = Backbone.View.extend({
     el: '#personaCreationModal',
     events: {
+        'click #createPersonaButton' : 'checkDataAndSubmit'
     },
     initialize: function () {
         this.$name = this.$("#personaCreationName");
@@ -259,18 +263,26 @@ app.PersonaModalView = Backbone.View.extend({
     },
     checkDataAndSubmit: function () {
         if (this.checkData()) {
-            app.aggregatorList.add(this.newAttributes());
-            console.log(app.aggregatorList)
+            console.log("Name: ", this.$name.val());
+            console.log("photo:", this.$photo.val());
+            console.log("description:" ,this.$description.val());
+            app.personaList.add(this.newAttributes());
+            alert('Persona created!');
+            console.log(app.personaList);
+            this.$name.val().trim();
+            this.$description.val().trim();
         }
     },
     newAttributes: function () {
         return {
             name: this.$name.val(),
-            aggregatorType: this.$andAggregator.is(':checked') ? "AND" : "OR"
+            photo: this.$photo.val() === undefined ? "": this.$photo.val(),
+            description: this.$description.val()
         }
     }
 });
 
+new app.PersonaModalView();
 
 // Views
 // window.WineListView = Backbone.View.extend({

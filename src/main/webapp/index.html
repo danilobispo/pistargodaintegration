@@ -115,7 +115,7 @@
         <li><h5>Persona-based modelling activated</h5></li>
         <li>
 
-            <button class="btn btn-group"
+            <button class="btn btn-info navbar-btn"
                     type="button" id="defineFactsButton" data-toggle="modal"
                     data-target="#factsModal"
                     title="Define facts for contexts">
@@ -144,28 +144,30 @@
             </button>
         </li>
         <li>
+            <button type="button" id="sidebarCollapse" class="btn btn-info navbar-btn">
+                <span>(Optional) Review your persona</span>
+            </button>
+        </li>
+        <li>
             <button type="button" id="fourthStepPersona" class="btn btn-info navbar-btn">
                 <span>Step 5: Run achievability algorithm </span>
             </button>
         </li>
-        <li>
-            <button type="button" id="sidebarCollapse" class="btn btn-info navbar-btn">
-                <span>Add Facts and Attributes and/or Contexts</span>
-            </button>
-        </li>
-        <li>
-            <div id="header"><h1>Backbone Cellar</h1></div>
 
-            <div id="seila"></div>
+        <!--for reference-->
+        <!--<li>-->
+        <!--<div id="header"><h1>Backbone Cellar</h1></div>-->
 
-            <div id="content">
-                <h2>Welcome to Backbone Cellar</h2>
-                <p>
-                    This is a sample application part of of three-part tutorial showing how to build a CRUD application
-                    with Backbone.js.
-                </p>
-            </div>
-        </li>
+        <!--<div id="seila"></div>-->
+
+        <!--<div id="content">-->
+        <!--<h2>Welcome to Backbone Cellar</h2>-->
+        <!--<p>-->
+        <!--This is a sample application part of of three-part tutorial showing how to build a CRUD application-->
+        <!--with Backbone.js.-->
+        <!--</p>-->
+        <!--</div>-->
+        <!--</li>-->
 
 
     </ul>
@@ -175,6 +177,62 @@
     <!-- Sidebar Holder -->
     <nav id="sidebar" class="active">
         <div class="sidebar-header">
+            <h3>Persona info</h3>
+        </div>
+        <h4>Name: Mary</h4>
+        <h4>Description: </h4>
+        <h5>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et
+            dolore
+            magna aliqua. In cursus turpis massa tincidunt dui ut ornare lectus. Velit laoreet id donec ultrices
+            tincidunt
+            arcu non sodales neque. Lacus vel facilisis volutpat est velit. Mauris pharetra et ultrices neque ornare
+            aenean
+            euismod. Pellentesque adipiscing commodo elit at imperdiet dui accumsan sit. Eu feugiat pretium nibh ipsum
+            consequat nisl vel pretium.</h5>
+
+        <ul class="list-unstyled components">
+            <li>
+                <a href="#factsSubmenu" data-toggle="collapse" aria-expanded="false" id="#factsMenu"
+                   class="sidebar-list">Facts</a>
+                <ul class="collapse list-unstyled" id="factsSubmenu">
+                    <li>
+                        <span>Fact 1</span>
+                    </li>
+                    <li>
+                        <span>Fact 2</span>
+                    </li>
+                    <li>
+                        <span>Fact 3</span>
+                    </li>
+                    <li>
+                        <a href="#">Edit facts</a>
+                    </li>
+                </ul>
+            </li>
+            <li>
+                <a href="#contextsSubmenu" data-toggle="collapse" aria-expanded="false" id="#contextsMenu"
+                   class="sidebar-list">Contexts</a>
+                <ul class="collapse list-unstyled" id="contextsSubmenu">
+                    <li>
+                        <span>Context 1</span>
+                    </li>
+                    <li>
+                        <span>Context 2</span>
+                    </li>
+                    <li>
+                        <span>Context 3</span>
+                    </li>
+                    <li>
+                        <a href="#">Edit contexts</a>
+                    </li>
+                </ul>
+            </li>
+        </ul>
+
+        <button class="btn-success"> Run achievability algorithm</button>
+
+
+        <!--<div class="sidebar-header">
             <h3>Context and Facts</h3>
         </div>
         <div class="sidebar-header">
@@ -273,7 +331,7 @@
                     </li>
                 </ul>
             </li>
-            <!-- Might need it later
+            &lt;!&ndash; Might need it later
             <li>
                 <a href="#">Dummy link 0</a>
                 <a href="#pageSubmenu" data-toggle="collapse" aria-expanded="false">Dummy menu</a>
@@ -288,8 +346,8 @@
             </li>
             <li>
                 <a href="#">Dummy link also</a>
-            </li>-->
-        </ul>
+            </li>&ndash;&gt;
+        </ul>-->
     </nav>
 
     <!-- Page Content Holder -->
@@ -486,20 +544,20 @@
 </script>
 
 <!--<script type="text/template" id="tpl-header">-->
-    <!--<span class="title">Backbone Cellar</span>-->
-    <!--<button class="new">New Wine</button>-->
+<!--<span class="title">Backbone Cellar</span>-->
+<!--<button class="new">New Wine</button>-->
 <!--</script>-->
 
 <!--For reference-->
 <!--<script type="text/template" id="tpl-wine-list-item">-->
-    <!--<a href='#wines/<%= id %>'><%= name %></a>-->
+<!--<a href='#wines/<%= id %>'><%= name %></a>-->
 
-    <!--<div class="btn-group mr-2" role="group" aria-label="Second group">-->
-        <!--<button id="<%= id %>" data-toggle="button" aria-pressed="false" autocomplete="off"><%=name %></button>-->
-        <!--<button id="#removeElementButton" type="button" class="close" aria-label="Close">-->
-            <!--<span aria-hidden="true">&times;</span>-->
-        <!--</button>-->
-    <!--</div>-->
+<!--<div class="btn-group mr-2" role="group" aria-label="Second group">-->
+<!--<button id="<%= id %>" data-toggle="button" aria-pressed="false" autocomplete="off"><%=name %></button>-->
+<!--<button id="#removeElementButton" type="button" class="close" aria-label="Close">-->
+<!--<span aria-hidden="true">&times;</span>-->
+<!--</button>-->
+<!--</div>-->
 <!--</script>-->
 
 <script type="text/template" id="tpl-aggregator-list-item">
@@ -514,29 +572,29 @@
 
 <!--<script type="text/template" id="tpl-wine-details">-->
 
-    <!--<div class="form-left-col">-->
-        <!--<label>Id:</label>-->
-        <!--<input type="text" id="wineId" name="id" value="<%= id %>" disabled/>-->
-        <!--<label>Name:</label>-->
-        <!--<input type="text" id="name" name="name" value="<%= name %>" required/>-->
-        <!--<label>Grapes:</label>-->
-        <!--<input type="text" id="grapes" name="grapes" value="<%= grapes %>"/>-->
-        <!--<label>Country:</label>-->
-        <!--<input type="text" id="country" name="country" value="<%= country %>"/>-->
-        <!--<label>Region:</label>-->
-        <!--<input type="text" id="region" name="region" value="<%= region %>"/>-->
-        <!--<label>Year:</label>-->
-        <!--<input type="text" id="year" name="year" value="<%= year %>"/>-->
-        <!--<button class="save">Save</button>-->
-        <!--<button class="delete">Delete</button>-->
-        <!--<button class="sair">Hide</button>-->
-    <!--</div>-->
+<!--<div class="form-left-col">-->
+<!--<label>Id:</label>-->
+<!--<input type="text" id="wineId" name="id" value="<%= id %>" disabled/>-->
+<!--<label>Name:</label>-->
+<!--<input type="text" id="name" name="name" value="<%= name %>" required/>-->
+<!--<label>Grapes:</label>-->
+<!--<input type="text" id="grapes" name="grapes" value="<%= grapes %>"/>-->
+<!--<label>Country:</label>-->
+<!--<input type="text" id="country" name="country" value="<%= country %>"/>-->
+<!--<label>Region:</label>-->
+<!--<input type="text" id="region" name="region" value="<%= region %>"/>-->
+<!--<label>Year:</label>-->
+<!--<input type="text" id="year" name="year" value="<%= year %>"/>-->
+<!--<button class="save">Save</button>-->
+<!--<button class="delete">Delete</button>-->
+<!--<button class="sair">Hide</button>-->
+<!--</div>-->
 
-    <!--<div class="form-right-col">-->
-        <!--<img height="300" src="../pics/<%= picture %>"/>-->
-        <!--<label>Notes:</label>-->
-        <!--<textarea id="description" name="description"><%= description %></textarea>-->
-    <!--</div>-->
+<!--<div class="form-right-col">-->
+<!--<img height="300" src="../pics/<%= picture %>"/>-->
+<!--<label>Notes:</label>-->
+<!--<textarea id="description" name="description"><%= description %></textarea>-->
+<!--</div>-->
 
 <!--</script>-->
 
@@ -765,7 +823,8 @@
         </div>
     </div>
 
-    <div class="modal fade" id="personaCreationModal" tabindex="-1" role="dialog" aria-labelledby="personaCreationModalLabel">
+    <div class="modal fade" id="personaCreationModal" tabindex="-1" role="dialog"
+         aria-labelledby="personaCreationModalLabel">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
