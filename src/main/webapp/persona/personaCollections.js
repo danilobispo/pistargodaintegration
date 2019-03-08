@@ -1,7 +1,7 @@
 var app = app || {};
 
 // List of Facts
-var FactCollection = Backbone.Collection.extend({
+app.FactCollection = Backbone.Collection.extend({
     // Reference to this collection's model.
     model: app.Facts,
     localStorage: true
