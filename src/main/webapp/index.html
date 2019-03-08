@@ -115,7 +115,7 @@
         <li><h5>Persona-based modelling activated</h5></li>
         <li>
 
-            <button class="btn btn-info navbar-btn"
+            <button class="btn btn-info navbar-btnF"
                     type="button" id="defineFactsButton" data-toggle="modal"
                     data-target="#factsModal"
                     title="Define facts for contexts">
@@ -560,7 +560,7 @@
 <!--</div>-->
 <!--</script>-->
 
-<script type="text/template" id="tpl-aggregator-list-item">
+<script type="text/template" id="tpl-decomposition-list-item">
     <div class="btn-group mr-2" role="group" aria-label="Second group">
         <button id="buttonFor<%= name %>" data-toggle="button" aria-pressed="false" autocomplete="off"><%=name %>
         </button>
@@ -737,9 +737,9 @@
                         <label for="selectContext"></label><select id="selectContext"></select>
                         <button id="removeContext">Remove selected context</button>
                     </div>
-                    <h4>Create new aggregator of facts</h4>
-                    <a data-toggle="modal" data-target="#aggregatorModal">New aggregator</a>
-                    <h4>Aggregator List</h4>
+                    <h4>Create new decomposition of facts</h4>
+                    <a data-toggle="modal" data-target="#decompositionModal">New decomposition</a>
+                    <h4>Decomposition List</h4>
                     <div id="aggrList"></div>
 
                     <h4>Select the facts</h4>
@@ -791,7 +791,7 @@
         </div>
     </div>
 
-    <div class="modal fade" id="aggregatorModal" tabindex="-1" role="dialog" aria-labelledby="aggregatorModalLabel">
+    <div class="modal fade" id="decompositionModal" tabindex="-1" role="dialog" aria-labelledby="decompositionModalLabel">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
@@ -799,22 +799,22 @@
                             data-dismiss="modal"
                             aria-label="Close"><span
                             aria-hidden="true">&times;</span></button>
-                    <h4 class="modal-title" id="aggregatorModalTitle">Choose your aggregator name and type</h4>
+                    <h4 class="modal-title" id="decompositionModalTitle">Choose your decomposition name and type</h4>
                 </div>
                 <div class="modal-body">
-                    <input id="aggregatorNameInput" type="text" placeholder="New aggregator name" maxlength="30">
+                    <input id="decompositionNameInput" type="text" placeholder="New decomposition name" maxlength="30">
                     <h4>Select an aggregation type</h4>
                     <div class="radio-inline" role="group" aria-label="aggregationTypes">
-                        <input id="aggregatorAndOptionRadio"
+                        <input id="decompositionAndOptionRadio"
                                type="radio" value="and" name="aggrType" title="AND" PLACEHOLDER="AND"> AND
                         <br/>
-                        <input id="aggregatorOrOptionRadio"
+                        <input id="decompositionOrOptionRadio"
                                type="radio" value="or" name="aggrType" title="OR" placeholder="OR"> OR
                         <br/>
                     </div>
                     <br/>
-                    <button id="aggregatorCreatorButton" class="btn"> Create!</button>
-                    <span id="successAggregatorMessage" hidden>Aggregator created!</span>
+                    <button id="decompositionCreatorButton" class="btn"> Create!</button>
+                    <span id="successDecompositionMessage" hidden>Decomposition created!</span>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn" aria-label="Close" data-dismiss="modal">Close</button>

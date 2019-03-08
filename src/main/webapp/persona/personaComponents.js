@@ -135,34 +135,34 @@ app.ContextModalView = Backbone.View.extend({
 
 new app.ContextModalView();
 
-app.aggregatorList = new app.AggregatorList();
+app.decompositionList = new app.DecompositionList();
 
-app.AggregatorModalView = Backbone.View.extend({
-    el: '#aggregatorModal',
+app.DecompositionModalView = Backbone.View.extend({
+    el: '#decompositionModal',
     events: {
-        'click button#aggregatorCreatorButton': 'checkDataAndSubmit'
+        'click button#decompositionCreatorButton': 'checkDataAndSubmit'
     },
     initialize: function () {
-        this.$name = this.$("#aggregatorNameInput");
-        this.$andAggregator = this.$("#aggregatorAndOptionRadio");
-        this.$orAggregator = this.$("#aggregatorOrOptionRadio");
-        this.$success = this.$('#successAggregatorMessage');
+        this.$name = this.$("#decompositionNameInput");
+        this.$andDecomposition = this.$("#decompositionAndOptionRadio");
+        this.$orDecomposition = this.$("#decompositionOrOptionRadio");
+        this.$success = this.$('#successDecompositionMessage');
     },
     checkData: function () {
         if (this.$name.val().length > 0) {
             // DEBUG
-            // console.log("and:", this.$andAggregator.is(':checked'));
-            // console.log("Or:" , this.$orAggregator.is(':checked'));
-            if (this.$andAggregator.is(':checked') || this.$orAggregator.is(':checked')) {
+            // console.log("and:", this.$andDecomposition.is(':checked'));
+            // console.log("Or:" , this.$orDecomposition.is(':checked'));
+            if (this.$andDecomposition.is(':checked') || this.$orDecomposition.is(':checked')) {
                 //Animação para mostrar mensagem e depois apagar
                 this.$success.show();
                 setTimeout(function () {
-                    $('#successAggregatorMessage').hide();
+                    $('#successDecompositionMessage').hide();
                     }, 3000
                 );
                 return true;
             } else {
-                alert('Choose an aggregator type!');
+                alert('Choose an decomposition type!');
                 return false;
             }
         } else {
@@ -172,42 +172,42 @@ app.AggregatorModalView = Backbone.View.extend({
     },
     checkDataAndSubmit: function () {
         if (this.checkData()) {
-            app.aggregatorList.add(this.newAttributes());
-            console.log(app.aggregatorList)
+            app.decompositionList.add(this.newAttributes());
+            console.log(app.decompositionList)
         }
 
     },
     newAttributes: function () {
         return {
             name: this.$name.val(),
-            aggregatorType: this.$andAggregator.is(':checked') ? "AND" : "OR"
+            decompositionType: this.$andDecomposition.is(':checked') ? "AND" : "OR"
         }
     }
 
 });
 
-new app.AggregatorModalView();
+new app.DecompositionModalView();
 
-app.AggregatorListView = Backbone.View.extend({
+app.DecompositionListView = Backbone.View.extend({
     tagName:'div',
 
     initialize:function () {
         this.model.bind("reset", this.render, this);
         var self = this;
-        this.model.bind("add", function (aggregator) {
-            $(self.el).append(new app.AggregatorListItemView({model:aggregator}).render().el);
+        this.model.bind("add", function (decomposition) {
+            $(self.el).append(new app.DecompositionListItemView({model:decomposition}).render().el);
         });
     },
 
     render:function (eventName) {
-        _.each(this.model.models, function (aggregator) {
-            $(this.el).append(new app.AggregatorListItemView({model:aggregator}).render().el);
+        _.each(this.model.models, function (decomposition) {
+            $(this.el).append(new app.DecompositionListItemView({model:decomposition}).render().el);
         }, this);
         return this;
     }
 });
 
-app.AggregatorListItemView = Backbone.View.extend({
+app.DecompositionListItemView = Backbone.View.extend({
 
     tagName:"span",
 
@@ -215,7 +215,7 @@ app.AggregatorListItemView = Backbone.View.extend({
         'click .close': 'destroyItem'
     },
 
-    template:_.template($('#tpl-aggregator-list-item').html()),
+    template:_.template($('#tpl-decomposition-list-item').html()),
 
     initialize:function () {
         this.model.bind("change", this.render, this);
@@ -239,8 +239,8 @@ app.AggregatorListItemView = Backbone.View.extend({
     }
 });
 
-app.aggregatorListView = new app.AggregatorListView({model:app.aggregatorList});
-$('#aggrList').html(app.aggregatorListView.render().el);
+app.decompositionListView = new app.DecompositionListView({model:app.decompositionList});
+$('#aggrList').html(app.decompositionListView.render().el);
 
 
 app.personaList = new app.PersonaList();

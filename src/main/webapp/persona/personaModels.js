@@ -12,10 +12,10 @@ app.Context = Backbone.Model.extend({
     }
 });
 
-app.Aggregator = Backbone.Model.extend({
+app.Decomposition = Backbone.Model.extend({
     defaults: {
         name: "",
-        aggregatorType: ""
+        decompositionType: ""
     }
 });
 

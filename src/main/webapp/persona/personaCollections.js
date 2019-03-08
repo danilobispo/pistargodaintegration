@@ -13,9 +13,9 @@ app.ContextList = Backbone.Collection.extend({
     localStorage: true
 });
 
-// List of aggregators
-app.AggregatorList = Backbone.Collection.extend({
-    model: app.Aggregator,
+// List of decompositions
+app.DecompositionList = Backbone.Collection.extend({
+    model: app.Decomposition,
     localStorage: true,
 });
 
