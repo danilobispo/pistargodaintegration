@@ -8,7 +8,7 @@ app.Facts = Backbone.Model.extend({
 
 app.Context = Backbone.Model.extend({
     defaults: {
-        factName: ""
+        contextName: ""
     }
 });
 

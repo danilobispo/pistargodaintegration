@@ -46,10 +46,52 @@ app.FactsModalView = Backbone.View.extend({
 });
 new app.FactsModalView();
 
+app.ListOfFacts = Backbone.View.extend({
+    el: $('#factsList'),
+    template: _.template('<li data-id="${id}" value="<%= id%>" ><%= factName %></li>'),
 
-var ComboBox = Backbone.View.extend({
+    // Na inicialização unimos a coleção e a visão e
+    // também definimos o evento `add` para executar
+    // o callback `this.render`
+    initialize: function () {
+        this.collection = app.factCollection;
+        this.collection.on('add', this.render, this);
+        this.collection.on('remove', this.unrender, this);
+    },
+    events: {
+        'click option': 'change',
+    },
+    add: function (option) {
+        this.collection.add(option);
+    },
+    render: function (model) {
+        this.$el.append(this.template(model.attributes));
+    },
+    unrender: function () {
+        $('#selectContext option:selected').remove();
+    },
+    // Este método é executado a cada click na combo (select).
+    // Com as informações obtidas poderíamos, inclusive,
+    // realizar uma requisação AJAX, por exemplo.
+    change: function () {
+        var index = this.el.selectedIndex;
+        var value = this.el.options[index].value;
+        var text = this.el.options[index].text;
+        // DEBUG
+        // console.log("index: " + index + ",  value: " + value + ", text: " + text);
+    },
+    remove: function (option) {
+        this.collection.remove(option);
+        console.log(this.collection);
+    }
+});
+
+app.listOfFacts = new app.ListOfFacts();
+
+
+app.ComboBoxContext = Backbone.View.extend({
     el: $('#selectContext'),
-    template: _.template('<option data-id="${id}" value="<%= id%>" ><%= factName %></option>'),
+    template: _.template('<option data-id="${id}" value="<%= id%>" ><%= contextName %></option>'),
 
     // Na inicialização unimos a coleção e a visão e
     // também definimos o evento `add` para executar
@@ -87,10 +129,10 @@ var ComboBox = Backbone.View.extend({
     }
 });
 
-app.comboBox = new ComboBox();
-var editContextOption = $("input[value=edit]");
-app.comboBox.collection.bind("add remove change reset", function () {
-    app.comboBox.collection.length <= 0 ?
+app.comboBoxContext = new app.ComboBoxContext();
+var editContextOption = $("input[value=edit-context]");
+app.comboBoxContext.collection.bind("add remove change reset", function () {
+    app.comboBoxContext.collection.length <= 0 ?
         editContextOption.attr('disabled', true) : editContextOption.attr('disabled', false);
 });
 
@@ -102,34 +144,34 @@ app.ContextModalView = Backbone.View.extend({
         'click #removeContext': 'removeContext'
     },
     initialize: function () {
-        this.$editContextOption = $("input[value=edit]");
+        this.$editContextOption = $("input[value=edit-context]");
         this.$input = this.$('.context-input');
-        app.comboBox.collection.length <= 0 ?
+        app.comboBoxContext.collection.length <= 0 ?
             this.$editContextOption.attr('disabled', true) : this.$editContextOption.attr('disabled', false);
     },
     createOrEditContextEvent: function (e) {
         $this = $(e.target);
-        this.$('.createContext')[$this.val() === 'create' ? 'show' : 'hide']();
-        this.$('.editContext')[$this.val() === 'edit' ? 'show' : 'hide']();
+        this.$('.createContext')[$this.val() === 'create-context' ? 'show' : 'hide']();
+        this.$('.editContext')[$this.val() === 'edit-context' ? 'show' : 'hide']();
     },
     addContext: function (e) {
         if (e.which === 13 && this.$input.val().trim()) {
-            app.comboBox.add(new Context(this.newAttributes()));
+            app.comboBoxContext.add(new Context(this.newAttributes()));
             this.$input.val('');
             alert("Done, now go edit your context!");
-            console.log(app.comboBox.collection);
+            console.log(app.comboBoxContext.collection);
         }
     },
     newAttributes: function () {
         return {
-            id: app.comboBox.collection.length,
-            factName: this.$input.val().trim()
+            id: app.comboBoxContext.collection.length,
+            contextName: this.$input.val().trim()
         };
     },
     removeContext: function (e) {
-        console.log(app.comboBox.el.value);
-        app.comboBox.collection.remove(app.comboBox.el.value);
-        console.log(app.comboBox.collection);
+        console.log(app.comboBoxContext.el.value);
+        app.comboBoxContext.collection.remove(app.comboBoxContext.el.value);
+        console.log(app.comboBoxContext.collection);
     }
 });
 
