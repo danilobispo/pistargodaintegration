@@ -1,6 +1,6 @@
 var app = app || {};
 
-app.FactCollection = new FactCollection();
+app.factCollection = new app.FactCollection();
 
 app.FactsModalView = Backbone.View.extend({
     el: '#factsModal',
@@ -16,9 +16,9 @@ app.FactsModalView = Backbone.View.extend({
     },
     addFact: function (e) {
         if (e.which === 13 && this.$input.val().trim()) {
-            app.FactCollection.add(this.newAttributes());
+            app.factCollection.add(this.newAttributes());
             this.$input.val('');
-            console.log(app.FactCollection);
+            console.log(app.factCollection);
         }
     },
     newAttributes: function () {
@@ -32,7 +32,7 @@ app.FactsModalView = Backbone.View.extend({
             this.$showFactsButton.text('Show facts list');
     },
     saveChangesAndExit: function () {
-        if (app.FactCollection.length > 0) {
+        if (app.factCollection.length > 0) {
             this.$el.modal('toggle');
             $("#stepOneDone").css("color", "#00FF00");
             $("#stepOneLabel").html("Step 1: Edit facts for contexts");
