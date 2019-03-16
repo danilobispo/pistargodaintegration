@@ -23,6 +23,7 @@ app.FactsModalView = Backbone.View.extend({
     },
     newAttributes: function () {
         return {
+            id: app.factCollection.length,
             factName: this.$input.val().trim()
         };
     },
@@ -48,18 +49,19 @@ new app.FactsModalView();
 
 app.ListOfFacts = Backbone.View.extend({
     el: $('#factsList'),
-    template: _.template('<li data-id="${id}" value="<%= id%>" ><%= factName %></li>'),
-
+    template: _.template('<li data-id="${id}" ' +
+        'value="<%= id%>" class="list-group-item"><%= factName %>'
+        + '<span class="close">&times;</span></li>'),
     // Na inicialização unimos a coleção e a visão e
     // também definimos o evento `add` para executar
     // o callback `this.render`
     initialize: function () {
         this.collection = app.factCollection;
         this.collection.on('add', this.render, this);
-        this.collection.on('remove', this.unrender, this);
+
     },
     events: {
-        'click option': 'change',
+        'click li span.close': 'remove',
     },
     add: function (option) {
         this.collection.add(option);
@@ -67,22 +69,18 @@ app.ListOfFacts = Backbone.View.extend({
     render: function (model) {
         this.$el.append(this.template(model.attributes));
     },
-    unrender: function () {
-        $('#selectContext option:selected').remove();
-    },
     // Este método é executado a cada click na combo (select).
     // Com as informações obtidas poderíamos, inclusive,
     // realizar uma requisação AJAX, por exemplo.
-    change: function () {
-        var index = this.el.selectedIndex;
-        var value = this.el.options[index].value;
-        var text = this.el.options[index].text;
+    remove: function (e) {
+        var liElement = $(e.target.parentElement);
         // DEBUG
-        // console.log("index: " + index + ",  value: " + value + ", text: " + text);
-    },
-    remove: function (option) {
-        this.collection.remove(option);
-        console.log(this.collection);
+        // console.log($(e.target.parentElement));
+        // console.log(liElement.attr("data-id"));
+        this.collection.remove(liElement.attr("data-id"));
+        liElement.remove();
+        // DEBUG
+        // console.log(this.collection);
     }
 });
 
@@ -124,10 +122,12 @@ app.ComboBoxContext = Backbone.View.extend({
         // console.log("index: " + index + ",  value: " + value + ", text: " + text);
     },
     remove: function (option) {
+
         this.collection.remove(option);
         console.log(this.collection);
     }
 });
+
 
 app.comboBoxContext = new app.ComboBoxContext();
 var editContextOption = $("input[value=edit-context]");
