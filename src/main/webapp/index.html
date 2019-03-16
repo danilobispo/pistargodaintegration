@@ -683,25 +683,22 @@
                     <h4 class="modal-title" id="defineFactsModalTitle">Define facts for context</h4>
                 </div>
                 <div class="modal-body">
-                    <ul>
-                        <li>
-                            <input class='fact-input' title="Define a fact by name" placeholder="Choose a fact name!"
-                                   autofocus="">
-                        </li>
-                        <li>
-                            <div class="panel-heading">
-                                <h4 class="panel-title">
-                                    <a id="show-facts-button" class="show-facts" data-toggle="collapse"
-                                       href="#showFactsList">
-                                    </a>
-                                </h4>
-                            </div>
-                            <div id="showFactsList" class="panel-collapse collapse">
-                                <ul id="factsList" class="list-group">
-                                </ul>
-                            </div>
-                        </li>
-                    </ul>
+                    <div>
+                        <input class='fact-input' title="Define a fact by name" placeholder="Choose a fact name!" autofocus="">
+                        <button class="fact-create" id="createFact" title="Click here to create your fact!">Create fact!
+                        </button>
+                    </div>
+                    <div class="panel-heading">
+                        <h4 class="panel-title">
+                            <a id="show-facts-button" class="show-facts" data-toggle="collapse"
+                               href="#showFactsList">
+                            </a>
+                        </h4>
+                    </div>
+                    <div id="showFactsList" class="panel-collapse collapse">
+                        <ul id="factsList" class="list-group">
+                        </ul>
+                    </div>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn close-modal" aria-label="Close">Close</button>
@@ -785,7 +782,8 @@
         </div>
     </div>
 
-    <div class="modal fade" id="decompositionModal" tabindex="-1" role="dialog" aria-labelledby="decompositionModalLabel">
+    <div class="modal fade" id="decompositionModal" tabindex="-1" role="dialog"
+         aria-labelledby="decompositionModalLabel">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
@@ -850,7 +848,8 @@
                             <label class="btn btn-default">
                                 <input type="checkbox" name="fact-group" id="" value="fact_1">Fact 3
                             </label>
-                        </div><br/><br/>
+                        </div>
+                        <br/><br/>
 
                         <h4>Or select contexts directly</h4>
                         <div class="btn-group col-xs-12" data-toggle="buttons">
@@ -863,7 +862,8 @@
                             <label class="btn btn-default">
                                 <input type="checkbox" name="fact-group" id="" value="context_3">Context 3
                             </label>
-                        </div><br/><br/>
+                        </div>
+                        <br/><br/>
 
                         <button id="createPersonaButton" class="btn-success">Finish and create persona!</button>
                     </div>

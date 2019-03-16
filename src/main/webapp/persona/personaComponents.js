@@ -6,19 +6,32 @@ app.FactsModalView = Backbone.View.extend({
     el: '#factsModal',
     events: {
         'keypress .fact-input': 'addFact',
+        'click .fact-create': 'addFactViaClick',
         'click .show-facts': 'showList',
         'click .close-modal': 'saveChangesAndExit'
     },
     initialize: function () {
+
         this.$input = this.$('.fact-input');
         this.$showFactsButton = this.$('.show-facts');
         this.$showFactsButton.text("Show facts list");
+        this.$createFactButton = this.$('#createFact');
+
     },
     addFact: function (e) {
         if (e.which === 13 && this.$input.val().trim()) {
             app.factCollection.add(this.newAttributes());
             this.$input.val('');
             console.log(app.factCollection);
+        }
+    },
+    addFactViaClick: function() {
+        if(this.$input.val().trim()){
+            app.factCollection.add(this.newAttributes());
+            this.$input.val('');
+            console.log(app.factCollection);
+        } else {
+            alert("Type a name to add a fact!");
         }
     },
     newAttributes: function () {
