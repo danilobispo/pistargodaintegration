@@ -206,6 +206,7 @@ app.DecompositionModalView = Backbone.View.extend({
     },
     initialize: function () {
         this.$name = this.$("#decompositionNameInput");
+        this.$radioButtons = this.$("#input[name=aggrType]");
         this.$andDecomposition = this.$("#decompositionAndOptionRadio");
         this.$orDecomposition = this.$("#decompositionOrOptionRadio");
         this.$success = this.$('#successDecompositionMessage');
@@ -235,7 +236,8 @@ app.DecompositionModalView = Backbone.View.extend({
     checkDataAndSubmit: function () {
         if (this.checkData()) {
             app.decompositionList.add(this.newAttributes());
-            console.log(app.decompositionList)
+            this.$name.val('');
+            console.log(app.decompositionList);
         }
 
     },
