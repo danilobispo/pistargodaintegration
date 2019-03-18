@@ -157,10 +157,13 @@ app.ContextModalView = Backbone.View.extend({
         'click #removeContext': 'removeContext'
     },
     initialize: function () {
+        this.$createContextOption = $("input[value=create-context]");
         this.$editContextOption = $("input[value=edit-context]");
         this.$input = this.$('.context-input');
+        this.collection = app.comboBoxContext.collection;
         app.comboBoxContext.collection.length <= 0 ?
             this.$editContextOption.attr('disabled', true) : this.$editContextOption.attr('disabled', false);
+        this.collection.on('remove', this.changeRadioButtonIfEmpty, this)
     },
     createOrEditContextEvent: function (e) {
         $this = $(e.target);
@@ -181,10 +184,14 @@ app.ContextModalView = Backbone.View.extend({
             contextName: this.$input.val().trim()
         };
     },
-    removeContext: function (e) {
-        console.log(app.comboBoxContext.el.value);
-        app.comboBoxContext.collection.remove(app.comboBoxContext.el.value);
+    removeContext: function () {
+        this.collection.remove(app.comboBoxContext.el.value);
         console.log(app.comboBoxContext.collection);
+    },
+    changeRadioButtonIfEmpty: function () {
+        if(this.collection.length <= 0){
+            this.$createContextOption.click();
+        }
     }
 });
 
