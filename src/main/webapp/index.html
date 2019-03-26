@@ -562,12 +562,17 @@
 
 <script type="text/template" id="tpl-decomposition-list-item">
     <div class="btn-group mr-2" role="group" aria-label="Second group">
-        <button id="buttonFor<%= name %>" data-toggle="button" aria-pressed="false" autocomplete="off"><%=name %>
-        </button>
-        <button id="#removeElementButton" type="button" class="close" aria-label="Close">
+        <input type="radio" id="buttonFor<%= name %>" data-toggle="button" aria-pressed="false" autocomplete="off"><%=name %>
+        </input>
+        <button id="#removeElementButton" type="button" class="close" aria-label="Close" title="Remove this decomposition">
             <span aria-hidden="true">&times;</span>
         </button>
     </div>
+</script>
+
+<script type="text/template" id="tpl-fact-button-list-item">
+    <label for="<=%factName %>"></label>
+    <input id="<=%factName %>" type="checkbox" name="fact-group" value="<=% factName %>"><%= factName %>
 </script>
 
 <!--<script type="text/template" id="tpl-wine-details">-->
@@ -734,43 +739,8 @@
                     <div id="aggrList"></div>
 
                     <h4>Select the facts</h4>
-                    <div class="btn-group col-xs-12" data-toggle="buttons">
-                        <label class="btn btn-default">
-                            <input type="checkbox" name="fact-group" id="" value="fact_1">Fact 1
-                        </label>
-                        <label class="btn btn-default">
-                            <input type="checkbox" name="fact-group" id="" value="fact_2">Fact 2
-                        </label>
-                        <label class="btn btn-default">
-                            <input type="checkbox" name="fact-group" id="" value="fact_3">Fact 3
-                        </label>
-                        <label class="btn btn-default">
-                            <input type="checkbox" name="fact-group" id="" value="fact_1">Fact 1
-                        </label>
-                        <label class="btn btn-default">
-                            <input type="checkbox" name="fact-group" id="" value="fact_2">Fact 2
-                        </label>
-                        <label class="btn btn-default">
-                            <input type="checkbox" name="fact-group" id="" value="fact_3">Fact 3
-                        </label>
-                        <label class="btn btn-default">
-                            <input type="checkbox" name="fact-group" id="" value="fact_1">Fact 1
-                        </label>
-                        <label class="btn btn-default">
-                            <input type="checkbox" name="fact-group" id="" value="fact_2">Fact 2
-                        </label>
-                        <label class="btn btn-default">
-                            <input type="checkbox" name="fact-group" id="" value="fact_3">Fact 3
-                        </label>
-                        <label class="btn btn-default">
-                            <input type="checkbox" name="fact-group" id="" value="fact_1">Fact 1
-                        </label>
-                        <label class="btn btn-default">
-                            <input type="checkbox" name="fact-group" id="" value="fact_2">Fact 2
-                        </label>
-                        <label class="btn btn-default">
-                            <input type="checkbox" name="fact-group" id="" value="fact_3">Fact 3
-                        </label>
+                    <div id="factBttnList" class="btn-group col-xs-12" data-toggle="buttons">
+
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn close-modal-context" data-dismiss="modal" aria-label="Close">
@@ -795,7 +765,7 @@
                 </div>
                 <div class="modal-body">
                     <input id="decompositionNameInput" type="text" placeholder="New decomposition name" maxlength="30">
-                    <h4>Select an aggregation type</h4>
+                    <h4>Select a decomposition type</h4>
                     <div class="radio-inline" role="group" aria-label="aggregationTypes">
                         <input id="decompositionAndOptionRadio"
                                type="radio" value="and" name="aggrType" title="AND" PLACEHOLDER="AND"> AND

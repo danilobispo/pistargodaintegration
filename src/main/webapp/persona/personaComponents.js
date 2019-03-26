@@ -206,7 +206,6 @@ app.DecompositionModalView = Backbone.View.extend({
     },
     initialize: function () {
         this.$name = this.$("#decompositionNameInput");
-        this.$radioButtons = this.$("#input[name=aggrType]");
         this.$andDecomposition = this.$("#decompositionAndOptionRadio");
         this.$orDecomposition = this.$("#decompositionOrOptionRadio");
         this.$success = this.$('#successDecompositionMessage');
@@ -272,30 +271,23 @@ app.DecompositionListView = Backbone.View.extend({
 });
 
 app.DecompositionListItemView = Backbone.View.extend({
-
     tagName:"span",
-
     events: {
         'click .close': 'destroyItem'
     },
-
     template:_.template($('#tpl-decomposition-list-item').html()),
-
     initialize:function () {
         this.model.bind("change", this.render, this);
         this.model.bind("destroy", this.close, this);
     },
-
     render:function (eventName) {
         $(this.el).html(this.template(this.model.toJSON()));
         return this;
     },
-
     close:function () {
         $(this.el).unbind();
         $(this.el).remove();
     },
-
     destroyItem: function () {
         $(this.el).unbind();
         $(this.el).remove();
@@ -305,6 +297,51 @@ app.DecompositionListItemView = Backbone.View.extend({
 
 app.decompositionListView = new app.DecompositionListView({model:app.decompositionList});
 $('#aggrList').html(app.decompositionListView.render().el);
+
+app.FactButtonListView = Backbone.View.extend({
+    tagName:'div',
+    initialize:function () {
+        this.model.bind("reset", this.render, this);
+        var self = this;
+        this.model.bind("add", function (fact) {
+            $(self.el).append(new app.FactButtonListItemView({model:fact}).render().el);
+        });
+    },
+    render:function (eventName) {
+        _.each(this.model.models, function (fact) {
+            $(this.el).append(new app.DecompositionListItemView({model:fact}).render().el);
+        }, this);
+        return this;
+    }
+});
+
+app.FactButtonListItemView = Backbone.View.extend({
+    tagName: 'label',
+    events: {
+        //'click .close': 'destroyItem'
+    },
+    template:_.template($('#tpl-fact-button-list-item').html()),
+    initialize:function () {
+        this.model.bind("change", this.render, this);
+        // this.model.bind("destroy", this.close, this);
+    },
+    render:function (eventName) {
+        $(this.el).html(this.template(this.model.toJSON()));
+        return this;
+    }/*,
+    close:function () {
+        $(this.el).unbind();
+        $(this.el).remove();
+    },*/
+    /*destroyItem: function () {
+        $(this.el).unbind();
+        $(this.el).remove();
+        this.model.destroy();
+    }*/
+});
+
+app.factButtonListView = new app.FactButtonListView({model:app.factCollection});
+$('#factCheckboxList').html(app.factButtonListView.render().el);
 
 
 app.personaList = new app.PersonaList();
