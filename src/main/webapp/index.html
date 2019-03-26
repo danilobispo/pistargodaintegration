@@ -562,17 +562,20 @@
 
 <script type="text/template" id="tpl-decomposition-list-item">
     <div class="btn-group mr-2" role="group" aria-label="Second group">
-        <input type="radio" id="buttonFor<%= name %>" data-toggle="button" aria-pressed="false" autocomplete="off"><%=name %>
+        <input type="radio" id="buttonFor<%= name %>" data-toggle="button" aria-pressed="false" autocomplete="off"><%=name
+        %>
         </input>
-        <button id="#removeElementButton" type="button" class="close" aria-label="Close" title="Remove this decomposition">
+        <button id="#removeElementButton" type="button" class="close" aria-label="Close"
+                title="Remove this decomposition">
             <span aria-hidden="true">&times;</span>
         </button>
     </div>
 </script>
 
-<script type="text/template" id="tpl-fact-button-list-item">
-    <label for="<=%factName %>"></label>
-    <input id="<=%factName %>" type="checkbox" name="fact-group" value="<=% factName %>"><%= factName %>
+<script type="text/template" id="tpl-fact-checkbox-list-item">
+    <label for="<=%factName %>">
+        <input id="<=%factName %>" type="checkbox" name="fact-group" value="<=% factName %>"><%= factName %>
+    </label>
 </script>
 
 <!--<script type="text/template" id="tpl-wine-details">-->
@@ -689,7 +692,8 @@
                 </div>
                 <div class="modal-body">
                     <div>
-                        <input class='fact-input' title="Define a fact by name" placeholder="Choose a fact name!" autofocus="">
+                        <input class='fact-input' title="Define a fact by name" placeholder="Choose a fact name!"
+                               autofocus="">
                         <button class="fact-create" id="createFact" title="Click here to create your fact!">Create fact!
                         </button>
                     </div>
@@ -737,10 +741,8 @@
                     <a data-toggle="modal" data-target="#decompositionModal">New decomposition</a>
                     <h4>Decomposition List</h4>
                     <div id="aggrList"></div>
-
                     <h4>Select the facts</h4>
-                    <div id="factBttnList" class="btn-group col-xs-12" data-toggle="buttons">
-
+                    <div id="factCheckboxList">
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn close-modal-context" data-dismiss="modal" aria-label="Close">

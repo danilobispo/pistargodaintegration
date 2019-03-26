@@ -250,6 +250,8 @@ app.DecompositionModalView = Backbone.View.extend({
 });
 
 new app.DecompositionModalView();
+app.selectedContext = new app.Context();
+app.selectedDecomposition = new app.Decomposition();
 
 app.DecompositionListView = Backbone.View.extend({
     tagName:'div',
@@ -298,51 +300,49 @@ app.DecompositionListItemView = Backbone.View.extend({
 app.decompositionListView = new app.DecompositionListView({model:app.decompositionList});
 $('#aggrList').html(app.decompositionListView.render().el);
 
-app.FactButtonListView = Backbone.View.extend({
+app.FactCheckboxListView = Backbone.View.extend({
     tagName:'div',
     initialize:function () {
         this.model.bind("reset", this.render, this);
         var self = this;
         this.model.bind("add", function (fact) {
-            $(self.el).append(new app.FactButtonListItemView({model:fact}).render().el);
+            $(self.el).append(new app.FactCheckboxListItemView({model:fact}).render().el);
         });
     },
     render:function (eventName) {
         _.each(this.model.models, function (fact) {
-            $(this.el).append(new app.DecompositionListItemView({model:fact}).render().el);
+            $(this.el).append(new app.FactCheckboxListItemView({model:fact}).render().el);
         }, this);
         return this;
     }
 });
 
-app.FactButtonListItemView = Backbone.View.extend({
-    tagName: 'label',
+app.FactCheckboxListItemView = Backbone.View.extend({
     events: {
-        //'click .close': 'destroyItem'
+        // 'click .close': 'destroyItem'
     },
-    template:_.template($('#tpl-fact-button-list-item').html()),
+    template:_.template($('#tpl-fact-checkbox-list-item').html()),
     initialize:function () {
         this.model.bind("change", this.render, this);
-        // this.model.bind("destroy", this.close, this);
+        this.model.bind("destroy", this.close, this);
     },
     render:function (eventName) {
         $(this.el).html(this.template(this.model.toJSON()));
         return this;
-    }/*,
+    },
     close:function () {
         $(this.el).unbind();
         $(this.el).remove();
-    },*/
-    /*destroyItem: function () {
+    },
+    destroyItem: function () {
         $(this.el).unbind();
         $(this.el).remove();
         this.model.destroy();
-    }*/
+    }
 });
 
-app.factButtonListView = new app.FactButtonListView({model:app.factCollection});
-$('#factCheckboxList').html(app.factButtonListView.render().el);
-
+app.factCheckboxListView = new app.FactCheckboxListView({model:app.factCollection});
+$('#factCheckboxList').html(app.factCheckboxListView.render().el);
 
 app.personaList = new app.PersonaList();
 

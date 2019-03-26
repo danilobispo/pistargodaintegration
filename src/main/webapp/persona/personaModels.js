@@ -19,6 +19,14 @@ app.Decomposition = Backbone.Model.extend({
     }
 });
 
+app.GlobalContext = Backbone.Model.extend({
+   defaults: {
+       contextName: "",
+       aggregationType: "",
+       facts: []
+   }
+});
+
 app.Persona = Backbone.Model.extend({
     defaults: {
         name: "",
