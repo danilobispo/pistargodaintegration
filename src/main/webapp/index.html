@@ -561,10 +561,9 @@
 <!--</script>-->
 
 <script type="text/template" id="tpl-decomposition-list-item">
-    <div class="btn-group mr-2" role="group" aria-label="Second group">
-        <input type="radio" id="buttonFor<%= name %>" data-toggle="button" aria-pressed="false" autocomplete="off"><%=name
-        %>
-        </input>
+    <div class="btn-group mr-2" role="group" aria-label="Decomposition group">
+        <input type="checkbox" id="buttonFor<%= name %>" data-toggle="button" name="decomposition" aria-pressed="false"
+               autocomplete="off"><%=name %><b>[<%= decompositionType %>]</b>
         <button id="#removeElementButton" type="button" class="close" aria-label="Close"
                 title="Remove this decomposition">
             <span aria-hidden="true">&times;</span>
@@ -573,9 +572,11 @@
 </script>
 
 <script type="text/template" id="tpl-fact-checkbox-list-item">
-    <label for="<=%factName %>">
-        <input id="<=%factName %>" type="checkbox" name="fact-group" value="<=% factName %>"><%= factName %>
-    </label>
+    <div>
+        <label for="<=%factName %>">
+            <input id="<=%factName %>" type="checkbox" name="fact-group" value="<=% factName %>"><%= factName %>
+        </label>
+    </div>
 </script>
 
 <!--<script type="text/template" id="tpl-wine-details">-->
@@ -737,13 +738,16 @@
                         <label for="selectContext"></label><select id="selectContext"></select>
                         <button id="removeContext">Remove selected context</button>
                     </div>
-                    <h4>Create new decomposition of facts</h4>
-                    <a data-toggle="modal" data-target="#decompositionModal">New decomposition</a>
-                    <h4>Decomposition List</h4>
-                    <div id="aggrList"></div>
-                    <h4>Select the facts</h4>
-                    <div id="factCheckboxList">
+                    <div>
+                        <h4>Create new decomposition of facts</h4>
+                        <a data-toggle="modal" data-target="#decompositionModal">New decomposition</a>
                     </div>
+                    <div class="modal-separator">
+                        <select id="selectDecomposition"></select> <a>Edit decomposition</a>
+                    </div>
+                    <h4>Select the decompositions you want in this context: </h4>
+                    <div id="aggrList" class="col-xs-12"></div>
+                    <button class="btn-success">Create Context</button>
                     <div class="modal-footer">
                         <button type="button" class="btn close-modal-context" data-dismiss="modal" aria-label="Close">
                             Close
@@ -777,6 +781,9 @@
                         <br/>
                     </div>
                     <br/>
+                    <h4>Select the facts that you want in this decomposition</h4>
+                    <div id="factCheckboxList" class="col-xs-12"></div>
+
                     <button id="decompositionCreatorButton" class="btn"> Create!</button>
                     <span id="successDecompositionMessage" hidden>Decomposition created!</span>
                 </div>

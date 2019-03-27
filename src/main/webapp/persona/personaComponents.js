@@ -319,26 +319,32 @@ app.FactCheckboxListView = Backbone.View.extend({
 
 app.FactCheckboxListItemView = Backbone.View.extend({
     events: {
-        // 'click .close': 'destroyItem'
+         'click input': 'setAsSelected'
     },
     template:_.template($('#tpl-fact-checkbox-list-item').html()),
     initialize:function () {
         this.model.bind("change", this.render, this);
-        this.model.bind("destroy", this.close, this);
+        // this.model.bind("destroy", this.close, this);
     },
     render:function (eventName) {
         $(this.el).html(this.template(this.model.toJSON()));
+        console.log(this.model);
         return this;
     },
-    close:function () {
-        $(this.el).unbind();
-        $(this.el).remove();
-    },
-    destroyItem: function () {
-        $(this.el).unbind();
-        $(this.el).remove();
-        this.model.destroy();
+    setAsSelected: function(){
+        app.selectedDecomposition = this.model;
+        console.log('Opção selecionada: ', app.selectedDecomposition.defaults.name);
     }
+        // ,
+    // close:function () {
+    //     $(this.el).unbind();
+    //     $(this.el).remove();
+    // },
+    // destroyItem: function () {
+    //     $(this.el).unbind();
+    //     $(this.el).remove();
+    //     this.model.destroy();
+    // }
 });
 
 app.factCheckboxListView = new app.FactCheckboxListView({model:app.factCollection});
