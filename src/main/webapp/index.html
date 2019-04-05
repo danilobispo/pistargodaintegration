@@ -40,10 +40,10 @@
                 </li>
                 <li id="helpButton"><a href="#helpArea" aria-controls="helpArea" aria-expanded="false"
                                        data-toggle="collapse"
-                                       title="Don't worry, you won't loose your model if you click here.">Help</a></li>
+                                       title="Don't worry, you won't lose your model if you click here.">Help</a></li>
                 <li id="personaButton"><a href="#personaArea" aria-controls="personaArea" aria-expanded="false"
                                           data-toggle="collapse"
-                                          title="Don't worry, you won't loose your model if you click here.">Persona-Based
+                                          title="Don't worry, you won't lose your model if you click here.">Persona-Based
                     Modelling</a></li>
             </ul>
         </div><!--/.nav-collapse -->
@@ -562,21 +562,20 @@
 
 <script type="text/template" id="tpl-decomposition-list-item">
     <div class="btn-group mr-2" role="group" aria-label="Decomposition group">
-        <input type="checkbox" id="buttonFor<%= name %>" data-toggle="button" name="decomposition" aria-pressed="false"
+        <input type="checkbox" id="buttonFor <%= name %>" data-toggle="button" name="decomposition" aria-pressed="false"
                autocomplete="off"><%=name %><b>[<%= decompositionType %>]</b>
         <button id="#removeElementButton" type="button" class="close" aria-label="Close"
                 title="Remove this decomposition">
             <span aria-hidden="true">&times;</span>
         </button>
     </div>
+
 </script>
 
 <script type="text/template" id="tpl-fact-checkbox-list-item">
-    <div>
-        <label for="<=%factName %>">
-            <input id="<=%factName %>" type="checkbox" name="fact-group" value="<=% factName %>"><%= factName %>
-        </label>
-    </div>
+    <label for="<%= factName %>">
+        <input id="<%= factName %>" type="checkbox" value="<%= factName %>"><%= factName %>
+    </label>
 </script>
 
 <!--<script type="text/template" id="tpl-wine-details">-->
@@ -692,19 +691,16 @@
                     <h4 class="modal-title" id="defineFactsModalTitle">Define facts for context</h4>
                 </div>
                 <div class="modal-body">
-                    <div>
-                        <input class='fact-input' title="Define a fact by name" placeholder="Choose a fact name!"
-                               autofocus="">
-                        <button class="fact-create" id="createFact" title="Click here to create your fact!">Create fact!
-                        </button>
-                    </div>
-                    <div class="panel-heading">
-                        <h4 class="panel-title">
-                            <a id="show-facts-button" class="show-facts" data-toggle="collapse"
-                               href="#showFactsList">
-                            </a>
-                        </h4>
-                    </div>
+                    <input class='fact-input' title="Define a fact by name" placeholder="Choose a fact name!"
+                           autofocus="">
+                    <button class="fact-create" id="createFact" title="Click here to create your fact!">Create fact!
+                    </button>
+                    <hr class="edited-hr"/>
+                    <h4 class="panel-title">
+                        <a id="show-facts-button" class="show-facts" data-toggle="collapse"
+                           href="#showFactsList">
+                        </a>
+                    </h4>
                     <div id="showFactsList" class="panel-collapse collapse">
                         <ul id="factsList" class="list-group">
                         </ul>
@@ -742,12 +738,12 @@
                         <h4>Create new decomposition of facts</h4>
                         <a data-toggle="modal" data-target="#decompositionModal">New decomposition</a>
                     </div>
-                    <div class="modal-separator">
-                        <select id="selectDecomposition"></select> <a>Edit decomposition</a>
-                    </div>
                     <h4>Select the decompositions you want in this context: </h4>
-                    <div id="aggrList" class="col-xs-12"></div>
-                    <button class="btn-success">Create Context</button>
+                    <div id="aggrList" class="col-xs-12">
+
+                    </div>
+                        <button id="saveContext" class="btn-success">Create Context</button>
+                    </div>
                     <div class="modal-footer">
                         <button type="button" class="btn close-modal-context" data-dismiss="modal" aria-label="Close">
                             Close
@@ -782,8 +778,8 @@
                     </div>
                     <br/>
                     <h4>Select the facts that you want in this decomposition</h4>
-                    <div id="factCheckboxList" class="col-xs-12"></div>
-
+                    <div id="factCheckboxList"></div>
+                    <div class="separator"></div>
                     <button id="decompositionCreatorButton" class="btn"> Create!</button>
                     <span id="successDecompositionMessage" hidden>Decomposition created!</span>
                 </div>

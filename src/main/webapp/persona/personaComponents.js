@@ -25,8 +25,8 @@ app.FactsModalView = Backbone.View.extend({
             console.log(app.factCollection);
         }
     },
-    addFactViaClick: function() {
-        if(this.$input.val().trim()){
+    addFactViaClick: function () {
+        if (this.$input.val().trim()) {
             app.factCollection.add(this.newAttributes());
             this.$input.val('');
             console.log(app.factCollection);
@@ -71,6 +71,7 @@ app.ListOfFacts = Backbone.View.extend({
     initialize: function () {
         this.collection = app.factCollection;
         this.collection.on('add', this.render, this);
+        // this.collection.on('remove', this.renderTemplateifListIsEmpty, this);
 
     },
     events: {
@@ -95,10 +96,25 @@ app.ListOfFacts = Backbone.View.extend({
         // DEBUG
         // console.log(this.collection);
     }
+    // TODO: Arrumar isso aqui embaixo pra funfar
+    //
+    // ,
+    // renderTemplateifListIsEmpty: function () {
+    //     if(this.collection.length === 0) {
+    //         this.$el.show('<h3> The list is empty!</h3>');
+    //         this.template = _.template('<h3> The list is empty!</h3>');
+    //     } else {
+    //         this.template = _.template('<li data-id="${id}" ' +
+    //             'value="<%= id%>" class="list-group-item"><%= factName %>'
+    //             + '<span class="close">&times;</span></li>')
+    //     }
+    // }
 });
 
 app.listOfFacts = new app.ListOfFacts();
-
+app.selectedContext = new app.Context();
+app.selectedDecompositionsForContext = new app.DecompositionList();
+app.contextList = new app.ContextList();
 
 app.ComboBoxContext = Backbone.View.extend({
     el: $('#selectContext'),
@@ -117,6 +133,9 @@ app.ComboBoxContext = Backbone.View.extend({
     },
     add: function (option) {
         this.collection.add(option);
+        if (this.collection.length === 1) {
+            app.selectedContext = option;
+        }
     },
     render: function (model) {
         this.$el.append(this.template(model.attributes));
@@ -127,7 +146,9 @@ app.ComboBoxContext = Backbone.View.extend({
     // Este método é executado a cada click na combo (select).
     // Com as informações obtidas poderíamos, inclusive,
     // realizar uma requisação AJAX, por exemplo.
-    change: function () {
+    change: function (e) {
+        console.log('selectedContext: ', this.collection.get(e.target.value));
+        app.selectedContext = this.collection.get(e.target.value);
         var index = this.el.selectedIndex;
         var value = this.el.options[index].value;
         var text = this.el.options[index].text;
@@ -154,7 +175,8 @@ app.ContextModalView = Backbone.View.extend({
     events: {
         'click input[name="createOrEdit"]': 'createOrEditContextEvent',
         'keypress .context-input': 'addContext',
-        'click #removeContext': 'removeContext'
+        'click #removeContext': 'removeContext',
+        'click #saveContext': 'saveContext'
     },
     initialize: function () {
         this.$createContextOption = $("input[value=create-context]");
@@ -186,13 +208,31 @@ app.ContextModalView = Backbone.View.extend({
     },
     removeContext: function () {
         this.collection.remove(app.comboBoxContext.el.value);
+        // Remove da lista geral pra evitar bugs
+        app.contextList.remove(app.comboBoxContext.el.value);
         console.log(app.comboBoxContext.collection);
     },
     changeRadioButtonIfEmpty: function () {
-        if(this.collection.length <= 0){
+        if (this.collection.length <= 0) {
             this.$createContextOption.click();
         }
-    }
+    },
+    createNewContext: function() {
+        return {
+            id: app.comboBoxContext.collection.length,
+            contextName: app.selectedContext.attributes.contextName,
+            // Facts are inside the decompositions
+            decompositionsAndFacts: app.selectedDecompositionsForContext
+        }
+    },
+    saveContext: function () {
+        console.log('app.selectedContext:', app.selectedContext);
+        console.log('app.selectedContext contextName:', app.selectedContext.attributes.contextName);
+        console.log('app.selectedDecompositionsForContext:', app.selectedDecompositionsForContext);
+
+        app.contextList.add(new Context(this.createNewContext()));
+        console.log("app.contextList:", app.contextList);
+    },
 });
 
 new app.ContextModalView();
@@ -216,13 +256,18 @@ app.DecompositionModalView = Backbone.View.extend({
             // console.log("and:", this.$andDecomposition.is(':checked'));
             // console.log("Or:" , this.$orDecomposition.is(':checked'));
             if (this.$andDecomposition.is(':checked') || this.$orDecomposition.is(':checked')) {
-                //Animação para mostrar mensagem e depois apagar
-                this.$success.show();
-                setTimeout(function () {
-                    $('#successDecompositionMessage').hide();
-                    }, 3000
-                );
-                return true;
+                if(app.selectedFacts.length > 0) {
+
+                    //Animação para mostrar mensagem e depois apagar
+                    this.$success.show();
+                    setTimeout(function () {
+                            $('#successDecompositionMessage').hide();
+                        }, 3000
+                    );
+                    return true;
+                } else{
+                    alert("You have to choose at least one fact for this decomposition!");
+                }
             } else {
                 alert('Choose an decomposition type!');
                 return false;
@@ -243,7 +288,8 @@ app.DecompositionModalView = Backbone.View.extend({
     newAttributes: function () {
         return {
             name: this.$name.val(),
-            decompositionType: this.$andDecomposition.is(':checked') ? "AND" : "OR"
+            decompositionType: this.$andDecomposition.is(':checked') ? "AND" : "OR",
+            facts: app.selectedFacts
         }
     }
 
@@ -251,42 +297,43 @@ app.DecompositionModalView = Backbone.View.extend({
 
 new app.DecompositionModalView();
 app.selectedContext = new app.Context();
-app.selectedDecomposition = new app.Decomposition();
+app.selectedFacts = new app.DecompositionList();
 
 app.DecompositionListView = Backbone.View.extend({
-    tagName:'div',
+    tagName: 'div',
 
-    initialize:function () {
+    initialize: function () {
         this.model.bind("reset", this.render, this);
         var self = this;
         this.model.bind("add", function (decomposition) {
-            $(self.el).append(new app.DecompositionListItemView({model:decomposition}).render().el);
+            $(self.el).append(new app.DecompositionListItemView({model: decomposition}).render().el);
         });
     },
 
-    render:function (eventName) {
+    render: function (eventName) {
         _.each(this.model.models, function (decomposition) {
-            $(this.el).append(new app.DecompositionListItemView({model:decomposition}).render().el);
+            $(this.el).append(new app.DecompositionListItemView({model: decomposition}).render().el);
         }, this);
         return this;
     }
 });
 
 app.DecompositionListItemView = Backbone.View.extend({
-    tagName:"span",
+    tagName: "span",
     events: {
-        'click .close': 'destroyItem'
+        'click .close': 'destroyItem',
+        'click input[type=checkbox]': 'addOrRemoveFromList'
     },
-    template:_.template($('#tpl-decomposition-list-item').html()),
-    initialize:function () {
+    template: _.template($('#tpl-decomposition-list-item').html()),
+    initialize: function () {
         this.model.bind("change", this.render, this);
         this.model.bind("destroy", this.close, this);
     },
-    render:function (eventName) {
+    render: function (eventName) {
         $(this.el).html(this.template(this.model.toJSON()));
         return this;
     },
-    close:function () {
+    close: function () {
         $(this.el).unbind();
         $(this.el).remove();
     },
@@ -294,24 +341,35 @@ app.DecompositionListItemView = Backbone.View.extend({
         $(this.el).unbind();
         $(this.el).remove();
         this.model.destroy();
+    },
+    addOrRemoveFromList: function (e) {
+        console.log(e.target);
+        if (e.target.checked) {
+            console.log('kkk add');
+            app.selectedDecompositionsForContext.add(this.model);
+        } else {
+            console.log('kkk remove');
+            app.selectedDecompositionsForContext.remove(this.model);
+        }
+        console.log('Opção selecionada: ', this.model);
     }
 });
 
-app.decompositionListView = new app.DecompositionListView({model:app.decompositionList});
+app.decompositionListView = new app.DecompositionListView({model: app.decompositionList});
 $('#aggrList').html(app.decompositionListView.render().el);
 
 app.FactCheckboxListView = Backbone.View.extend({
-    tagName:'div',
-    initialize:function () {
+    tagName: 'div',
+    initialize: function () {
         this.model.bind("reset", this.render, this);
         var self = this;
         this.model.bind("add", function (fact) {
-            $(self.el).append(new app.FactCheckboxListItemView({model:fact}).render().el);
+            $(self.el).append(new app.FactCheckboxListItemView({model: fact}).render().el);
         });
     },
-    render:function (eventName) {
+    render: function (eventName) {
         _.each(this.model.models, function (fact) {
-            $(this.el).append(new app.FactCheckboxListItemView({model:fact}).render().el);
+            $(this.el).append(new app.FactCheckboxListItemView({model: fact}).render().el);
         }, this);
         return this;
     }
@@ -319,23 +377,23 @@ app.FactCheckboxListView = Backbone.View.extend({
 
 app.FactCheckboxListItemView = Backbone.View.extend({
     events: {
-         'click input': 'setAsSelected'
+        'click input': 'setAsSelectedOrRemove'
     },
-    template:_.template($('#tpl-fact-checkbox-list-item').html()),
-    initialize:function () {
+    template: _.template($('#tpl-fact-checkbox-list-item').html()),
+    initialize: function () {
         this.model.bind("change", this.render, this);
         // this.model.bind("destroy", this.close, this);
     },
-    render:function (eventName) {
+    render: function (eventName) {
         $(this.el).html(this.template(this.model.toJSON()));
         console.log(this.model);
         return this;
     },
-    setAsSelected: function(){
-        app.selectedDecomposition = this.model;
-        console.log('Opção selecionada: ', app.selectedDecomposition.defaults.name);
+    setAsSelectedOrRemove: function (e) {
+        e.target.checked ? app.selectedFacts.add(this.model) : app.selectedFacts.remove(this.model);
+        console.log('Opção selecionada: ', e.target.value);
     }
-        // ,
+    // ,
     // close:function () {
     //     $(this.el).unbind();
     //     $(this.el).remove();
@@ -347,7 +405,7 @@ app.FactCheckboxListItemView = Backbone.View.extend({
     // }
 });
 
-app.factCheckboxListView = new app.FactCheckboxListView({model:app.factCollection});
+app.factCheckboxListView = new app.FactCheckboxListView({model: app.factCollection});
 $('#factCheckboxList').html(app.factCheckboxListView.render().el);
 
 app.personaList = new app.PersonaList();
@@ -355,7 +413,7 @@ app.personaList = new app.PersonaList();
 app.PersonaModalView = Backbone.View.extend({
     el: '#personaCreationModal',
     events: {
-        'click #createPersonaButton' : 'checkDataAndSubmit'
+        'click #createPersonaButton': 'checkDataAndSubmit'
     },
     initialize: function () {
         this.$name = this.$("#personaCreationName");
@@ -372,7 +430,7 @@ app.PersonaModalView = Backbone.View.extend({
         if (this.checkData()) {
             console.log("Name: ", this.$name.val());
             console.log("photo:", this.$photo.val());
-            console.log("description:" ,this.$description.val());
+            console.log("description:", this.$description.val());
             app.personaList.add(this.newAttributes());
             alert('Persona created!');
             console.log(app.personaList);
@@ -383,7 +441,7 @@ app.PersonaModalView = Backbone.View.extend({
     newAttributes: function () {
         return {
             name: this.$name.val(),
-            photo: this.$photo.val() === undefined ? "": this.$photo.val(),
+            photo: this.$photo.val() === undefined ? "" : this.$photo.val(),
             description: this.$description.val()
         }
     }
