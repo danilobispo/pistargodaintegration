@@ -175,6 +175,7 @@ app.ContextModalView = Backbone.View.extend({
     events: {
         'click input[name="createOrEdit"]': 'createOrEditContextEvent',
         'keypress .context-input': 'addContext',
+        'click #createContextName': 'addContextNameViaClick',
         'click #removeContext': 'removeContext',
         'click #saveContext': 'saveContext'
     },
@@ -194,7 +195,15 @@ app.ContextModalView = Backbone.View.extend({
     },
     addContext: function (e) {
         if (e.which === 13 && this.$input.val().trim()) {
-            app.comboBoxContext.add(new Context(this.newAttributes()));
+            app.comboBoxContext.add(new app.Context(this.newAttributes()));
+            this.$input.val('');
+            alert("Done, now go edit your context!");
+            console.log(app.comboBoxContext.collection);
+        }
+    },
+    addContextNameViaClick: function() {
+        if(this.$input.val().trim()) {
+            app.comboBoxContext.add(new app.Context(this.newAttributes()));
             this.$input.val('');
             alert("Done, now go edit your context!");
             console.log(app.comboBoxContext.collection);
@@ -230,7 +239,7 @@ app.ContextModalView = Backbone.View.extend({
         console.log('app.selectedContext contextName:', app.selectedContext.attributes.contextName);
         console.log('app.selectedDecompositionsForContext:', app.selectedDecompositionsForContext);
 
-        app.contextList.add(new Context(this.createNewContext()));
+        app.contextList.add(new app.Context(this.createNewContext()));
         console.log("app.contextList:", app.contextList);
     },
 });
