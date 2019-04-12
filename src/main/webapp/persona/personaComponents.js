@@ -191,7 +191,10 @@ app.ContextModalView = Backbone.View.extend({
         'keypress .context-input': 'addContext',
         'click #createContextName': 'addContextNameViaClick',
         'click #removeContext': 'removeContext',
-        'click #saveContext': 'saveContext'
+        'click #saveContext': 'saveContext',
+        'click .btn close-modal-context': 'exitContextModal',
+        'hidden.bs.modal' : 'controlDoneButtons',
+        'shown.bs.modal': 'displayMessageIfNoFacts'
     },
     initialize: function () {
         this.$createContextOption = $("input[value=create-context]");
@@ -201,6 +204,13 @@ app.ContextModalView = Backbone.View.extend({
         app.comboBoxContext.collection.length <= 0 ?
             this.$editContextOption.attr('disabled', true) : this.$editContextOption.attr('disabled', false);
         this.collection.on('remove', this.changeRadioButtonIfEmpty, this)
+    },
+    displayMessageIfNoFacts: function() {
+        if(app.factCollection.length <= 0) {
+            alert('There are not enough facts to create a decomposition!\n ' +
+                'Go back to the previous step and create at least one');
+            this.$el.modal('toggle');
+        }
     },
     createOrEditContextEvent: function (e) {
         $this = $(e.target);
@@ -252,10 +262,33 @@ app.ContextModalView = Backbone.View.extend({
         console.log('app.selectedContext:', app.selectedContext);
         console.log('app.selectedContext contextName:', app.selectedContext.attributes.contextName);
         console.log('app.selectedDecompositionsForContext:', app.selectedDecompositionsForContext);
-
         app.contextList.add(new app.Context(this.createNewContext()));
         console.log("app.contextList:", app.contextList);
     },
+    exitContextModal: function () {
+        if(app.contextList.length > 0) {
+            this.$el.modal.toggle();
+        } else {
+            if(confirm('You did not create any contexts, are you sure you want to exit?')){
+                this.$el.modal.toggle();
+            }
+        }
+    },
+    controlDoneButtons: function () {
+        if (app.contextList.length > 0) {
+            // Caso em que a seta deve aparecer verde e o X desaparecer
+            $("#stepTwoDone").css("display", "");
+            $("#stepTwoNotDone").css("display", "none");
+            $("#stepTwoDone").css("color", "#00FF00");
+            $("#stepTwoLabel").html("Step 2: Edit contexts");
+        } else {
+            // Caso em que a seta deve desaparecer verde e o X aparecer
+            $("#stepTwoNotDone").css("display", "");
+            $("#stepTwoDone").css("display", "none");
+            $("#stepTwoNotDone").css("color", "#FF0000");
+            $("#stepTwoLabel").html("Step 2: Define contexts");
+        }
+    }
 });
 
 new app.ContextModalView();
@@ -416,16 +449,6 @@ app.FactCheckboxListItemView = Backbone.View.extend({
         e.target.checked ? app.selectedFacts.add(this.model) : app.selectedFacts.remove(this.model);
         console.log('Opção selecionada: ', e.target.value);
     }
-    // ,
-    // close:function () {
-    //     $(this.el).unbind();
-    //     $(this.el).remove();
-    // },
-    // destroyItem: function () {
-    //     $(this.el).unbind();
-    //     $(this.el).remove();
-    //     this.model.destroy();
-    // }
 });
 
 app.factCheckboxListView = new app.FactCheckboxListView({model: app.factCollection});
@@ -470,6 +493,47 @@ app.PersonaModalView = Backbone.View.extend({
     }
 });
 
+app.personaModalFactCheckboxListView = new app.FactCheckboxListView({el: "#personaFactCheckboxList", model: app.factCollection});
+
+
+app.ContextCheckboxListView = Backbone.View.extend({
+    tagName: 'div',
+    initialize: function () {
+        this.model.bind("reset", this.render, this);
+        var self = this;
+        this.model.bind("add", function (context) {
+            $(self.el).append(new app.ContextCheckboxListItemView({model: context}).render().el);
+        });
+    },
+    render: function (eventName) {
+        _.each(this.model.models, function (context) {
+            $(this.el).append(new app.ContextCheckboxListItemView({model: context}).render().el);
+        }, this);
+        return this;
+    }
+});
+
+app.ContextCheckboxListItemView = Backbone.View.extend({
+    events: {
+        'click input': 'setAsSelectedOrRemove'
+    },
+    template: _.template($('#tpl-context-checkbox-list-item').html()),
+    initialize: function () {
+        this.model.bind("change", this.render, this);
+        // this.model.bind("destroy", this.close, this);
+    },
+    render: function (eventName) {
+        $(this.el).html(this.template(this.model.toJSON()));
+        console.log(this.model);
+        return this;
+    },
+    setAsSelectedOrRemove: function (e) {
+        e.target.checked ? app.selectedContextsForPersona.add(this.model) : app.selectedContextsForPersona.remove(this.model);
+        console.log('Opção selecionada: ', e.target.value);
+    }
+});
+app.personaModalContextCheckboxListView = new app.ContextCheckboxListView({el: "#personaContextList", model: app.contextList});
+app.selectedContextsForPersona = new app.ContextList();
 new app.PersonaModalView();
 
 // Views

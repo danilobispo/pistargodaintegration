@@ -129,8 +129,10 @@
                     data-toggle="modal"
                     data-target="#contextAndFactsModal"
                     title="Define contexts and associate then with facts created in step 1">
-                <span>Step 2: Define contexts </span>
+                <span id="stepTwoLabel">Step 2: Define contexts </span>
             </button>
+            <span id="stepTwoDone" class="glyphicon glyphicon-ok" style="display:none"></span>
+            <span id="stepTwoNotDone" class="glyphicon glyphicon-remove" style="display:none"></span>
         </li>
         <li>
             <button type="button" id="thirdStepPersona" class="btn btn-info navbar-btn">
@@ -579,6 +581,12 @@
     </label>
 </script>
 
+<script type="text/template" id="tpl-context-checkbox-list-item">
+    <label for="<%= contextName %>">
+        <input id="<%= contextName %>" type="checkbox" value="<%= contextName %>"><%= contextName %>
+    </label>
+</script>
+
 <!--<script type="text/template" id="tpl-wine-details">-->
 
 <!--<div class="form-left-col">-->
@@ -807,35 +815,17 @@
                         <input type="text"
                                placeholder="Persona name"
                                id="personaCreationName">
+                        <hr/>
                         <textarea id="personaCreationDescription" autofocus="" rows="5" cols="30"
                                   placeholder="Set a description(optional)"></textarea>
                         <h4>Select facts about this persona</h4>
-                        <div class="btn-group col-xs-12" data-toggle="buttons">
-                            <label class="btn btn-default">
-                                <input type="checkbox" name="fact-group" id="" value="fact_1">Fact 1
-                            </label>
-                            <label class="btn btn-default">
-                                <input type="checkbox" name="fact-group" id="" value="fact_1">Fact 2
-                            </label>
-                            <label class="btn btn-default">
-                                <input type="checkbox" name="fact-group" id="" value="fact_1">Fact 3
-                            </label>
+                        <div id="personaFactCheckboxList" class="col-xs-12">
                         </div>
-                        <br/><br/>
-
+                        <hr/><hr/>
                         <h4>Or select contexts directly</h4>
-                        <div class="btn-group col-xs-12" data-toggle="buttons">
-                            <label class="btn btn-default">
-                                <input type="checkbox" name="fact-group" id="" value="context_1">Context 1
-                            </label>
-                            <label class="btn btn-default">
-                                <input type="checkbox" name="fact-group" id="" value="context_2">Context 2
-                            </label>
-                            <label class="btn btn-default">
-                                <input type="checkbox" name="fact-group" id="" value="context_3">Context 3
-                            </label>
+                        <div id="personaContextList" class="col-xs-12">
                         </div>
-                        <br/><br/>
+                        <hr/><hr/>
 
                         <button id="createPersonaButton" class="btn-success">Finish and create persona!</button>
                     </div>
