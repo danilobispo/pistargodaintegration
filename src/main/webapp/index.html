@@ -121,7 +121,8 @@
                     title="Define facts for contexts">
                 <span id="stepOneLabel">Step 1: Define facts for contexts</span>
             </button>
-            <span id="stepOneDone" class="glyphicon glyphicon-ok"></span>
+            <span id="stepOneDone" class="glyphicon glyphicon-ok" style="display:none"></span>
+            <span id="stepOneNotDone" class="glyphicon glyphicon-remove" style="display:none"></span>
         </li>
         <li>
             <button type="button" id="secondStepPersona" class="btn btn-info navbar-btn"
@@ -743,13 +744,12 @@
                     <div id="aggrList" class="col-xs-12">
 
                     </div>
-                        <button id="saveContext" class="btn-success">Create Context</button>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn close-modal-context" data-dismiss="modal" aria-label="Close">
-                            Close
-                        </button>
-                    </div>
+                    <button id="saveContext" class="btn-success">Create Context</button>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn close-modal-context" data-dismiss="modal" aria-label="Close">
+                        Close
+                    </button>
                 </div>
             </div>
         </div>
@@ -807,10 +807,6 @@
                         <input type="text"
                                placeholder="Persona name"
                                id="personaCreationName">
-                        <input type="file"
-                               title="Persona photo(optional)"
-                               placeholder="Persona photo(optional)"
-                               id="personaCreationPhoto">
                         <textarea id="personaCreationDescription" autofocus="" rows="5" cols="30"
                                   placeholder="Set a description(optional)"></textarea>
                         <h4>Select facts about this persona</h4>
@@ -851,7 +847,6 @@
             </div>
         </div>
     </div>
-
 
 </div>
 </body>

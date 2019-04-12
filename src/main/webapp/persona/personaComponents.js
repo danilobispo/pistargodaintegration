@@ -8,10 +8,10 @@ app.FactsModalView = Backbone.View.extend({
         'keypress .fact-input': 'addFact',
         'click .fact-create': 'addFactViaClick',
         'click .show-facts': 'showList',
-        'click .close-modal': 'saveChangesAndExit'
+        'click .close-modal': 'saveChangesAndExit',
+        'hidden.bs.modal' : 'saveChangesAndExitViaClickOrEscape'
     },
     initialize: function () {
-
         this.$input = this.$('.fact-input');
         this.$showFactsButton = this.$('.show-facts');
         this.$showFactsButton.text("Show facts list");
@@ -48,14 +48,28 @@ app.FactsModalView = Backbone.View.extend({
     saveChangesAndExit: function () {
         if (app.factCollection.length > 0) {
             this.$el.modal('toggle');
-            $("#stepOneDone").css("color", "#00FF00");
-            $("#stepOneLabel").html("Step 1: Edit facts for contexts");
         } else {
             if (confirm("Not enough facts to create contexts from(you need at least 1)!\n" +
                 "Do you really want to leave?")) {
                 this.$el.modal('toggle');
             }
         }
+    },
+    saveChangesAndExitViaClickOrEscape: function () {
+        if (app.factCollection.length > 0) {
+            // Caso em que a seta deve aparecer verde e o X desaparecer
+            $("#stepOneDone").css("display", "");
+            $("#stepOneNotDone").css("display", "none");
+            $("#stepOneDone").css("color", "#00FF00");
+            $("#stepOneLabel").html("Step 1: Edit facts for contexts");
+        } else {
+            // Caso em que a seta deve desaparecer verde e o X aparecer
+            $("#stepOneNotDone").css("display", "");
+            $("#stepOneDone").css("display", "none");
+            $("#stepOneNotDone").css("color", "#FF0000");
+            $("#stepOneLabel").html("Step 1: Define facts for contexts");
+        }
+
     }
 });
 new app.FactsModalView();
