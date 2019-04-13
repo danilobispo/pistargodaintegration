@@ -321,7 +321,7 @@ app.DecompositionModalView = Backbone.View.extend({
                         }, 3000
                     );
                     return true;
-                } else{
+                } else {
                     alert("You have to choose at least one fact for this decomposition!");
                 }
             } else {
@@ -353,7 +353,8 @@ app.DecompositionModalView = Backbone.View.extend({
 
 new app.DecompositionModalView();
 app.selectedContext = new app.Context();
-app.selectedFacts = new app.DecompositionList();
+app.selectedFacts = new app.FactCollection();
+app.selectedFactsForPersona = new app.FactCollection();
 
 app.DecompositionListView = Backbone.View.extend({
     tagName: 'div',
@@ -438,6 +439,10 @@ app.FactCheckboxListItemView = Backbone.View.extend({
     template: _.template($('#tpl-fact-checkbox-list-item').html()),
     initialize: function () {
         this.model.bind("change", this.render, this);
+        this.on("setAsSelectedOrRemove", function(){
+            //TODO: Se foi selecionado ou removido, verificar se algum
+            // contexto se encaixa com base na proposição lógica
+        });
         // this.model.bind("destroy", this.close, this);
     },
     render: function (eventName) {
