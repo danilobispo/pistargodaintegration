@@ -192,7 +192,7 @@ app.ContextModalView = Backbone.View.extend({
         'click #createContextName': 'addContextNameViaClick',
         'click #removeContext': 'removeContext',
         'click #saveContext': 'saveContext',
-        'click .btn close-modal-context': 'exitContextModal',
+        'click .close-modal-context': 'exitContextModal',
         'hidden.bs.modal' : 'controlDoneButtons',
         'shown.bs.modal': 'displayMessageIfNoFacts'
     },
@@ -267,10 +267,10 @@ app.ContextModalView = Backbone.View.extend({
     },
     exitContextModal: function () {
         if(app.contextList.length > 0) {
-            this.$el.modal.toggle();
+            this.$el.modal('toggle');
         } else {
             if(confirm('You did not create any contexts, are you sure you want to exit?')){
-                this.$el.modal.toggle();
+                this.$el.modal('toggle');
             }
         }
     },
