@@ -345,7 +345,7 @@ app.DecompositionModalView = Backbone.View.extend({
         return {
             name: this.$name.val(),
             decompositionType: this.$andDecomposition.is(':checked') ? "AND" : "OR",
-            facts: app.selectedFacts
+            facts: app.factCheckboxListView.optionsCollection
         }
     }
 
@@ -417,17 +417,19 @@ $('#aggrList').html(app.decompositionListView.render().el);
 
 app.FactCheckboxListView = Backbone.View.extend({
     tagName: 'div',
-    initialize: function () {
+    initialize: function (options) {
+        this.optionsCollection = options.list;
         this.model.bind("reset", this.render, this);
         var self = this;
         this.model.bind("add", function (fact) {
-            $(self.el).append(new app.FactCheckboxListItemView({model: fact}).render().el);
+            $(self.el).append(new app.FactCheckboxListItemView({model: fact, list: options.list}).render().el);
         });
     },
-    render: function (eventName) {
+    render: function (eventName, options) {
         _.each(this.model.models, function (fact) {
-            $(this.el).append(new app.FactCheckboxListItemView({model: fact}).render().el);
+            $(this.el).append(new app.FactCheckboxListItemView({model: fact, list: options.list}).render().el);
         }, this);
+        console.log('lista de opções: ', this.optionsCollection);
         return this;
     }
 });
@@ -437,7 +439,8 @@ app.FactCheckboxListItemView = Backbone.View.extend({
         'click input': 'setAsSelectedOrRemove'
     },
     template: _.template($('#tpl-fact-checkbox-list-item').html()),
-    initialize: function () {
+    initialize: function (options) {
+        this.collection = options.list;
         this.model.bind("change", this.render, this);
         this.on("setAsSelectedOrRemove", function(){
             //TODO: Se foi selecionado ou removido, verificar se algum
@@ -451,12 +454,12 @@ app.FactCheckboxListItemView = Backbone.View.extend({
         return this;
     },
     setAsSelectedOrRemove: function (e) {
-        e.target.checked ? app.selectedFacts.add(this.model) : app.selectedFacts.remove(this.model);
+        e.target.checked ? this.collection.add(this.model) : this.collection.remove(this.model);
         console.log('Opção selecionada: ', e.target.value);
     }
 });
 
-app.factCheckboxListView = new app.FactCheckboxListView({model: app.factCollection});
+app.factCheckboxListView = new app.FactCheckboxListView({model: app.factCollection, list: app.selectedFacts});
 $('#factCheckboxList').html(app.factCheckboxListView.render().el);
 
 app.personaList = new app.PersonaList();
@@ -468,7 +471,6 @@ app.PersonaModalView = Backbone.View.extend({
     },
     initialize: function () {
         this.$name = this.$("#personaCreationName");
-        this.$photo = this.$("#personaCreationPhoto");
         this.$description = this.$("#personaCreationDescription");
     },
     checkData: function () {
@@ -480,8 +482,8 @@ app.PersonaModalView = Backbone.View.extend({
     checkDataAndSubmit: function () {
         if (this.checkData()) {
             console.log("Name: ", this.$name.val());
-            console.log("photo:", this.$photo.val());
             console.log("description:", this.$description.val());
+            console.log('Selected facts in persona modal:', app.personaModalFactCheckboxListView.optionsCollection);
             app.personaList.add(this.newAttributes());
             alert('Persona created!');
             console.log(app.personaList);
@@ -492,13 +494,16 @@ app.PersonaModalView = Backbone.View.extend({
     newAttributes: function () {
         return {
             name: this.$name.val(),
-            photo: this.$photo.val() === undefined ? "" : this.$photo.val(),
             description: this.$description.val()
         }
     }
 });
 
-app.personaModalFactCheckboxListView = new app.FactCheckboxListView({el: "#personaFactCheckboxList", model: app.factCollection});
+app.personaModalFactCheckboxListView = new app.FactCheckboxListView({
+    el: "#personaFactCheckboxList",
+    model: app.factCollection,
+    list: app.selectedFactsForPersona // Pois será usada na modal de criar persona, sendo portanto uma lista diferente
+});
 
 
 app.ContextCheckboxListView = Backbone.View.extend({
