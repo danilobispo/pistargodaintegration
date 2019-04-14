@@ -2,6 +2,9 @@ var app = app || {};
 
 app.factCollection = new app.FactCollection();
 
+/**
+ * Modal da criação de facts, uma modal que consiste de um campo onde o usuário escreve o nome e cadastra o fact desejado
+ */
 app.FactsModalView = Backbone.View.extend({
     el: '#factsModal',
     events: {
@@ -74,6 +77,9 @@ app.FactsModalView = Backbone.View.extend({
 });
 new app.FactsModalView();
 
+/**
+ * View utilizada para mostrar o nome dos facts e deletá-los, se necessário
+ */
 app.ListOfFacts = Backbone.View.extend({
     el: $('#factsList'),
     template: _.template('<li data-id="${id}" ' +
@@ -125,11 +131,24 @@ app.ListOfFacts = Backbone.View.extend({
     // }
 });
 
-app.listOfFacts = new app.ListOfFacts();
+/*
+ Instância da view da lista de fatos
+ */
+new app.ListOfFacts();
+/*
+ Respectivamente, contexto selecionado pelo usuário na modal de criação de contextos e as decomposições selecionadas
+ estão guardadas nesse objeto
+ */
 app.selectedContext = new app.Context();
 app.selectedDecompositionsForContext = new app.DecompositionList();
+/*
+    Lista de contextos criados pelo usuário
+ */
 app.contextList = new app.ContextList();
 
+/**
+ * Combobox criada para exibir o nome dos contextos criadas pelo usuário
+ */
 app.ComboBoxContext = Backbone.View.extend({
     el: $('#selectContext'),
     template: _.template('<option data-id="${id}" value="<%= id%>" ><%= contextName %></option>'),
@@ -177,6 +196,9 @@ app.ComboBoxContext = Backbone.View.extend({
 });
 
 
+/*
+    Combobox do context que armazena apenas o nome dos contextos por ora
+ */
 app.comboBoxContext = new app.ComboBoxContext();
 var editContextOption = $("input[value=edit-context]");
 app.comboBoxContext.collection.bind("add remove change reset", function () {
@@ -184,6 +206,9 @@ app.comboBoxContext.collection.bind("add remove change reset", function () {
         editContextOption.attr('disabled', true) : editContextOption.attr('disabled', false);
 });
 
+/**
+ * Modal de criação de contextos e associação com decomposições com facts
+ */
 app.ContextModalView = Backbone.View.extend({
     el: '#contextAndFactsModal',
     events: {
@@ -291,10 +316,19 @@ app.ContextModalView = Backbone.View.extend({
     }
 });
 
+/*
+    Instância criada para a modal de contexto
+ */
 new app.ContextModalView();
 
+/**
+ * Lista de decomposições criadas pelo usuário
+ */
 app.decompositionList = new app.DecompositionList();
 
+/**
+ * Modal de decomposição, onde selecionamos os facts associados àquela decomposição
+ */
 app.DecompositionModalView = Backbone.View.extend({
     el: '#decompositionModal',
     events: {
@@ -356,6 +390,12 @@ app.selectedContext = new app.Context();
 app.selectedFacts = new app.FactCollection();
 app.selectedFactsForPersona = new app.FactCollection();
 
+/**
+ * Lista de decomposições, que possui:
+ * 1. Nome
+ * 2. Tipo de decomposição (OR ou AND)
+ * 3. Fatos associados àquela decomposição, ou seja, os itens selecionados pelo usuário
+ */
 app.DecompositionListView = Backbone.View.extend({
     tagName: 'div',
 
@@ -375,6 +415,9 @@ app.DecompositionListView = Backbone.View.extend({
     }
 });
 
+/**
+ * View de cada item para a lista de decomposições
+ */
 app.DecompositionListItemView = Backbone.View.extend({
     tagName: "span",
     events: {
@@ -401,13 +444,9 @@ app.DecompositionListItemView = Backbone.View.extend({
     },
     addOrRemoveFromList: function (e) {
         console.log(e.target);
-        if (e.target.checked) {
-            console.log('kkk add');
-            app.selectedDecompositionsForContext.add(this.model);
-        } else {
-            console.log('kkk remove');
+        (e.target.checked) ?
+            app.selectedDecompositionsForContext.add(this.model):
             app.selectedDecompositionsForContext.remove(this.model);
-        }
         console.log('Opção selecionada: ', this.model);
     }
 });
@@ -415,6 +454,12 @@ app.DecompositionListItemView = Backbone.View.extend({
 app.decompositionListView = new app.DecompositionListView({model: app.decompositionList});
 $('#aggrList').html(app.decompositionListView.render().el);
 
+/**
+ * View da lista de fatos em checkboxes, para que o usuário selecione quais ele irá utilizar
+ * nesse projeto temos duas delas:
+ * 1. Dentro da modal de decomposição, para selecionarmos os facts que entrarão naquela decomposição
+ * 2. Na modal de criação de personas, para selecionarmos os facts da persona que estamos criando
+ */
 app.FactCheckboxListView = Backbone.View.extend({
     tagName: 'div',
     initialize: function (options) {
@@ -434,6 +479,9 @@ app.FactCheckboxListView = Backbone.View.extend({
     }
 });
 
+/**
+    View individual utilizada na lista de checkbox para Facts
+ **/
 app.FactCheckboxListItemView = Backbone.View.extend({
     events: {
         'click input': 'setAsSelectedOrRemove'
@@ -459,11 +507,21 @@ app.FactCheckboxListItemView = Backbone.View.extend({
     }
 });
 
+/*
+    Instância da FactCheckboxListView original
+    usada para mostrar os fatos selecionados dentro da modal de criar decomposições
+ */
 app.factCheckboxListView = new app.FactCheckboxListView({model: app.factCollection, list: app.selectedFacts});
 $('#factCheckboxList').html(app.factCheckboxListView.render().el);
 
+/*
+    Lista de personas criadas pelo usuário
+ */
 app.personaList = new app.PersonaList();
 
+/**
+ * Modal de criação de personas
+ */
 app.PersonaModalView = Backbone.View.extend({
     el: '#personaCreationModal',
     events: {
@@ -493,12 +551,18 @@ app.PersonaModalView = Backbone.View.extend({
     },
     newAttributes: function () {
         return {
-            name: this.$name.val(),
-            description: this.$description.val()
+            personaName: this.$name.val(),
+            personaDescription: this.$description.val(),
+            personaFacts: app.personaModalFactCheckboxListView.optionsCollection,
+            personaContexts: app.selectedContextsForPersona
         }
     }
 });
 
+/*
+    Utilizamos aqui uma instância da factCheckboxListView mas alteramos o elemento(onde ela será exibida)
+    e a lista que ela guardará com os elementos selecionados(app.selectedFactsForPersona)
+ */
 app.personaModalFactCheckboxListView = new app.FactCheckboxListView({
     el: "#personaFactCheckboxList",
     model: app.factCollection,
@@ -506,6 +570,9 @@ app.personaModalFactCheckboxListView = new app.FactCheckboxListView({
 });
 
 
+/**
+ * Checkbox utilizada na modal de criação personas para mostrar os contextos criados pelo usuário
+ */
 app.ContextCheckboxListView = Backbone.View.extend({
     tagName: 'div',
     initialize: function () {
@@ -523,6 +590,9 @@ app.ContextCheckboxListView = Backbone.View.extend({
     }
 });
 
+/**
+ * View individual da checkbox usada na modal de criação personas para mostrar os contextos criados pelo usuário
+ */
 app.ContextCheckboxListItemView = Backbone.View.extend({
     events: {
         'click input': 'setAsSelectedOrRemove'
@@ -545,6 +615,18 @@ app.ContextCheckboxListItemView = Backbone.View.extend({
 app.personaModalContextCheckboxListView = new app.ContextCheckboxListView({el: "#personaContextList", model: app.contextList});
 app.selectedContextsForPersona = new app.ContextList();
 new app.PersonaModalView();
+
+/////////////////////
+/////////////////////
+/////////////////////
+/////////////////////
+// NAVBAR STUFF   //
+/////////////////////
+/////////////////////
+/////////////////////
+/////////////////////
+/////////////////////
+
 
 // Views
 // window.WineListView = Backbone.View.extend({

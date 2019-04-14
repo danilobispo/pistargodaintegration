@@ -587,6 +587,165 @@
     </label>
 </script>
 
+<script type="text/template" id="tpl-sidebar-persona-info">
+    <nav id="sidebar" class="active">
+        <div class="sidebar-header">
+            <h3>Persona info</h3>
+        </div>
+        <h4>Name: <%= personaName %></h4>
+        <h4>Description: </h4>
+        <h5><%= personaDescription %></h5>
+        <ul class="list-unstyled components">
+            <li>
+                <a href="#factsSubmenu" data-toggle="collapse" aria-expanded="false" id="#factsMenu"
+                   class="sidebar-list">Facts</a>
+                <ul class="collapse list-unstyled" id="factsSubmenu">
+
+                </ul>
+            </li>
+            <li>
+                <a href="#contextsSubmenu" data-toggle="collapse" aria-expanded="false" id="#contextsMenu"
+                   class="sidebar-list">Contexts</a>
+                <ul class="collapse list-unstyled" id="contextsSubmenu">
+                    <li>
+                        <span>Context 1</span>
+                    </li>
+                    <li>
+                        <span>Context 2</span>
+                    </li>
+                    <li>
+                        <span>Context 3</span>
+                    </li>
+                    <li>
+                        <a href="#">Edit contexts</a>
+                    </li>
+                </ul>
+            </li>
+        </ul>
+
+        <button class="btn-success"> Run achievability algorithm</button>
+
+
+        <!--<div class="sidebar-header">
+            <h3>Context and Facts</h3>
+        </div>
+        <div class="sidebar-header">
+            <h3>Is your persona a:</h3>
+            <ul>
+                <li><label for="patientRadioOption">
+                </label><input type="radio" name="personatype" id="patientRadioOption" value="patient"> Patient
+                </li>
+                <li><label for="doctorRadioOption">
+                </label><input type="radio" name="personatype" id="doctorRadioOption" value="doctor"> Doctor
+                </li>
+            </ul>
+        </div>
+        <ul class="list-unstyled components">
+            <li class="active">
+                <div id="contextContainer">
+
+                </div>
+            </li>
+        </ul>
+
+        <ul class="list-unstyled components">
+            <li class="active">
+                <a href="#healthRiskSubmenu" data-toggle="collapse" aria-expanded="false" id="#healthRiskMenu"
+                   class="sidebar-list">Health
+                    Risk Context</a>
+                <ul class="collapse list-unstyled" id="healthRiskSubmenu">
+                    <li>
+                        <div id="healthRiskFacts"></div>
+                    </li>
+                </ul>
+            </li>
+            <li>
+                <a href="#technologyAversionSubmenu" data-toggle="collapse" aria-expanded="false"
+                   id="#technologyAversionMenu" class="sidebar-list">Technology Aversion Context</a>
+                <ul class="collapse list-unstyled" id="technologyAversionSubmenu">
+                    <li>
+                        <div id="technologyAversionFacts"></div>
+                    </li>
+                </ul>
+            </li>
+            <li>
+                <a href="#mobilityIssueSubmenu" data-toggle="collapse" aria-expanded="false" id="#mobilityIssueMenu"
+                   class="sidebar-list">Mobility
+                    Issue Context</a>
+                <ul class="collapse list-unstyled" id="mobilityIssueSubmenu">
+                    <li>
+                        <div id="mobilityIssueFacts"></div>
+                    </li>
+                </ul>
+            </li>
+            <li>
+                <a href="#homeAssistanceSubmenu" data-toggle="collapse" aria-expanded="false" id="homeAssistanceMenu"
+                   class="sidebar-list">Home
+                    Assistance Context</a>
+                <ul class="collapse list-unstyled" id="homeAssistanceSubmenu">
+                    <li>
+                        <div id="homeAssistanceFacts"></div>
+                    </li>
+                </ul>
+            </li>
+            <li>
+                <a href="#physicalActivitySubmenu" data-toggle="collapse" aria-expanded="false"
+                   id="physicalActivityMenu" class="sidebar-list">Physical Activity Context</a>
+                <ul class="collapse list-unstyled" id="physicalActivitySubmenu">
+                    <li>
+                        <div id="physicalActivityFacts"></div>
+                    </li>
+                </ul>
+            </li>
+            <li>
+                <a href="#meansOfCommunicationSubmenu" data-toggle="collapse" aria-expanded="false"
+                   id="meansOfCommunicationMenu" class="sidebar-list">Means of Communication Context</a>
+                <ul class="collapse list-unstyled" id="meansOfCommunicationSubmenu">
+                    <li>
+                        <div id="meansOfCommunicationFacts"></div>
+                    </li>
+                </ul>
+            </li>
+            <li>
+                <a href="#meansOfInformationSubmenu" data-toggle="collapse" aria-expanded="false"
+                   id="meansOfInfomationMenu" class="sidebar-list">Means of Information Context</a>
+                <ul class="collapse list-unstyled" id="meansOfInformationSubmenu">
+                    <li>
+                        <div id="meansOfInformationFacts"></div>
+                    </li>
+                </ul>
+            </li>
+            <li>
+                <a href="#meansOfHelpingSubmenu" data-toggle="collapse" aria-expanded="false" id="meansOfHelpingMenu"
+                   class="sidebar-list">Means
+                    of Helping Context</a>
+                <ul class="collapse list-unstyled" id="meansOfHelpingSubmenu">
+                    <li>
+                        <div id="meansOfHelpingFacts"></div>
+                    </li>
+                </ul>
+            </li>
+            &lt;!&ndash; Might need it later
+            <li>
+                <a href="#">Dummy link 0</a>
+                <a href="#pageSubmenu" data-toggle="collapse" aria-expanded="false">Dummy menu</a>
+                <ul class="collapse list-unstyled" id="pageSubmenu">
+                    <li><a href="#">Page 1</a></li>
+                    <li><a href="#">Page 2</a></li>
+                    <li><a href="#">Page 3</a></li>
+                </ul>
+            </li>
+            <li>
+                <a href="#">Dummy link</a>
+            </li>
+            <li>
+                <a href="#">Dummy link also</a>
+            </li>&ndash;&gt;
+        </ul>-->
+    </nav>
+
+</script>
+
 <!--<script type="text/template" id="tpl-wine-details">-->
 
 <!--<div class="form-left-col">-->
@@ -812,20 +971,22 @@
                 </div>
                 <div class="modal-body">
                     <div id="personaForm">
+                        <h4>Define the name for your persona</h4>
                         <input type="text"
                                placeholder="Persona name"
                                id="personaCreationName">
                         <hr/>
+                        <h4>Set a description(optional)</h4>
                         <textarea id="personaCreationDescription" autofocus="" rows="5" cols="30"
                                   placeholder="Set a description(optional)"></textarea>
                         <h4>Select facts about this persona</h4>
                         <div id="personaFactCheckboxList" class="col-xs-12">
                         </div>
-                        <hr/><hr/>
+                        <hr/>
                         <h4>Or select contexts directly</h4>
                         <div id="personaContextList" class="col-xs-12">
                         </div>
-                        <hr/><hr/>
+                        <hr/>
 
                         <button id="createPersonaButton" class="btn-success">Finish and create persona!</button>
                     </div>
