@@ -551,6 +551,7 @@ app.PersonaModalView = Backbone.View.extend({
     },
     newAttributes: function () {
         return {
+            id: app.contextList.length,
             personaName: this.$name.val(),
             personaDescription: this.$description.val(),
             personaFacts: app.personaModalFactCheckboxListView.optionsCollection,
@@ -626,6 +627,71 @@ new app.PersonaModalView();
 /////////////////////
 /////////////////////
 /////////////////////
+
+/* Variável para controlar a persona selecionada atualmente pelo usuário */
+app.selectedPersona = new app.Persona();
+
+/**
+ * Combobox que define de qual persona serão mostrada as informações na navbar
+ */
+app.ComboBoxPersona = Backbone.View.extend({
+    el: '#comboBoxPersona',
+    template: _.template('<option data-id="${id}" value="<%= id%>" ><%= personaName %></option>'),
+    initialize: function () {
+        this.collection = app.personaList;
+        this.collection.on('add', this.render, this);
+        // this.collection.on('remove', this.unrender, this);
+    },
+    events: {
+        'click option': 'change',
+    },
+    add: function (option) {
+        this.collection.add(option);
+        if (this.collection.length === 1) {
+            app.selectedPersona = option;
+        }
+    },
+    render: function (model) {
+        this.$el.append(this.template(model.attributes));
+    },
+    // unrender: function () {
+    //     $('#comboBoxPersona option:selected').remove();
+    // },
+    // Este método é executado a cada click na combo (select).
+    // Com as informações obtidas poderíamos, inclusive,
+    // realizar uma requisação AJAX, por exemplo.
+    change: function (e) {
+        console.log('selectedPersona: ', this.collection.get(e.target.value));
+        app.selectedPersona = this.collection.get(e.target.value);
+        // var index = this.el.selectedIndex;
+        // var value = this.el.options[index].value;
+        // var text = this.el.options[index].text;
+        // DEBUG
+        // console.log("index: " + index + ",  value: " + value + ", text: " + text);
+    }
+    // ,remove: function (option) {
+    //     this.collection.remove(option);
+    //     console.log(this.collection);
+    // }
+});
+
+/*Instância da view definida acima*/
+new app.ComboBoxPersona();
+
+/**
+ * View feita apenas para mostrar as informações da persona selecionada na sidebar
+ */
+app.PersonaReviewInfoView = Backbone.View.extend({
+    el: '#reviewPersonaView',
+    model: app.selectedPersona,
+    template: _.template($('#tpl-review-persona-navbar-view').html()),
+    render: function (model) {
+        this.$el.append(this.template(model.attributes));
+    }
+});
+
+/*Instância da view criada acima*/
+new app.PersonaReviewInfoView();
 
 
 // Views

@@ -29,11 +29,10 @@ app.GlobalContext = Backbone.Model.extend({
 
 app.Persona = Backbone.Model.extend({
     defaults: {
-        name: "",
-        photo: "",
-        description: ""
-        // contexts: [""],
-        // facts: [""]
+        personaName: "",
+        personaDescription: "",
+        personaFacts: "",
+        personaContexts: ""
     }
 });
 
