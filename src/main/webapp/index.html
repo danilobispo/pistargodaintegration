@@ -182,56 +182,59 @@
         <div class="sidebar-header">
             <h3>Persona info</h3>
         </div>
-        <h4>Name:</h4> <select id="comboBoxPersona"></select>
+        <h4>Name: <label for="comboBoxPersona">
+            <select id="comboBoxPersona"></select>
+        </label>
+        </h4>
         <div id="reviewPersonaView"></div>
         <!-- Salvo para referência futura -->
         <!--<h4>Description: </h4>-->
         <!--<h5>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et-->
-            <!--dolore-->
-            <!--magna aliqua. In cursus turpis massa tincidunt dui ut ornare lectus. Velit laoreet id donec ultrices-->
-            <!--tincidunt-->
-            <!--arcu non sodales neque. Lacus vel facilisis volutpat est velit. Mauris pharetra et ultrices neque ornare-->
-            <!--aenean-->
-            <!--euismod. Pellentesque adipiscing commodo elit at imperdiet dui accumsan sit. Eu feugiat pretium nibh ipsum-->
-            <!--consequat nisl vel pretium.</h5>-->
+        <!--dolore-->
+        <!--magna aliqua. In cursus turpis massa tincidunt dui ut ornare lectus. Velit laoreet id donec ultrices-->
+        <!--tincidunt-->
+        <!--arcu non sodales neque. Lacus vel facilisis volutpat est velit. Mauris pharetra et ultrices neque ornare-->
+        <!--aenean-->
+        <!--euismod. Pellentesque adipiscing commodo elit at imperdiet dui accumsan sit. Eu feugiat pretium nibh ipsum-->
+        <!--consequat nisl vel pretium.</h5>-->
 
         <!--<ul class="list-unstyled components">-->
-            <!--<li>-->
-                <!--<a href="#factsSubmenu" data-toggle="collapse" aria-expanded="false" id="#factsMenu"-->
-                   <!--class="sidebar-list">Facts</a>-->
-                <!--<ul class="collapse list-unstyled" id="factsSubmenu">-->
-                    <!--<li>-->
-                        <!--<span>Fact 1</span>-->
-                    <!--</li>-->
-                    <!--<li>-->
-                        <!--<span>Fact 2</span>-->
-                    <!--</li>-->
-                    <!--<li>-->
-                        <!--<span>Fact 3</span>-->
-                    <!--</li>-->
-                    <!--<li>-->
-                        <!--<a href="#">Edit facts</a>-->
-                    <!--</li>-->
-                <!--</ul>-->
-            <!--</li>-->
-            <!--<li>-->
-                <!--<a href="#contextsSubmenu" data-toggle="collapse" aria-expanded="false" id="#contextsMenu"-->
-                   <!--class="sidebar-list">Contexts</a>-->
-                <!--<ul class="collapse list-unstyled" id="contextsSubmenu">-->
-                    <!--<li>-->
-                        <!--<span>Context 1</span>-->
-                    <!--</li>-->
-                    <!--<li>-->
-                        <!--<span>Context 2</span>-->
-                    <!--</li>-->
-                    <!--<li>-->
-                        <!--<span>Context 3</span>-->
-                    <!--</li>-->
-                    <!--<li>-->
-                        <!--<a href="#">Edit contexts</a>-->
-                    <!--</li>-->
-                <!--</ul>-->
-            <!--</li>-->
+        <!--<li>-->
+        <!--<a href="#factsSubmenu" data-toggle="collapse" aria-expanded="false" id="#factsMenu"-->
+        <!--class="sidebar-list">Facts</a>-->
+        <!--<ul class="collapse list-unstyled" id="factsSubmenu">-->
+        <!--<li>-->
+        <!--<span>Fact 1</span>-->
+        <!--</li>-->
+        <!--<li>-->
+        <!--<span>Fact 2</span>-->
+        <!--</li>-->
+        <!--<li>-->
+        <!--<span>Fact 3</span>-->
+        <!--</li>-->
+        <!--<li>-->
+        <!--<a href="#">Edit facts</a>-->
+        <!--</li>-->
+        <!--</ul>-->
+        <!--</li>-->
+        <!--<li>-->
+        <!--<a href="#contextsSubmenu" data-toggle="collapse" aria-expanded="false" id="#contextsMenu"-->
+        <!--class="sidebar-list">Contexts</a>-->
+        <!--<ul class="collapse list-unstyled" id="contextsSubmenu">-->
+        <!--<li>-->
+        <!--<span>Context 1</span>-->
+        <!--</li>-->
+        <!--<li>-->
+        <!--<span>Context 2</span>-->
+        <!--</li>-->
+        <!--<li>-->
+        <!--<span>Context 3</span>-->
+        <!--</li>-->
+        <!--<li>-->
+        <!--<a href="#">Edit contexts</a>-->
+        <!--</li>-->
+        <!--</ul>-->
+        <!--</li>-->
         <!--</ul>-->
 
         <button class="btn-success"> Run achievability algorithm</button>
@@ -579,7 +582,7 @@
 
 <script type="text/template" id="tpl-fact-checkbox-list-item">
     <label for="<%= factName %>">
-        <input id="<%= factName %>" type="checkbox" value="<%= factName %>"><%= factName %>
+        <input id="<%= factName %>" type="checkbox" value="<%= id %>"><%= factName %>
     </label>
 </script>
 
@@ -717,36 +720,35 @@
 </script>
 
 <script type="text/template" id="tpl-review-persona-navbar-view">
-    <h4>Name:</h4> <div id="comboBoxPersona"></div>
     <h4>Description: </h4>
     <h5><%= personaDescription %></h5>
-    <ul class="list-unstyled components">
-        <li>
-            <a href="#factsSubmenu" data-toggle="collapse" aria-expanded="false" id="#factsMenu"
-               class="sidebar-list">Facts</a>
-            <ul class="collapse list-unstyled" id="factsSubmenu">
+    <!--<ul class="list-unstyled components">-->
+    <!--<li>-->
+    <!--<a href="#factsSubmenu" data-toggle="collapse" aria-expanded="false" id="#factsMenu"-->
+    <!--class="sidebar-list">Facts</a>-->
+    <!--<ul class="collapse list-unstyled" id="factsSubmenu">-->
 
-            </ul>
-        </li>
-        <li>
-            <a href="#contextsSubmenu" data-toggle="collapse" aria-expanded="false" id="#contextsMenu"
-               class="sidebar-list">Contexts</a>
-            <ul class="collapse list-unstyled" id="contextsSubmenu">
-                <li>
-                    <span>Context 1</span>
-                </li>
-                <li>
-                    <span>Context 2</span>
-                </li>
-                <li>
-                    <span>Context 3</span>
-                </li>
-                <li>
-                    <a href="#">Edit contexts</a>
-                </li>
-            </ul>
-        </li>
-    </ul>
+    <!--</ul>-->
+    <!--</li>-->
+    <!--<li>-->
+    <!--<a href="#contextsSubmenu" data-toggle="collapse" aria-expanded="false" id="#contextsMenu"-->
+    <!--class="sidebar-list">Contexts</a>-->
+    <!--<ul class="collapse list-unstyled" id="contextsSubmenu">-->
+    <!--<li>-->
+    <!--<span>Context 1</span>-->
+    <!--</li>-->
+    <!--<li>-->
+    <!--<span>Context 2</span>-->
+    <!--</li>-->
+    <!--<li>-->
+    <!--<span>Context 3</span>-->
+    <!--</li>-->
+    <!--<li>-->
+    <!--<a href="#">Edit contexts</a>-->
+    <!--</li>-->
+    <!--</ul>-->
+    <!--</li>-->
+    <!--</ul>-->
 </script>
 
 <!--<script type="text/template" id="tpl-wine-details">-->

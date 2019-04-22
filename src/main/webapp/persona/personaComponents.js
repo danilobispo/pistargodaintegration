@@ -114,7 +114,7 @@ app.ListOfFacts = Backbone.View.extend({
         this.collection.remove(liElement.attr("data-id"));
         liElement.remove();
         // DEBUG
-        // console.log(this.collection);
+        console.log(this.collection);
     }
     // TODO: Arrumar isso aqui embaixo pra funfar
     //
@@ -490,6 +490,7 @@ app.FactCheckboxListItemView = Backbone.View.extend({
     initialize: function (options) {
         this.collection = options.list;
         this.model.bind("change", this.render, this);
+        this.model.bind("remove", this.unrender, this)
         this.on("setAsSelectedOrRemove", function(){
             //TODO: Se foi selecionado ou removido, verificar se algum
             // contexto se encaixa com base na proposição lógica
@@ -500,6 +501,10 @@ app.FactCheckboxListItemView = Backbone.View.extend({
         $(this.el).html(this.template(this.model.toJSON()));
         console.log(this.model);
         return this;
+    },
+    unrender: function() {
+        $(this.el).unbind();
+        $(this.el).remove();
     },
     setAsSelectedOrRemove: function (e) {
         e.target.checked ? this.collection.add(this.model) : this.collection.remove(this.model);
@@ -544,14 +549,14 @@ app.PersonaModalView = Backbone.View.extend({
             console.log('Selected facts in persona modal:', app.personaModalFactCheckboxListView.optionsCollection);
             app.personaList.add(this.newAttributes());
             alert('Persona created!');
-            console.log(app.personaList);
+            console.log('PersonaList: ', app.personaList);
             this.$name.val().trim();
             this.$description.val().trim();
         }
     },
     newAttributes: function () {
         return {
-            id: app.contextList.length,
+            id: app.personaList.length,
             personaName: this.$name.val(),
             personaDescription: this.$description.val(),
             personaFacts: app.personaModalFactCheckboxListView.optionsCollection,
@@ -636,7 +641,7 @@ app.selectedPersona = new app.Persona();
  */
 app.ComboBoxPersona = Backbone.View.extend({
     el: '#comboBoxPersona',
-    template: _.template('<option data-id="${id}" value="<%= id%>" ><%= personaName %></option>'),
+    template: _.template('<option data-id="${id}" value="<%= id %>" ><%= personaName %></option>'),
     initialize: function () {
         this.collection = app.personaList;
         this.collection.on('add', this.render, this);
@@ -646,7 +651,6 @@ app.ComboBoxPersona = Backbone.View.extend({
         'click option': 'change',
     },
     add: function (option) {
-        this.collection.add(option);
         if (this.collection.length === 1) {
             app.selectedPersona = option;
         }
@@ -663,11 +667,8 @@ app.ComboBoxPersona = Backbone.View.extend({
     change: function (e) {
         console.log('selectedPersona: ', this.collection.get(e.target.value));
         app.selectedPersona = this.collection.get(e.target.value);
-        // var index = this.el.selectedIndex;
-        // var value = this.el.options[index].value;
-        // var text = this.el.options[index].text;
-        // DEBUG
-        // console.log("index: " + index + ",  value: " + value + ", text: " + text);
+        console.log('Persona selecionada!');
+        new app.PersonaReviewInfoView();
     }
     // ,remove: function (option) {
     //     this.collection.remove(option);
@@ -689,10 +690,6 @@ app.PersonaReviewInfoView = Backbone.View.extend({
         this.$el.append(this.template(model.attributes));
     }
 });
-
-/*Instância da view criada acima*/
-new app.PersonaReviewInfoView();
-
 
 // Views
 // window.WineListView = Backbone.View.extend({
