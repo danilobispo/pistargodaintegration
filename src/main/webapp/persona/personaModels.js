@@ -2,7 +2,8 @@ var app = app || {};
 
 app.Facts = Backbone.Model.extend({
     defaults: {
-        factName: ""
+        factName: "",
+        id: ""
     }
 });
 

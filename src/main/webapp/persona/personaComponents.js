@@ -19,6 +19,7 @@ app.FactsModalView = Backbone.View.extend({
         this.$showFactsButton = this.$('.show-facts');
         this.$showFactsButton.text("Show facts list");
         this.$createFactButton = this.$('#createFact');
+        this.counter = 0;
 
     },
     addFact: function (e) {
@@ -39,8 +40,8 @@ app.FactsModalView = Backbone.View.extend({
     },
     newAttributes: function () {
         return {
-            id: app.factCollection.length,
-            factName: this.$input.val().trim()
+            factName: this.$input.val().trim(),
+            id: this.counter++
         };
     },
     showList: function () {
@@ -90,16 +91,18 @@ app.ListOfFacts = Backbone.View.extend({
     // o callback `this.render`
     initialize: function () {
         this.collection = app.factCollection;
-        this.collection.on('add', this.render, this);
+        this.collection.bind('change', this.render, this);
+        this.collection.bind('add', this.render, this);
+
         // this.collection.on('remove', this.renderTemplateifListIsEmpty, this);
 
     },
     events: {
         'click li span.close': 'remove',
     },
-    add: function (option) {
-        this.collection.add(option);
-    },
+    // add: function (option) {
+    //     this.collection.add(option);
+    // },
     render: function (model) {
         this.$el.append(this.template(model.attributes));
     },
@@ -110,8 +113,9 @@ app.ListOfFacts = Backbone.View.extend({
         var liElement = $(e.target.parentElement);
         // DEBUG
         // console.log($(e.target.parentElement));
-        // console.log(liElement.attr("data-id"));
-        this.collection.remove(liElement.attr("data-id"));
+        console.log("data-id:", liElement.attr("data-id"));
+        console.log("e.target.parentElement: ", liElement);
+        console.log(this.collection.remove(liElement.attr("data-id")).toString());
         liElement.remove();
         // DEBUG
         console.log(this.collection);
