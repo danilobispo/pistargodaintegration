@@ -1,7 +1,7 @@
 var app = app || {};
 
 app.factCollection = new app.FactCollection();
-
+app.removedFact = new app.Facts();
 /**
  * Modal da criação de facts, uma modal que consiste de um campo onde o usuário escreve o nome e cadastra o fact desejado
  */
@@ -82,6 +82,7 @@ new app.FactsModalView();
  * View utilizada para mostrar o nome dos facts e deletá-los, se necessário
  */
 app.ListOfFacts = Backbone.View.extend({
+    model: app.Facts,
     el: $('#factsList'),
     template: _.template('<li data-id="${id}" ' +
         'value="<%= id%>" class="list-group-item"><%= factName %>'
@@ -115,7 +116,10 @@ app.ListOfFacts = Backbone.View.extend({
         // console.log($(e.target.parentElement));
         console.log("data-id:", liElement.attr("data-id"));
         console.log("e.target.parentElement: ", liElement);
+        app.removedFact = this.collection.get(liElement.attr("data-id"));
+        console.log("fact removido: ", app.removedFact);
         console.log(this.collection.remove(liElement.attr("data-id")).toString());
+        liElement.unbind();
         liElement.remove();
         // DEBUG
         console.log(this.collection);
@@ -410,7 +414,6 @@ app.DecompositionListView = Backbone.View.extend({
             $(self.el).append(new app.DecompositionListItemView({model: decomposition}).render().el);
         });
     },
-
     render: function (eventName) {
         _.each(this.model.models, function (decomposition) {
             $(this.el).append(new app.DecompositionListItemView({model: decomposition}).render().el);
@@ -468,8 +471,8 @@ app.FactCheckboxListView = Backbone.View.extend({
     tagName: 'div',
     initialize: function (options) {
         this.optionsCollection = options.list;
-        this.model.bind("reset", this.render, this);
         var self = this;
+        this.model.bind("reset", this.render, this);
         this.model.bind("add", function (fact) {
             $(self.el).append(new app.FactCheckboxListItemView({model: fact, list: options.list}).render().el);
         });
@@ -488,34 +491,37 @@ app.FactCheckboxListView = Backbone.View.extend({
  **/
 app.FactCheckboxListItemView = Backbone.View.extend({
     events: {
-        'click input': 'setAsSelectedOrRemove'
+        'click input': 'setAsSelectedOrUnselect'
     },
     template: _.template($('#tpl-fact-checkbox-list-item').html()),
     initialize: function (options) {
         this.collection = options.list;
         this.model.bind("change", this.render, this);
-        this.model.bind("remove", this.unrender, this)
-        this.on("setAsSelectedOrRemove", function(){
-            //TODO: Se foi selecionado ou removido, verificar se algum
-            // contexto se encaixa com base na proposição lógica
-        });
+        this.model.bind("remove", this.unrender, this);
         // this.model.bind("destroy", this.close, this);
     },
-    render: function (eventName) {
+    render: function () {
+        console.log('vou render');
         $(this.el).html(this.template(this.model.toJSON()));
         console.log(this.model);
         return this;
     },
-    unrender: function() {
-        $(this.el).unbind();
-        $(this.el).remove();
+    unrender: function () {
+        console.log();
+        if(app.removedFact.id == $("#" + app.removedFact.attributes.factName).val()){
+            console.log("vou unrender");
+            this.$el.unbind();
+            this.$el.remove();
+        }
     },
-    setAsSelectedOrRemove: function (e) {
-        e.target.checked ? this.collection.add(this.model) : this.collection.remove(this.model);
+    setAsSelectedOrUnselect: function (e) {
+        e.target.checked ?
+            this.collection.add(this.model) :
+            this.collection.remove(this.model);
         console.log('Opção selecionada: ', e.target.value);
+        console.log("COLLECTION: ", this.collection);
     }
 });
-
 /*
     Instância da FactCheckboxListView original
     usada para mostrar os fatos selecionados dentro da modal de criar decomposições
@@ -605,7 +611,7 @@ app.ContextCheckboxListView = Backbone.View.extend({
  */
 app.ContextCheckboxListItemView = Backbone.View.extend({
     events: {
-        'click input': 'setAsSelectedOrRemove'
+        'click input': 'setAsSelectedOrUnselect'
     },
     template: _.template($('#tpl-context-checkbox-list-item').html()),
     initialize: function () {
@@ -617,7 +623,7 @@ app.ContextCheckboxListItemView = Backbone.View.extend({
         console.log(this.model);
         return this;
     },
-    setAsSelectedOrRemove: function (e) {
+    setAsSelectedOrUnselect: function (e) {
         e.target.checked ? app.selectedContextsForPersona.add(this.model) : app.selectedContextsForPersona.remove(this.model);
         console.log('Opção selecionada: ', e.target.value);
     }
@@ -644,17 +650,25 @@ app.selectedPersona = new app.Persona();
  * Combobox que define de qual persona serão mostrada as informações na navbar
  */
 app.ComboBoxPersona = Backbone.View.extend({
-    el: '#comboBoxPersona',
-    template: _.template('<option data-id="${id}" value="<%= id %>" ><%= personaName %></option>'),
+    el: $('#selectPersona'),
+    template: _.template('<option data-id="<%= id %>" ' +
+        'value="<%= id%>" ' +
+        'title="<%= personaName %>"' +
+        'label="<%= personaName %>"><%= personaName %></option>'),
+
+    // Na inicialização unimos a coleção e a visão e
+    // também definimos o evento `add` para executar
+    // o callback `this.render`
     initialize: function () {
         this.collection = app.personaList;
         this.collection.on('add', this.render, this);
-        // this.collection.on('remove', this.unrender, this);
+        this.collection.on('remove', this.unrender, this);
     },
     events: {
         'click option': 'change',
     },
     add: function (option) {
+        this.collection.add(option);
         if (this.collection.length === 1) {
             app.selectedPersona = option;
         }
@@ -662,26 +676,31 @@ app.ComboBoxPersona = Backbone.View.extend({
     render: function (model) {
         this.$el.append(this.template(model.attributes));
     },
-    // unrender: function () {
-    //     $('#comboBoxPersona option:selected').remove();
-    // },
+    unrender: function () {
+        $('#comboBoxPersona option:selected').unbind();
+        $('#comboBoxPersona option:selected').remove();
+    },
     // Este método é executado a cada click na combo (select).
     // Com as informações obtidas poderíamos, inclusive,
     // realizar uma requisação AJAX, por exemplo.
     change: function (e) {
         console.log('selectedPersona: ', this.collection.get(e.target.value));
         app.selectedPersona = this.collection.get(e.target.value);
-        console.log('Persona selecionada!');
-        new app.PersonaReviewInfoView();
+        console.log('target:', e.target);
+        var index = this.el.selectedIndex;
+        var value = this.el.options[index].value;
+        var text = this.el.options[index].text;
+        // DEBUG
+        // console.log("index: " + index + ",  value: " + value + ", text: " + text);
+    },
+    remove: function (option) {
+        this.collection.remove(option);
+        console.log(this.collection);
     }
-    // ,remove: function (option) {
-    //     this.collection.remove(option);
-    //     console.log(this.collection);
-    // }
 });
 
 /*Instância da view definida acima*/
-new app.ComboBoxPersona();
+app.comboBoxPersona = new app.ComboBoxPersona();
 
 /**
  * View feita apenas para mostrar as informações da persona selecionada na sidebar
@@ -690,8 +709,12 @@ app.PersonaReviewInfoView = Backbone.View.extend({
     el: '#reviewPersonaView',
     model: app.selectedPersona,
     template: _.template($('#tpl-review-persona-navbar-view').html()),
+    initialize: function (){
+        this.$el.render();
+    },
     render: function (model) {
-        this.$el.append(this.template(model.attributes));
+        console.log('SelectedPersona: ', app.selectedPersona);
+        this.$el.html(this.template(model.attributes));
     }
 });
 
