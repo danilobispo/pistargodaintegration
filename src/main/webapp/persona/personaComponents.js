@@ -501,7 +501,8 @@ app.FactCheckboxListItemView = Backbone.View.extend({
         // this.model.bind("destroy", this.close, this);
     },
     render: function () {
-        console.log('vou render');
+        // DEBUG
+        // console.log('vou render');
         $(this.el).html(this.template(this.model.toJSON()));
         console.log(this.model);
         return this;
@@ -509,7 +510,8 @@ app.FactCheckboxListItemView = Backbone.View.extend({
     unrender: function () {
         console.log();
         if(app.removedFact.id == $("#" + app.removedFact.attributes.factName).val()){
-            console.log("vou unrender");
+            // DEBUG
+            // console.log("vou unrender");
             this.$el.unbind();
             this.$el.remove();
         }
@@ -518,8 +520,9 @@ app.FactCheckboxListItemView = Backbone.View.extend({
         e.target.checked ?
             this.collection.add(this.model) :
             this.collection.remove(this.model);
-        console.log('Opção selecionada: ', e.target.value);
-        console.log("COLLECTION: ", this.collection);
+        // DEBUG
+        // console.log('Opção selecionada: ', e.target.value);
+        // console.log("COLLECTION: ", this.collection);
     }
 });
 /*
