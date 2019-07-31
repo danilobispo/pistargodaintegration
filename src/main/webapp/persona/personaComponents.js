@@ -168,6 +168,7 @@ app.ComboBoxContext = Backbone.View.extend({
         this.collection = new app.ContextList(null, this);
         this.collection.on('add', this.render, this);
         this.collection.on('remove', this.unrender, this);
+        this.on('click option', this.change, this);
     },
     events: {
         'click option': 'change',
@@ -194,7 +195,7 @@ app.ComboBoxContext = Backbone.View.extend({
         var value = this.el.options[index].value;
         var text = this.el.options[index].text;
         // DEBUG
-        // console.log("index: " + index + ",  value: " + value + ", text: " + text);
+        console.log("index: " + index + ",  value: " + value + ", text: " + text);
     },
     remove: function (option) {
 
@@ -230,9 +231,12 @@ app.ContextModalView = Backbone.View.extend({
         'shown.bs.modal': 'displayMessageIfNoFacts'
     },
     initialize: function () {
+        this.nameCounter = 0;
+        this.counter = 0;
         this.$createContextOption = $("input[value=create-context]");
         this.$editContextOption = $("input[value=edit-context]");
         this.$input = this.$('.context-input');
+        this.$success = this.$('#successContextMessage');
         this.collection = app.comboBoxContext.collection;
         app.comboBoxContext.collection.length <= 0 ?
             this.$editContextOption.attr('disabled', true) : this.$editContextOption.attr('disabled', false);
@@ -268,7 +272,7 @@ app.ContextModalView = Backbone.View.extend({
     },
     newAttributes: function () {
         return {
-            id: app.comboBoxContext.collection.length,
+            id: this.nameCounter++,
             contextName: this.$input.val().trim()
         };
     },
@@ -285,8 +289,8 @@ app.ContextModalView = Backbone.View.extend({
     },
     createNewContext: function() {
         return {
-            id: app.comboBoxContext.collection.length,
-            contextName: app.selectedContext.attributes.contextName,
+            id: this.counter++,
+            contextName: app.selectedContext.contextName,
             // Facts are inside the decompositions
             decompositionsAndFacts: app.selectedDecompositionsForContext
         }
@@ -295,8 +299,45 @@ app.ContextModalView = Backbone.View.extend({
         console.log('app.selectedContext:', app.selectedContext);
         console.log('app.selectedContext contextName:', app.selectedContext.attributes.contextName);
         console.log('app.selectedDecompositionsForContext:', app.selectedDecompositionsForContext);
-        app.contextList.add(new app.Context(this.createNewContext()));
+        this.checkDataAndSaveContext();
+
         console.log("app.contextList:", app.contextList);
+    },
+    checkDataAndSaveContext: function() {
+        if(app.selectedDecompositionsForContext.length > 0){
+           if(app.comboBoxContext.collection.length > 0 && app.selectedContext.attributes.contextName !== undefined){
+               console.log("app.selectedContext.attributes.contextName", app.selectedContext.id);
+               if(app.contextList.get(app.selectedContext.id) === undefined){
+                   // Novo context
+                   app.contextList.add(new app.Context(this.createNewContext()));
+                   this.$success.text("Context created succesfully!");
+                   this.$success.show();
+                   setTimeout(function () {
+                           this.$('#successContextMessage').hide();
+                       }, 3000
+                   );
+               } else {
+                   // Context a ser editado
+                   var context = app.contextList.get(app.selectedContext.id);
+                   context.set({
+                       contextName: app.selectedContext.contextName,
+                       // Facts are inside the decompositions
+                       decompositionsAndFacts: app.selectedDecompositionsForContext
+                   }, {remove: true});
+                   this.$success.text("Context edited succesfully!");
+                   //Animação para mostrar mensagem e depois apagar
+                   this.$success.show();
+                   setTimeout(function () {
+                           this.$('#successContextMessage').hide();
+                       }, 3000
+                   );
+               }
+           } else {
+               alert("You have to name at least one context, then select it in Edit Existing Context option!");
+           }
+        } else {
+            alert("You have to choose at least one created decomposition!");
+        }
     },
     exitContextModal: function () {
         if(app.contextList.length > 0) {
@@ -454,7 +495,7 @@ app.DecompositionListItemView = Backbone.View.extend({
         (e.target.checked) ?
             app.selectedDecompositionsForContext.add(this.model):
             app.selectedDecompositionsForContext.remove(this.model);
-        console.log('Opção selecionada: ', this.model);
+        console.log('Decomposição selecionada: ', this.model);
     }
 });
 
@@ -508,7 +549,6 @@ app.FactCheckboxListItemView = Backbone.View.extend({
         return this;
     },
     unrender: function () {
-        console.log();
         if(app.removedFact.id == $("#" + app.removedFact.attributes.factName).val()){
             // DEBUG
             // console.log("vou unrender");
