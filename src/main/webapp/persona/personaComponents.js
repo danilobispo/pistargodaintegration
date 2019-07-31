@@ -290,7 +290,7 @@ app.ContextModalView = Backbone.View.extend({
     createNewContext: function() {
         return {
             id: this.counter++,
-            contextName: app.selectedContext.contextName,
+            contextName: app.selectedContext.attributes.contextName,
             // Facts are inside the decompositions
             decompositionsAndFacts: app.selectedDecompositionsForContext
         }
@@ -320,7 +320,7 @@ app.ContextModalView = Backbone.View.extend({
                    // Context a ser editado
                    var context = app.contextList.get(app.selectedContext.id);
                    context.set({
-                       contextName: app.selectedContext.contextName,
+                       contextName: app.selectedContext.attributes.contextName,
                        // Facts are inside the decompositions
                        decompositionsAndFacts: app.selectedDecompositionsForContext
                    }, {remove: true});
