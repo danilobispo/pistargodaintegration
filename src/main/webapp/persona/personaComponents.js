@@ -549,6 +549,7 @@ app.FactCheckboxListItemView = Backbone.View.extend({
         return this;
     },
     unrender: function () {
+        // TODO: Arrumar linha abaixo
         if(app.removedFact.id == $("#" + app.removedFact.attributes.factName).val()){
             // DEBUG
             // console.log("vou unrender");
@@ -575,6 +576,8 @@ $('#factCheckboxList').html(app.factCheckboxListView.render().el);
 /*
     Lista de personas criadas pelo usuário
  */
+/* Variável para controlar a persona selecionada atualmente pelo usuário */
+app.selectedPersona = new app.Persona();
 app.personaList = new app.PersonaList();
 
 /**
@@ -586,6 +589,7 @@ app.PersonaModalView = Backbone.View.extend({
         'click #createPersonaButton': 'checkDataAndSubmit'
     },
     initialize: function () {
+        this.counter = 0;
         this.$name = this.$("#personaCreationName");
         this.$description = this.$("#personaCreationDescription");
     },
@@ -601,6 +605,10 @@ app.PersonaModalView = Backbone.View.extend({
             console.log("description:", this.$description.val());
             console.log('Selected facts in persona modal:', app.personaModalFactCheckboxListView.optionsCollection);
             app.personaList.add(this.newAttributes());
+            if(app.personaList.length === 1){
+                app.selectedPersona = app.personaList.at(0);
+            }
+            new app.PersonaReviewInfoView({model: app.selectedPersona});
             alert('Persona created!');
             console.log('PersonaList: ', app.personaList);
             this.$name.val().trim();
@@ -609,7 +617,7 @@ app.PersonaModalView = Backbone.View.extend({
     },
     newAttributes: function () {
         return {
-            id: app.personaList.length,
+            id: this.counter++,
             personaName: this.$name.val(),
             personaDescription: this.$description.val(),
             personaFacts: app.personaModalFactCheckboxListView.optionsCollection,
@@ -686,8 +694,7 @@ new app.PersonaModalView();
 /////////////////////
 /////////////////////
 
-/* Variável para controlar a persona selecionada atualmente pelo usuário */
-app.selectedPersona = new app.Persona();
+
 
 /**
  * Combobox que define de qual persona serão mostrada as informações na navbar
@@ -729,6 +736,7 @@ app.ComboBoxPersona = Backbone.View.extend({
     change: function (e) {
         console.log('selectedPersona: ', this.collection.get(e.target.value));
         app.selectedPersona = this.collection.get(e.target.value);
+        new app.PersonaReviewInfoView({model: app.selectedPersona});
         console.log('target:', e.target);
         var index = this.el.selectedIndex;
         var value = this.el.options[index].value;
@@ -750,16 +758,32 @@ app.comboBoxPersona = new app.ComboBoxPersona();
  */
 app.PersonaReviewInfoView = Backbone.View.extend({
     el: '#reviewPersonaView',
-    model: app.selectedPersona,
+    model: app.Persona,
     template: _.template($('#tpl-review-persona-navbar-view').html()),
     initialize: function (){
-        this.$el.render();
+        this.render();
     },
     render: function (model) {
+        $(this.el).empty().html(this.template(app.selectedPersona.attributes));
+        this.renderFacts();
+        this.renderContexts();
         console.log('SelectedPersona: ', app.selectedPersona);
-        this.$el.html(this.template(model.attributes));
+        return this;
+    },
+    renderFacts: function () {
+        _.each(app.selectedPersona.attributes.personaFacts.models, function (fact) {
+            $("#factsSubmenu").append("<li><span>" + fact.attributes.factName + "</span></li>");
+            console.log(fact.attributes.factName);
+        });
+    },
+    renderContexts: function () {
+        _.each(app.selectedPersona.attributes.personaContexts.models, function (fact) {
+            $("#contextsSubmenu").append("<li><span>" + fact.attributes.contextName + "</span></li>");
+            console.log(fact.attributes.contextName);
+        });
     }
 });
+
 
 // Views
 // window.WineListView = Backbone.View.extend({

@@ -197,14 +197,14 @@ button:focus {
 }
 
 #sidebar ul li a:hover {
-    color: #7386D5;
+    /*color: #7386D5;*/
     background: #fff;
 }
 
 #sidebar ul li.active > a,
 a.sidebar-list[aria-expanded="true"] {
     color: #fff;
-    background: #6d7fcc;
+    /*background: #6d7fcc;*/
 }
 
 a.sidebar-list[data-toggle="collapse"] {

@@ -184,10 +184,11 @@
         </div>
         <div class="sidebar">
             <h4>Name:</h4>
-            <label for="selectPersona"></label><select id="selectPersona" >
+            <label for="selectPersona"></label><select id="selectPersona">
         </select>
         </div>
         <div class="sidebar" id="reviewPersonaView"></div>
+
         <!-- Salvo para referência futura -->
         <!--<h4>Description: </h4>-->
         <!--<h5>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et-->
@@ -723,33 +724,20 @@
 <script type="text/template" id="tpl-review-persona-navbar-view">
     <h4>Description: </h4>
     <h5><%= personaDescription %></h5>
-    <!--<ul class="list-unstyled components">-->
-    <!--<li>-->
-    <!--<a href="#factsSubmenu" data-toggle="collapse" aria-expanded="false" id="#factsMenu"-->
-    <!--class="sidebar-list">Facts</a>-->
-    <!--<ul class="collapse list-unstyled" id="factsSubmenu">-->
-
-    <!--</ul>-->
-    <!--</li>-->
-    <!--<li>-->
-    <!--<a href="#contextsSubmenu" data-toggle="collapse" aria-expanded="false" id="#contextsMenu"-->
-    <!--class="sidebar-list">Contexts</a>-->
-    <!--<ul class="collapse list-unstyled" id="contextsSubmenu">-->
-    <!--<li>-->
-    <!--<span>Context 1</span>-->
-    <!--</li>-->
-    <!--<li>-->
-    <!--<span>Context 2</span>-->
-    <!--</li>-->
-    <!--<li>-->
-    <!--<span>Context 3</span>-->
-    <!--</li>-->
-    <!--<li>-->
-    <!--<a href="#">Edit contexts</a>-->
-    <!--</li>-->
-    <!--</ul>-->
-    <!--</li>-->
-    <!--</ul>-->
+    <ul class="list-unstyled components">
+        <li>
+            <a href="#factsSubmenu" data-toggle="collapse" aria-expanded="false" id="factsMenu"
+               class="sidebar-list">Facts</a>
+            <ul class="collapse list-unstyled" id="factsSubmenu">
+            </ul>
+        </li>
+        <li>
+            <a href="#contextsSubmenu" data-toggle="collapse" aria-expanded="false" id="contextsMenu"
+               class="sidebar-list">Contexts</a>
+            <ul class="collapse list-unstyled" id="contextsSubmenu">
+            </ul>
+        </li>
+    </ul>
 </script>
 
 <!--<script type="text/template" id="tpl-wine-details">-->
