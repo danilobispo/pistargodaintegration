@@ -334,3 +334,7 @@ a.article:hover {
     display: none;
 }
 
+.description-ta {
+    resize: none;
+}
+

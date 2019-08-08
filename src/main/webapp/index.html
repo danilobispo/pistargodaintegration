@@ -860,7 +860,7 @@
                 </div>
                 <div class="modal-body">
                     <input class='fact-input' title="Define a fact by name" placeholder="Choose a fact name!"
-                           autofocus="">
+                           autofocus="" maxlength="20">
                     <button class="fact-create" id="createFact" title="Click here to create your fact!">Create fact!
                     </button>
                     <hr class="edited-hr"/>
@@ -896,7 +896,7 @@
                     <br/>
                     <input type="radio" name="createOrEdit" value="edit-context">Edit existing context
                     <div class="createContext" hidden>
-                        <input type="text" class="context-input" placeholder="New context name">
+                        <input type="text" class="context-input" placeholder="New context name" maxlength="20">
                         <button id="createContextName" title="Create context name">Set name for context</button>
                     </div>
                     <div class="editContext" hidden>
@@ -935,7 +935,7 @@
                     <h4 class="modal-title" id="decompositionModalTitle">Choose your decomposition name and type</h4>
                 </div>
                 <div class="modal-body">
-                    <input id="decompositionNameInput" type="text" placeholder="New decomposition name" maxlength="30">
+                    <input id="decompositionNameInput" type="text" placeholder="New decomposition name" maxlength="20">
                     <h4>Select a decomposition type</h4>
                     <div class="radio-inline" role="group" aria-label="aggregationTypes">
                         <input id="decompositionAndOptionRadio"
@@ -973,13 +973,17 @@
                 <div class="modal-body">
                     <div id="personaForm">
                         <h4>Define the name for your persona</h4>
-                        <input type="text"
+                        <h5><i>Type the same name of a previous persona to edit it</i></h5>
+                        <input type="text" maxlength="30"
                                placeholder="Persona name"
                                id="personaCreationName">
                         <hr/>
                         <h4>Set a description(optional)</h4>
-                        <textarea id="personaCreationDescription" autofocus="" rows="5" cols="30"
-                                  placeholder="Set a description(optional)"></textarea>
+                        <h5><label for="personaCreationDescription">Persona Description</label></h5>
+                        <textarea class="description-ta"
+                                  maxlength="90"
+                                  id="personaCreationDescription" rows="5" cols="30"
+                                  placeholder="Set a description(optional) (Max length: 90 characters)"></textarea>
                         <h4>Select facts about this persona</h4>
                         <div id="personaFactCheckboxList" class="col-xs-12">
                         </div>
