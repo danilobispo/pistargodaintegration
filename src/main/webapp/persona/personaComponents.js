@@ -292,7 +292,7 @@ app.ContextModalView = Backbone.View.extend({
             id: this.counter++,
             contextName: app.selectedContext.attributes.contextName,
             // Facts are inside the decompositions
-            decompositionsAndFacts: app.selectedDecompositionsForContext
+            decompositionsAndFacts: new app.DecompositionList(app.selectedDecompositionsForContext.toJSON())
         }
     },
     saveContext: function () {
@@ -428,7 +428,7 @@ app.DecompositionModalView = Backbone.View.extend({
         return {
             name: this.$name.val(),
             decompositionType: this.$andDecomposition.is(':checked') ? "AND" : "OR",
-            facts: app.factCheckboxListView.optionsCollection
+            facts: new app.FactCollection(app.factCheckboxListView.optionsCollection.toJSON())
         }
     }
 
@@ -438,6 +438,11 @@ new app.DecompositionModalView();
 app.selectedContext = new app.Context();
 app.selectedFacts = new app.FactCollection();
 app.selectedFactsForPersona = new app.FactCollection();
+// Criado para resolver o problema de fatos serem atualizados a cada nova criação de persona, então colocaremos em outro
+// objeto só para evitar esse conflito
+// Eg persona A possui os Facts 1, 2 e 3. Persona A é criada
+// persona B possui o Fact 1. Persona B é criada e os Facts da persona A são atualizados para apenas 1
+app.factsForPersona = new app.FactCollection();
 
 /**
  * Lista de decomposições, que possui:
@@ -604,11 +609,12 @@ app.PersonaModalView = Backbone.View.extend({
             console.log("Name: ", this.$name.val());
             console.log("description:", this.$description.val());
             console.log('Selected facts in persona modal:', app.personaModalFactCheckboxListView.optionsCollection);
-            app.personaList.add(this.newAttributes());
+
+            app.personaList.add(new app.Persona(this.newAttributes()));
             if(app.personaList.length === 1){
                 app.selectedPersona = app.personaList.at(0);
+                new app.PersonaReviewInfoView({model: app.selectedPersona});
             }
-            new app.PersonaReviewInfoView({model: app.selectedPersona});
             alert('Persona created!');
             console.log('PersonaList: ', app.personaList);
             this.$name.val().trim();
@@ -620,8 +626,8 @@ app.PersonaModalView = Backbone.View.extend({
             id: this.counter++,
             personaName: this.$name.val(),
             personaDescription: this.$description.val(),
-            personaFacts: app.personaModalFactCheckboxListView.optionsCollection,
-            personaContexts: app.selectedContextsForPersona
+            personaFacts: new app.FactCollection(app.selectedFactsForPersona.toJSON()),
+            personaContexts: new app.ContextList(app.selectedContextsForPersona.toJSON())
         }
     }
 });
@@ -702,7 +708,7 @@ new app.PersonaModalView();
 app.ComboBoxPersona = Backbone.View.extend({
     el: $('#selectPersona'),
     template: _.template('<option data-id="<%= id %>" ' +
-        'value="<%= id%>" ' +
+        'value="<%= id %>" ' +
         'title="<%= personaName %>"' +
         'label="<%= personaName %>"><%= personaName %></option>'),
 
@@ -758,29 +764,45 @@ app.comboBoxPersona = new app.ComboBoxPersona();
  */
 app.PersonaReviewInfoView = Backbone.View.extend({
     el: '#reviewPersonaView',
-    model: app.Persona,
     template: _.template($('#tpl-review-persona-navbar-view').html()),
     initialize: function (){
+        this.model = app.selectedPersona;
+        this.listenTo(this.model, 'change', this.render);
+        this.$factsMenu = this.$('#factsMenu');
+        this.$contextsMenu = this.$('#contextsMenu');
+        // this.$factsMenu.empty();
+        // this.$contextsMenu.empty();
         this.render();
     },
     render: function (model) {
-        $(this.el).empty().html(this.template(app.selectedPersona.attributes));
-        this.renderFacts();
-        this.renderContexts();
+        $(this.el).html(this.template(this.model.attributes));
+        // this.renderFacts();
+        // this.renderContexts();
         console.log('SelectedPersona: ', app.selectedPersona);
         return this;
     },
     renderFacts: function () {
-        _.each(app.selectedPersona.attributes.personaFacts.models, function (fact) {
-            $("#factsSubmenu").append("<li><span>" + fact.attributes.factName + "</span></li>");
-            console.log(fact.attributes.factName);
-        });
+        if(app.selectedPersona.attributes.personaFacts.models.length === 0) {
+            this.$factsMenu.hide();
+        } else {
+            this.$factsMenu.show();
+            _.each(app.selectedPersona.attributes.personaFacts.models, function (fact) {
+                $("#factsSubmenu").append("<li><span>" + fact.attributes.factName + "</span></li>");
+                console.log(fact.attributes.factName);
+            });
+        }
+
     },
     renderContexts: function () {
-        _.each(app.selectedPersona.attributes.personaContexts.models, function (fact) {
-            $("#contextsSubmenu").append("<li><span>" + fact.attributes.contextName + "</span></li>");
-            console.log(fact.attributes.contextName);
-        });
+        if(app.selectedPersona.attributes.personaContexts.models.length === 0) {
+            this.$contextsMenu.hide();
+        } else {
+            this.$contextsMenu.show();
+            _.each(app.selectedPersona.attributes.personaContexts.models, function (fact) {
+                $("#contextsSubmenu").append("<li><span>" + fact.attributes.contextName + "</span></li>");
+                console.log(fact.attributes.contextName);
+            });
+        }
     }
 });
 

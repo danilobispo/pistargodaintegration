@@ -729,12 +729,18 @@
             <a href="#factsSubmenu" data-toggle="collapse" aria-expanded="false" id="factsMenu"
                class="sidebar-list">Facts</a>
             <ul class="collapse list-unstyled" id="factsSubmenu">
+                <% _.each(personaFacts.models, function (fact) { %>
+                <li><span><%- fact.attributes.factName %></span></li>
+                <% }); %>
             </ul>
         </li>
         <li>
             <a href="#contextsSubmenu" data-toggle="collapse" aria-expanded="false" id="contextsMenu"
                class="sidebar-list">Contexts</a>
             <ul class="collapse list-unstyled" id="contextsSubmenu">
+                <% _.each(personaContexts.models, function (context) { %>
+                <li id="<%= context.attributes.contextName %>"><span><%- context.attributes.contextName %></span></li>
+                <% }); %>
             </ul>
         </li>
     </ul>
