@@ -159,6 +159,7 @@ ui.defineInteractions = function() {
                 }
             }
         }
+        // Aqui devem ser feitas as mudanças para adicionar os contextos
         else if (ui.currentStateIsView()) {
             if (! cellView.model.isLink()) {
                 ui.currentElement = cellView.model;
@@ -169,8 +170,17 @@ ui.defineInteractions = function() {
                     deleteRemoveElementButton();
                 });
                 new uiC.CellTableView({model: cellView.model}).render();
+
+                // Adição de contextos:
+                console.log("clickei nessa parada aí", ui.currentElement);
+                if(ui.currentElement.attributes.type === "istar.Goal"){
+                    console.log("é Goaaaaaal");
+                } else if(ui.currentElement.attributes.type === "istar.Task"){
+                    console.log("é Taaaaaask");
+                }
             }
         }
+
     });
 
     istar.paper.on('cell:pointerdblclick', function(cellView, evt, x, y) {
@@ -585,3 +595,4 @@ ui._toggleSmoothness = function(link, vertices, something) {
         link.set('smooth', false);
     }
 };
+
