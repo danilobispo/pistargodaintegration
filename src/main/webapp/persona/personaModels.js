@@ -37,6 +37,15 @@ app.Persona = Backbone.Model.extend({
     }
 });
 
+app.GoalOrTaskAndContexts = Backbone.Model.extend({
+    defaults: {
+        id: "",
+        goalOrTask: "",
+        contexts: "",
+        decompositionType: ""
+    }
+}) ;
+
 // // Models
 // window.Wine = Backbone.Model.extend({
 //     defaults:{

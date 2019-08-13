@@ -325,6 +325,12 @@ a.article:hover {
     border-bottom: 1px solid #e5e5e5
 }
 
+.modal-separator-sm {
+    padding-bottom: 3px;
+    padding-top: 3px;
+    border-bottom: 1px solid #e5e5e5
+}
+
 .edited-hr {
     margin-top: 10px;
     margin-bottom: 10px;

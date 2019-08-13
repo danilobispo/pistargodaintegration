@@ -172,11 +172,15 @@ ui.defineInteractions = function() {
                 new uiC.CellTableView({model: cellView.model}).render();
 
                 // Adição de contextos:
-                console.log("clickei nessa parada aí", ui.currentElement);
-                if(ui.currentElement.attributes.type === "istar.Goal"){
-                    console.log("é Goaaaaaal");
-                } else if(ui.currentElement.attributes.type === "istar.Task"){
-                    console.log("é Taaaaaask");
+                // DEBUG
+                console.log("Current Element: ", ui.currentElement);
+                if(ui.currentElement.attributes.type === "istar.Goal"
+                    || ui.currentElement.attributes.type === "istar.Task"){
+                    app.selectedElement = ui.currentElement;
+                    new app.GoalOrTaskInfoView({model: ui.currentElement});
+                    new app.GoalOrTaskNodeInfoView({model: ui.currentElement});
+                    app.contextAssociationModalView.show();
+                    console.log("Lista de contextos", app.contextList);
                 }
             }
         }

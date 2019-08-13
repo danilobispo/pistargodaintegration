@@ -135,7 +135,7 @@
             <span id="stepTwoNotDone" class="glyphicon glyphicon-remove" style="display:none"></span>
         </li>
         <li>
-            <button type="button" id="thirdStepPersona" class="btn btn-info navbar-btn">
+            <button type="button" id="thirdStepPersona" data-toggle="button" class="btn btn-info navbar-btn">
                 <span>Step 3: Relate contexts to goals/or tasks of CGM </span>
             </button>
         </li>
@@ -746,6 +746,17 @@
     </ul>
 </script>
 
+<script type="text/template" id="selectedGoalOrTaskTemplate">
+    <%= type.substring(6).toLowerCase() %>
+</script>
+
+<script type="text/template" id="goalOrTaskInfoTemplate">
+    <h4> Selected node info</h4>
+    <h5> <b>id:</b> <%= id %> </h5>
+    <h5> <b>Text:</b> <%= attrs.text.text %> </h5>
+    <h5> <b>Type:</b> <%= type.substring(6).toLowerCase() %></h5>
+</script>
+
 <!--<script type="text/template" id="tpl-wine-details">-->
 
 <!--<div class="form-left-col">-->
@@ -994,6 +1005,44 @@
                         <hr/>
                         <button id="createPersonaButton" class="btn-success">Finish and create persona!</button>
                     </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn" aria-label="Close" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="contextAssociationModal" tabindex="-1" role="dialog"
+         aria-labelledby="contextAssociationModalLabel">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close btn-close"
+                            data-dismiss="modal"
+                            aria-label="Close"><span
+                            aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="contextAssociationModalTitle">
+                        Choose the contexts associated to this <span id="goalOrTaskInfo"></span>
+                    </h4>
+                </div>
+                <div class="modal-body">
+                    <div id="nodeInfo"></div>
+                    <div class="modal-separator-sm"></div>
+                    <h4>Select a decomposition type for this context association</h4>
+                    <div class="radio-inline" role="group" aria-label="aggregationTypes">
+                        <input id="CAdecompositionAndOptionRadio"
+                               type="radio" value="and" name="decompType" title="AND" PLACEHOLDER="AND"> AND
+                        <br/>
+                        <input id="CAdecompositionOrOptionRadio"
+                               type="radio" value="or" name="decompType" title="OR" placeholder="OR"> OR
+                        <br/>
+                    </div>
+                    <br/>
+                    <h4>Select the contexts that you want in this association</h4>
+                    <div id="contextCheckboxListContextAssociation"></div>
+                    <button id="CAdecompositionCreatorButton" class="btn"> Create!</button>
+                    <span id="CAsuccessDecompositionMessage" hidden>Context association created!</span>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn" aria-label="Close" data-dismiss="modal">Close</button>

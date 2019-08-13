@@ -95,7 +95,6 @@ $('.persona-fact-button').click(function () {
 });
 
 $("#showFactsLink").click(function () {
-    console.log("ear bls");
     new app.FactListView();
     $("#showFactsLink").innerText = "Hide List";
 });
