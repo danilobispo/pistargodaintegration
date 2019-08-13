@@ -62,6 +62,16 @@ new uiC.DropdownItemView({attributes: {parent:'#addContributionDropdown'}, model
 new uiC.DropdownItemView({attributes: {parent:'#addContributionDropdown'}, model: new uiC.ButtonModel({label: 'Hurt (-)', action: ui.STATE_ADD_LINK, name: 'hurt', tooltip:'Add Hurt (-) Contribution link', statusText:'Hurt (-) Contribution link: click first on an element and then on the Quality it contributes to.'})}).render();
 new uiC.DropdownItemView({attributes: {parent:'#addContributionDropdown'}, model: new uiC.ButtonModel({label: 'Break (--)', action: ui.STATE_ADD_LINK, name: 'break', tooltip:'Add Break (--) Contribution link', statusText:'Break (--) Contribution link: click first on an element and then on the Quality it contributes to.'})}).render();
 
+//Persona buttons
+
+new uiC.ButtonView({model: new uiC.ButtonModel({label: 'Create Facts', name: 'edit_facts_for_contexts_off' ,action: ui.STATE_VIEW, tooltip:'Create facts', statusText:'Opens a modal, enabling fact creation!'})}).render();
+new uiC.ButtonView({model: new uiC.ButtonModel({label: 'Create Contexts', name: 'edit_contexts_off', action: ui.STATE_VIEW, tooltip:'Create contexts', statusText:'Opens a modal, enabling context creation!'})}).render();
+new uiC.ButtonView({model: new uiC.ButtonModel({label: 'Relate contexts to goals or tasks', name: 'relate_contexts_to_goals_off', action: ui.STATE_VIEW, tooltip:'Create contexts', statusText:'Click on a !'})}).render();
+new uiC.ButtonView({model: new uiC.ButtonModel({label: 'Create persona', name: 'define_personas_off', action: ui.STATE_VIEW, tooltip:'Create contexts', statusText:'Opens a modal, enabling context creation!'})}).render();
+new uiC.ButtonView({model: new uiC.ButtonModel({label: 'Review persona', name: 'review_your_persona_off', action: ui.STATE_VIEW, tooltip:'Create contexts', statusText:'Opens a modal, enabling context creation!'})}).render();
+new uiC.ButtonView({model: new uiC.ButtonModel({label: 'Run Achievability Algorithm', name: 'run_off', action: ui.STATE_VIEW, tooltip:'Create contexts', statusText:'Opens a modal, enabling context creation!'})}).render();
+
+
 
 ui.defineInteractions = function() {
     istar.paper.on('blank:pointerdown', function(evt, x, y) {
