@@ -82,6 +82,14 @@ uiC.ButtonView = Backbone.View.extend({
     highlight: function (element) {
         this.$('button').toggleClass('buttonHighlight', element.get('active'));
         this.$('button').blur();
+    },
+
+    hide: function() {
+        this.$el.hide();
+    },
+
+    openModal: function(element){
+        this.element.modal('show');
     }
 
 });

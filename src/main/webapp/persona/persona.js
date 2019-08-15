@@ -46,11 +46,64 @@ function removerDiagramaAtual() {
 
 $('#personaArea').on('show.bs.collapse', function () {
     $('#personaButton').addClass('active');
+    //Persona buttons
     alterarControlesDaUI();
+    app.factViewButton = new uiC.ButtonView({model: new uiC.ButtonModel({
+            label: 'Create Facts', 
+            name: 'edit_facts_for_contexts_off', 
+            tooltip:'Create facts'})}).render();
+    app.factViewButton.$el.click(function () {
+        $("#factsModal").modal('show');
+    });
+    app.contextViewButton = new uiC.ButtonView({model: new uiC.ButtonModel({
+            label: 'Create Contexts',
+            name: 'edit_contexts_off',
+            tooltip:'Create contexts'})}).render();
+    app.contextViewButton.$el.click(function () {
+        $("#contextAndFactsModal").modal('show');
+    });
+    app.relateGoalsButton = new uiC.ButtonView({model: new uiC.ButtonModel({
+            label: 'Relate contexts to goals or tasks', 
+            name: 'relate_contexts_to_goals_off', 
+            tooltip:'Create contexts', 
+            statusText: 'Click on a goal or task and assign created contexts to it!'})}).render();
+    app.relateGoalsButton.$el.click(function () {
+        app.stepThreeSelected = true;
+    })
+    app.createPersonaViewButton = new uiC.ButtonView({model: new uiC.ButtonModel({
+            label: 'Create persona', 
+            name: 'define_personas_off', 
+            tooltip:'Define a persona!'})}).render();
+    app.createPersonaViewButton.$el.click(function () {
+        $("#personaCreationModal").modal('show');
+    });
+    app.reviewPersonaViewButton = new uiC.ButtonView({model: new uiC.ButtonModel({
+            label: 'Review persona', 
+            name: 'review_your_persona_off', 
+            action: ui.STATE_VIEW, 
+            tooltip:'Create contexts', 
+            statusText:'Opens a modal, enabling context creation!'})}).render();
+    app.reviewPersonaViewButton.$el.click(function () {
+        $("#sidebar").toggleClass("active");
+        $(this).toggleClass("active");
+    });
+    app.runAchievabilityAlgorithmButton = new uiC.ButtonView({model: new uiC.ButtonModel({
+            label: 'Run Achievability Algorithm', 
+            name: 'run_off', 
+            action: ui.STATE_VIEW, 
+            tooltip:'Create contexts', 
+            statusText:'Opens a modal, enabling context creation!'})}).render();
 });
 $('#personaArea').on('hide.bs.collapse', function () {
     $('#personaButton').removeClass('active');
+    app.factViewButton.hide();
+    app.contextViewButton.hide();
+    app.relateGoalsButton.hide();
+    app.createPersonaViewButton.hide();
+    app.reviewPersonaViewButton.hide();
+    app.runAchievabilityAlgorithmButton.hide();
     restaurarControlesDaUI();
+
 });
 
 $('#finishCGMButton').click(function () {

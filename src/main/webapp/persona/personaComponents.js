@@ -64,12 +64,15 @@ app.FactsModalView = Backbone.View.extend({
             // Caso em que a seta deve aparecer verde e o X desaparecer
             $("#stepOneDone").css("display", "");
             $("#stepOneNotDone").css("display", "none");
+            app.factViewButton.$el.children().children().attr("src", "images/edit_facts_for_contexts_on.svg");
             $("#stepOneDone").css("color", "#00FF00");
             $("#stepOneLabel").html("Step 1: Edit facts for contexts");
+
         } else {
             // Caso em que a seta deve desaparecer verde e o X aparecer
             $("#stepOneNotDone").css("display", "");
             $("#stepOneDone").css("display", "none");
+            app.factViewButton.$el.children().children().attr("src", "images/edit_facts_for_contexts_off.svg");
             $("#stepOneNotDone").css("color", "#FF0000");
             $("#stepOneLabel").html("Step 1: Define facts for contexts");
         }
@@ -353,12 +356,14 @@ app.ContextModalView = Backbone.View.extend({
             // Caso em que a seta deve aparecer verde e o X desaparecer
             $("#stepTwoDone").css("display", "");
             $("#stepTwoNotDone").css("display", "none");
+            app.contextViewButton.$el.children().children().attr("src", "images/edit_contexts_on.svg");
             $("#stepTwoDone").css("color", "#00FF00");
             $("#stepTwoLabel").html("Step 2: Edit contexts");
         } else {
             // Caso em que a seta deve desaparecer verde e o X aparecer
             $("#stepTwoNotDone").css("display", "");
             $("#stepTwoDone").css("display", "none");
+            app.contextViewButton.$el.children().children().attr("src", "images/edit_contexts_off.svg");
             $("#stepTwoNotDone").css("color", "#FF0000");
             $("#stepTwoLabel").html("Step 2: Define contexts");
         }
@@ -599,10 +604,16 @@ app.PersonaModalView = Backbone.View.extend({
         this.$description = this.$("#personaCreationDescription");
     },
     checkData: function () {
-        if (this.$name.val().length > 0) {
-            //TODO: Check all fields
-            return true;
-        } else return false;
+        if(this.$name.val().length > 0) {
+            if(app.selectedFactsForPersona.length > 0 || app.selectedContextsForPersona.length > 0){
+                return true;
+            } else {
+                alert("You must select at least one fact or context to create a valid Persona!");
+            }
+        } else {
+            alert("You must give a name to your persona!");
+            return false;
+        }
     },
     checkDataAndSubmit: function () {
         if (this.checkData()) {
@@ -839,6 +850,7 @@ app.ContextAssociationModalView = Backbone.View.extend({
         this.$andDecomposition = this.$("#CAdecompositionAndOptionRadio");
         this.$orDecomposition = this.$("#CAdecompositionOrOptionRadio");
         this.$success = this.$('#CAsuccessDecompositionMessage');
+        this.$el.on('hidden.bs.modal', this.closeModal);
     },
     checkData: function () {
         // DEBUG
@@ -898,6 +910,12 @@ app.ContextAssociationModalView = Backbone.View.extend({
     },
     show: function () {
         this.$el.modal('show');
+    },
+    closeModal: function () {
+        // Desativa o modo de associação de contextos
+        app.stepThreeSelected = false;
+        // Esvazia o texto para não confundir o usuário a pensar que o modo ainda está ativo
+        $("#status").text("");
     }
 });
 

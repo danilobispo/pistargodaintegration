@@ -15,86 +15,275 @@ var ui = {
     dependencyType: 'GoalDependencyLink',
     currentElement: null,
 
-    currentStateIsAddKindOfActor: function(){return this.currentState === this.STATE_ADD_ACTOR;},
-    currentStateIsAddLink: function(){return this.currentState === this.STATE_ADD_LINK;},
-    currentStateIsAddNode: function(){return this.currentState === this.STATE_ADD_NODE;},
-    currentStateIsView: function(){return this.currentState === this.STATE_VIEW;},
+    currentStateIsAddKindOfActor: function () {
+        return this.currentState === this.STATE_ADD_ACTOR;
+    },
+    currentStateIsAddLink: function () {
+        return this.currentState === this.STATE_ADD_LINK;
+    },
+    currentStateIsAddNode: function () {
+        return this.currentState === this.STATE_ADD_NODE;
+    },
+    currentStateIsView: function () {
+        return this.currentState === this.STATE_VIEW;
+    },
 
-    isCurrentlyAddingElement: function(){return this.currentAddingElement != 'none';},
-    isLinkSourceUndefined: function(){return this.linkSource === 'none';},
-    isLinkTargetUndefined: function(){return this.linkTarget === 'none';},
+    isCurrentlyAddingElement: function () {
+        return this.currentAddingElement != 'none';
+    },
+    isLinkSourceUndefined: function () {
+        return this.linkSource === 'none';
+    },
+    isLinkTargetUndefined: function () {
+        return this.linkTarget === 'none';
+    },
 
-    resetAddingElement: function(){this.currentAddingElement = 'none'; return this;},
-    resetLinkSource: function(){this.linkSource = 'none'; return this;},
-    resetLinkTarget: function(){this.linkTarget = 'none'; return this;},
+    resetAddingElement: function () {
+        this.currentAddingElement = 'none';
+        return this;
+    },
+    resetLinkSource: function () {
+        this.linkSource = 'none';
+        return this;
+    },
+    resetLinkTarget: function () {
+        this.linkTarget = 'none';
+        return this;
+    },
 };
 
 
-
 //create the ADD buttons
-new uiC.DropdownItemView({attributes: {parent:'#addActorDropdown'}, model: new uiC.ButtonModel({label: 'Role', action: ui.STATE_ADD_ACTOR, tooltip:'Add Role', statusText:'Now click on an empty space in the diagram to add a Role'})}).render();
-new uiC.DropdownItemView({attributes: {parent:'#addActorDropdown'}, model: new uiC.ButtonModel({label: 'Agent', action: ui.STATE_ADD_ACTOR, tooltip:'Add Agent', statusText:'Now click on an empty space in the diagram to add an Agent'})}).render();
-new uiC.DropdownItemView({attributes: {parent:'#addActorDropdown'}, model: new uiC.ButtonModel({label: 'Actor', action: ui.STATE_ADD_ACTOR, tooltip:'Add Actor', statusText:'Now click on an empty space in the diagram to add an Actor'})}).render();
-new uiC.DropdownItemView({attributes: {parent:'#addActorLinkDropdown'}, model: new uiC.ButtonModel({label: 'Is A link', action: ui.STATE_ADD_LINK, name: 'IsALink', tooltip:'Add an Is-A link between an Actor and another Actor, or between a Role and another Role', statusText:'Adding Is-A link: click on the sub-element and then on the super-element.'})}).render();
-new uiC.DropdownItemView({attributes: {parent:'#addActorLinkDropdown'}, model: new uiC.ButtonModel({label: 'Participates-In link', action: ui.STATE_ADD_LINK, name: 'ParticipatesInLink', tooltip:'Add a Participates-In link between any Actors, Roles, or Agents', statusText:'Adding Participates-In link: click on the source, and then on the target.'})}).render();
-new uiC.DropdownItemView({attributes: {parent:'#addDependencyDropdown'}, model: new uiC.ButtonModel({label: 'Goal dependency', action: ui.STATE_ADD_LINK, name: 'GoalDependencyLink', tooltip:'Add Goal Dependency link (including its dependum)', statusText:'Goal Dependency link: click first on the depender, and then on the dependee.'})}).render();
-new uiC.DropdownItemView({attributes: {parent:'#addDependencyDropdown'}, model: new uiC.ButtonModel({label: 'Quality dependency', action: ui.STATE_ADD_LINK, name: 'QualityDependencyLink', tooltip:'Add Quality Dependency link (including its dependum)', statusText:'Quality Dependency link: click first on the depender, and then on the dependee.'})}).render();
-new uiC.DropdownItemView({attributes: {parent:'#addDependencyDropdown'}, model: new uiC.ButtonModel({label: 'Task dependency', action: ui.STATE_ADD_LINK, name: 'TaskDependencyLink', tooltip:'Add Task Dependency link (including its dependum)', statusText:'Task Dependency link: click first on the depender, and then on the dependee.'})}).render();
-new uiC.DropdownItemView({attributes: {parent:'#addDependencyDropdown'}, model: new uiC.ButtonModel({label: 'Resource dependency', action: ui.STATE_ADD_LINK, name: 'ResourceDependencyLink', tooltip:'Add Resource Dependency link (including its dependum)', statusText:'Resource Dependency link: click first on the depender, and then on the dependee.'})}).render();
-new uiC.ButtonView({model: new uiC.ButtonModel({label: 'Goal', action: ui.STATE_ADD_NODE, name: 'Goal', tooltip:'Add Goal', statusText:'Click on an actor/role/agent to add a Goal', precondition:function() {
-    var valid = true;
-    if (istar.isEmpty()) {
-        alert('Sorry, you can only add goals on an actor/role/agent.');
-        valid = false;
-    }
-    return valid;
-}
-})}).render();
-new uiC.ButtonView({model: new uiC.ButtonModel({label: 'Task', action: ui.STATE_ADD_NODE, tooltip:'Add Task', statusText:'Click on an actor/role/agent to add a Task'})}).render();
-new uiC.ButtonView({model: new uiC.ButtonModel({label: 'Resource', action: ui.STATE_ADD_NODE, tooltip:'Add Resource', statusText:'Click on an actor/role/agent to add a Resource'})}).render();
-new uiC.ButtonView({model: new uiC.ButtonModel({label: 'Quality', action: ui.STATE_ADD_NODE, name: 'Quality', tooltip:'Add Quality', statusText:'Click on an actor/role/agent to add a Quality'})}).render();
-new uiC.ButtonView({model: new uiC.ButtonModel({label: 'And-Refinement', action: ui.STATE_ADD_LINK, name: 'AndRefinementLink', tooltip:'Add And-Refinement link', statusText:'And-Refinement link: click first on the child, and then on the parent. It can only be applied to goals or tasks.'})}).render();
-new uiC.ButtonView({model: new uiC.ButtonModel({label: 'Or-Refinement', action: ui.STATE_ADD_LINK, name: 'OrRefinementLink', tooltip:'Add Or-Refinement link', statusText:'Or-Refinement link: click first on the child, and then on the parent. It can only be applied to goals or tasks.'})}).render();
-new uiC.ButtonView({model: new uiC.ButtonModel({label: 'Qualification', action: ui.STATE_ADD_LINK, name: 'QualificationLink', tooltip:'Add Qualification link', statusText:'Qualification link: click first on the Quality and then on the element it qualifies (Goal, Task or Resource).'})}).render();
-new uiC.ButtonView({model: new uiC.ButtonModel({label: 'Needed-By', action: ui.STATE_ADD_LINK, name: 'NeededByLink', tooltip:'Add Needed-By link', statusText:'Needed-By link: click first on the Resource and then on the Task that needs it.'})}).render();
-new uiC.DropdownItemView({attributes: {parent:'#addContributionDropdown'}, model: new uiC.ButtonModel({label: 'Make (++)', action: ui.STATE_ADD_LINK, name: 'make', tooltip:'Add Make (++) Contribution link', statusText:'Make (++) Contribution link: click first on an element and then on the Quality it contributes to.'})}).render();
-new uiC.DropdownItemView({attributes: {parent:'#addContributionDropdown'}, model: new uiC.ButtonModel({label: 'Help (+)', action: ui.STATE_ADD_LINK, name: 'help', tooltip:'Add Help (+) Contribution link', statusText:'Help (+) Contribution link: click first on an element and then on the Quality it contributes to.'})}).render();
-new uiC.DropdownItemView({attributes: {parent:'#addContributionDropdown'}, model: new uiC.ButtonModel({label: 'Hurt (-)', action: ui.STATE_ADD_LINK, name: 'hurt', tooltip:'Add Hurt (-) Contribution link', statusText:'Hurt (-) Contribution link: click first on an element and then on the Quality it contributes to.'})}).render();
-new uiC.DropdownItemView({attributes: {parent:'#addContributionDropdown'}, model: new uiC.ButtonModel({label: 'Break (--)', action: ui.STATE_ADD_LINK, name: 'break', tooltip:'Add Break (--) Contribution link', statusText:'Break (--) Contribution link: click first on an element and then on the Quality it contributes to.'})}).render();
+new uiC.DropdownItemView({
+    attributes: {parent: '#addActorDropdown'},
+    model: new uiC.ButtonModel({
+        label: 'Role',
+        action: ui.STATE_ADD_ACTOR,
+        tooltip: 'Add Role',
+        statusText: 'Now click on an empty space in the diagram to add a Role'
+    })
+}).render();
+new uiC.DropdownItemView({
+    attributes: {parent: '#addActorDropdown'},
+    model: new uiC.ButtonModel({
+        label: 'Agent',
+        action: ui.STATE_ADD_ACTOR,
+        tooltip: 'Add Agent',
+        statusText: 'Now click on an empty space in the diagram to add an Agent'
+    })
+}).render();
+new uiC.DropdownItemView({
+    attributes: {parent: '#addActorDropdown'},
+    model: new uiC.ButtonModel({
+        label: 'Actor',
+        action: ui.STATE_ADD_ACTOR,
+        tooltip: 'Add Actor',
+        statusText: 'Now click on an empty space in the diagram to add an Actor'
+    })
+}).render();
+new uiC.DropdownItemView({
+    attributes: {parent: '#addActorLinkDropdown'},
+    model: new uiC.ButtonModel({
+        label: 'Is A link',
+        action: ui.STATE_ADD_LINK,
+        name: 'IsALink',
+        tooltip: 'Add an Is-A link between an Actor and another Actor, or between a Role and another Role',
+        statusText: 'Adding Is-A link: click on the sub-element and then on the super-element.'
+    })
+}).render();
+new uiC.DropdownItemView({
+    attributes: {parent: '#addActorLinkDropdown'},
+    model: new uiC.ButtonModel({
+        label: 'Participates-In link',
+        action: ui.STATE_ADD_LINK,
+        name: 'ParticipatesInLink',
+        tooltip: 'Add a Participates-In link between any Actors, Roles, or Agents',
+        statusText: 'Adding Participates-In link: click on the source, and then on the target.'
+    })
+}).render();
+new uiC.DropdownItemView({
+    attributes: {parent: '#addDependencyDropdown'},
+    model: new uiC.ButtonModel({
+        label: 'Goal dependency',
+        action: ui.STATE_ADD_LINK,
+        name: 'GoalDependencyLink',
+        tooltip: 'Add Goal Dependency link (including its dependum)',
+        statusText: 'Goal Dependency link: click first on the depender, and then on the dependee.'
+    })
+}).render();
+new uiC.DropdownItemView({
+    attributes: {parent: '#addDependencyDropdown'},
+    model: new uiC.ButtonModel({
+        label: 'Quality dependency',
+        action: ui.STATE_ADD_LINK,
+        name: 'QualityDependencyLink',
+        tooltip: 'Add Quality Dependency link (including its dependum)',
+        statusText: 'Quality Dependency link: click first on the depender, and then on the dependee.'
+    })
+}).render();
+new uiC.DropdownItemView({
+    attributes: {parent: '#addDependencyDropdown'},
+    model: new uiC.ButtonModel({
+        label: 'Task dependency',
+        action: ui.STATE_ADD_LINK,
+        name: 'TaskDependencyLink',
+        tooltip: 'Add Task Dependency link (including its dependum)',
+        statusText: 'Task Dependency link: click first on the depender, and then on the dependee.'
+    })
+}).render();
+new uiC.DropdownItemView({
+    attributes: {parent: '#addDependencyDropdown'},
+    model: new uiC.ButtonModel({
+        label: 'Resource dependency',
+        action: ui.STATE_ADD_LINK,
+        name: 'ResourceDependencyLink',
+        tooltip: 'Add Resource Dependency link (including its dependum)',
+        statusText: 'Resource Dependency link: click first on the depender, and then on the dependee.'
+    })
+}).render();
+new uiC.ButtonView({
+    model: new uiC.ButtonModel({
+        label: 'Goal',
+        action: ui.STATE_ADD_NODE,
+        name: 'Goal',
+        tooltip: 'Add Goal',
+        statusText: 'Click on an actor/role/agent to add a Goal',
+        precondition: function () {
+            var valid = true;
+            if (istar.isEmpty()) {
+                alert('Sorry, you can only add goals on an actor/role/agent.');
+                valid = false;
+            }
+            return valid;
+        }
+    })
+}).render();
+new uiC.ButtonView({
+    model: new uiC.ButtonModel({
+        label: 'Task',
+        action: ui.STATE_ADD_NODE,
+        tooltip: 'Add Task',
+        statusText: 'Click on an actor/role/agent to add a Task'
+    })
+}).render();
+new uiC.ButtonView({
+    model: new uiC.ButtonModel({
+        label: 'Resource',
+        action: ui.STATE_ADD_NODE,
+        tooltip: 'Add Resource',
+        statusText: 'Click on an actor/role/agent to add a Resource'
+    })
+}).render();
+new uiC.ButtonView({
+    model: new uiC.ButtonModel({
+        label: 'Quality',
+        action: ui.STATE_ADD_NODE,
+        name: 'Quality',
+        tooltip: 'Add Quality',
+        statusText: 'Click on an actor/role/agent to add a Quality'
+    })
+}).render();
+new uiC.ButtonView({
+    model: new uiC.ButtonModel({
+        label: 'And-Refinement',
+        action: ui.STATE_ADD_LINK,
+        name: 'AndRefinementLink',
+        tooltip: 'Add And-Refinement link',
+        statusText: 'And-Refinement link: click first on the child, and then on the parent. It can only be applied to goals or tasks.'
+    })
+}).render();
+new uiC.ButtonView({
+    model: new uiC.ButtonModel({
+        label: 'Or-Refinement',
+        action: ui.STATE_ADD_LINK,
+        name: 'OrRefinementLink',
+        tooltip: 'Add Or-Refinement link',
+        statusText: 'Or-Refinement link: click first on the child, and then on the parent. It can only be applied to goals or tasks.'
+    })
+}).render();
+new uiC.ButtonView({
+    model: new uiC.ButtonModel({
+        label: 'Qualification',
+        action: ui.STATE_ADD_LINK,
+        name: 'QualificationLink',
+        tooltip: 'Add Qualification link',
+        statusText: 'Qualification link: click first on the Quality and then on the element it qualifies (Goal, Task or Resource).'
+    })
+}).render();
+new uiC.ButtonView({
+    model: new uiC.ButtonModel({
+        label: 'Needed-By',
+        action: ui.STATE_ADD_LINK,
+        name: 'NeededByLink',
+        tooltip: 'Add Needed-By link',
+        statusText: 'Needed-By link: click first on the Resource and then on the Task that needs it.'
+    })
+}).render();
+new uiC.DropdownItemView({
+    attributes: {parent: '#addContributionDropdown'},
+    model: new uiC.ButtonModel({
+        label: 'Make (++)',
+        action: ui.STATE_ADD_LINK,
+        name: 'make',
+        tooltip: 'Add Make (++) Contribution link',
+        statusText: 'Make (++) Contribution link: click first on an element and then on the Quality it contributes to.'
+    })
+}).render();
+new uiC.DropdownItemView({
+    attributes: {parent: '#addContributionDropdown'},
+    model: new uiC.ButtonModel({
+        label: 'Help (+)',
+        action: ui.STATE_ADD_LINK,
+        name: 'help',
+        tooltip: 'Add Help (+) Contribution link',
+        statusText: 'Help (+) Contribution link: click first on an element and then on the Quality it contributes to.'
+    })
+}).render();
+new uiC.DropdownItemView({
+    attributes: {parent: '#addContributionDropdown'},
+    model: new uiC.ButtonModel({
+        label: 'Hurt (-)',
+        action: ui.STATE_ADD_LINK,
+        name: 'hurt',
+        tooltip: 'Add Hurt (-) Contribution link',
+        statusText: 'Hurt (-) Contribution link: click first on an element and then on the Quality it contributes to.'
+    })
+}).render();
+new uiC.DropdownItemView({
+    attributes: {parent: '#addContributionDropdown'},
+    model: new uiC.ButtonModel({
+        label: 'Break (--)',
+        action: ui.STATE_ADD_LINK,
+        name: 'break',
+        tooltip: 'Add Break (--) Contribution link',
+        statusText: 'Break (--) Contribution link: click first on an element and then on the Quality it contributes to.'
+    })
+}).render();
 
-//Persona buttons
 
-new uiC.ButtonView({model: new uiC.ButtonModel({label: 'Create Facts', name: 'edit_facts_for_contexts_off' ,action: ui.STATE_VIEW, tooltip:'Create facts', statusText:'Opens a modal, enabling fact creation!'})}).render();
-new uiC.ButtonView({model: new uiC.ButtonModel({label: 'Create Contexts', name: 'edit_contexts_off', action: ui.STATE_VIEW, tooltip:'Create contexts', statusText:'Opens a modal, enabling context creation!'})}).render();
-new uiC.ButtonView({model: new uiC.ButtonModel({label: 'Relate contexts to goals or tasks', name: 'relate_contexts_to_goals_off', action: ui.STATE_VIEW, tooltip:'Create contexts', statusText:'Click on a !'})}).render();
-new uiC.ButtonView({model: new uiC.ButtonModel({label: 'Create persona', name: 'define_personas_off', action: ui.STATE_VIEW, tooltip:'Create contexts', statusText:'Opens a modal, enabling context creation!'})}).render();
-new uiC.ButtonView({model: new uiC.ButtonModel({label: 'Review persona', name: 'review_your_persona_off', action: ui.STATE_VIEW, tooltip:'Create contexts', statusText:'Opens a modal, enabling context creation!'})}).render();
-new uiC.ButtonView({model: new uiC.ButtonModel({label: 'Run Achievability Algorithm', name: 'run_off', action: ui.STATE_VIEW, tooltip:'Create contexts', statusText:'Opens a modal, enabling context creation!'})}).render();
-
-
-
-ui.defineInteractions = function() {
-    istar.paper.on('blank:pointerdown', function(evt, x, y) {
+ui.defineInteractions = function () {
+    istar.paper.on('blank:pointerdown', function (evt, x, y) {
         if (ui.currentStateIsAddKindOfActor()) {
             ui.addElementOnPaper(x, y);
         }
     });
 
-    istar.paper.on('cell:mouseover', function(cellView, evt, x, y) {
+    istar.paper.on('cell:mouseover', function (cellView, evt, x, y) {
         color = 'rgb(63,72,204)';
         if (cellView.model.isKindOfActor()) {
             if (cellView.model.prop('collapsed')) {
                 cellView.model.attr('circle', {stroke: color, 'stroke-width': '2'});
-            }
-            else {
+            } else {
                 cellView.model.attr('rect', {stroke: color, 'stroke-width': '4'});
                 cellView.model.attr('circle', {stroke: 'black', 'stroke-width': '3'});
             }
-        }
-        else {
+        } else {
             if (cellView.model.get('parent')) {
                 istar.graph.getCell(cellView.model.get('parent')).attr('rect', {stroke: color, 'stroke-width': '4'});
-                istar.graph.getCell(cellView.model.get('parent')).attr('circle', {stroke: 'black', 'stroke-width': '3'});
+                istar.graph.getCell(cellView.model.get('parent')).attr('circle', {
+                    stroke: 'black',
+                    'stroke-width': '3'
+                });
             }
         }
     });
@@ -110,24 +299,22 @@ ui.defineInteractions = function() {
     //         }
     //     }
     // });
-    istar.paper.on('cell:pointerup', function(cellView, evt, x, y) {
+    istar.paper.on('cell:pointerup', function (cellView, evt, x, y) {
         if (evt.ctrlKey) {
             cellView.model.toggleCollapse();  //collapse/uncollapse actors when ctrl-clicked
         }
         if (ui.currentStateIsAddNode()) {
-            ui.addElementOnActor(cellView, x-50, y-18);
-        }
-        else if (ui.currentStateIsAddLink()) {
+            ui.addElementOnActor(cellView, x - 50, y - 18);
+        } else if (ui.currentStateIsAddLink()) {
             if (cellView.model.isKindOfActor()) {
-                if ( ui.currentAddingElement.match(/IsALink|ParticipatesInLink/) ) {
+                if (ui.currentAddingElement.match(/IsALink|ParticipatesInLink/)) {
                     if (ui.isLinkSourceUndefined()) {
                         cellView.highlight();
                         ui.linkSource = cellView;
                     } else {
                         ui.addLinkBetweenActors(ui.currentAddingElement, cellView);
                     }
-                }
-                else if ( ui.dependencyType.match(/DependencyLink/)  ) {
+                } else if (ui.dependencyType.match(/DependencyLink/)) {
                     if (ui.isLinkSourceUndefined()) {
                         cellView.highlight();
                         ui.linkSource = cellView;
@@ -138,16 +325,15 @@ ui.defineInteractions = function() {
                         ui.currentButton.end();
                     }
                 }
-            }
-            else {
-                if ( ui.currentAddingElement.match(/AndRefinementLink|OrRefinementLink|NeededByLink|QualificationLink|ContributionLink|DependencyLink|make|help|hurt|break/) )  {
+            } else {
+                if (ui.currentAddingElement.match(/AndRefinementLink|OrRefinementLink|NeededByLink|QualificationLink|ContributionLink|DependencyLink|make|help|hurt|break/)) {
                     if (ui.isLinkSourceUndefined()) {
-                        cellView.highlight({blur:10, color:'blue'});
+                        cellView.highlight({blur: 10, color: 'blue'});
                         ui.linkSource = cellView;
                     } else {
                         ui.linkTarget = cellView;
 
-                        if ( ui.currentAddingElement.match(/AndRefinementLink|OrRefinementLink|NeededByLink|QualificationLink|ContributionLink|make|help|hurt|break/) ) {
+                        if (ui.currentAddingElement.match(/AndRefinementLink|OrRefinementLink|NeededByLink|QualificationLink|ContributionLink|make|help|hurt|break/)) {
                             if (ui.currentAddingElement === 'AndRefinementLink') istar.addAndRefinementLink(ui.linkSource.model, ui.linkTarget.model);
                             else if (ui.currentAddingElement === 'OrRefinementLink') istar.addOrRefinementLink(ui.linkSource.model, ui.linkTarget.model);
                             else if (ui.currentAddingElement === 'NeededByLink') istar.addNeededByLink(ui.linkSource.model, ui.linkTarget.model);
@@ -158,8 +344,7 @@ ui.defineInteractions = function() {
                                     newLink.on('change:vertices', ui._toggleSmoothness);//do some magic in order to prevent ugly links when there are no vertices
                                 }
                             }
-                        }
-                        else if (ui.dependencyType.match(/DependencyLink/)) {
+                        } else if (ui.dependencyType.match(/DependencyLink/)) {
                             addDependency(ui.linkSource.model, ui.dependencyType, ui.linkTarget.model);
                         }
 
@@ -171,11 +356,11 @@ ui.defineInteractions = function() {
         }
         // Aqui devem ser feitas as mudanças para adicionar os contextos
         else if (ui.currentStateIsView()) {
-            if (! cellView.model.isLink()) {
+            if (!cellView.model.isLink()) {
                 ui.currentElement = cellView.model;
                 var removeButton = createRemoveButton(cellView.model.prop('position'));
                 removeButton.node.elementToDelete = cellView.model.id;
-                $(removeButton.node).click( function(){
+                $(removeButton.node).click(function () {
                     istar.graph.getCell(this.elementToDelete).remove();
                     deleteRemoveElementButton();
                 });
@@ -184,31 +369,33 @@ ui.defineInteractions = function() {
                 // Adição de contextos:
                 // DEBUG
                 console.log("Current Element: ", ui.currentElement);
-                if(ui.currentElement.attributes.type === "istar.Goal"
-                    || ui.currentElement.attributes.type === "istar.Task"){
-                    app.selectedElement = ui.currentElement;
-                    new app.GoalOrTaskInfoView({model: ui.currentElement});
-                    new app.GoalOrTaskNodeInfoView({model: ui.currentElement});
-                    app.contextAssociationModalView.show();
-                    console.log("Lista de contextos", app.contextList);
+                if (app.stepThreeSelected) {
+                    if (ui.currentElement.attributes.type === "istar.Goal"
+                        || ui.currentElement.attributes.type === "istar.Task") {
+
+                        app.selectedElement = ui.currentElement;
+                        new app.GoalOrTaskInfoView({model: ui.currentElement});
+                        new app.GoalOrTaskNodeInfoView({model: ui.currentElement});
+                        app.contextAssociationModalView.show();
+                        console.log("Lista de contextos", app.contextList);
+                    }
                 }
             }
         }
 
     });
 
-    istar.paper.on('cell:pointerdblclick', function(cellView, evt, x, y) {
+    istar.paper.on('cell:pointerdblclick', function (cellView, evt, x, y) {
         var newText;
         if (cellView.model.isLink()) {
-            if ( cellView.model.isContributionLink() ) {
+            if (cellView.model.isContributionLink()) {
                 newText = window.prompt('make, help, hurt, or break', cellView.model.getContributionType());
                 if (newText !== null) {
                     cellView.model.setContributionType(newText);
                 }
             }
-        }
-        else {
-            oldText = cellView.model.attr('text/text').replace(/(\r\n|\n|\r)/gm,' ');
+        } else {
+            oldText = cellView.model.attr('text/text').replace(/(\r\n|\n|\r)/gm, ' ');
             newText = window.prompt('Edit text:', oldText);
             if (newText !== null) {
                 cellView.model.changeNodeContent(newText);
@@ -216,11 +403,11 @@ ui.defineInteractions = function() {
         }
     });
 
-    istar.paper.on('cell:contextmenu', function(cellView, evt, x, y) {
+    istar.paper.on('cell:contextmenu', function (cellView, evt, x, y) {
     });
 };
 
-ui.addElementOnPaper = function(x, y) {
+ui.addElementOnPaper = function (x, y) {
     try {
         istar['add' + ui.currentAddingElement](x, y);
     } catch (e) {
@@ -230,7 +417,7 @@ ui.addElementOnPaper = function(x, y) {
     }
 };
 
-ui.addElementOnActor = function(cellView, x, y) {
+ui.addElementOnActor = function (cellView, x, y) {
     try {
         addElementInPlace(cellView.model, istar[istar.PREFIX_ADD + ui.currentAddingElement], x, y);
     } catch (e) {
@@ -239,14 +426,12 @@ ui.addElementOnActor = function(cellView, x, y) {
         ui.currentButton.end();
     }
 };
-ui.addLinkBetweenActors = function(newLink, targetCellView) {
+ui.addLinkBetweenActors = function (newLink, targetCellView) {
     try {
         ui.linkTarget = targetCellView;
-        if (istar.types[newLink].isValid(ui.linkSource.model, ui.linkTarget.model))
-        {
+        if (istar.types[newLink].isValid(ui.linkSource.model, ui.linkTarget.model)) {
             istar[istar.PREFIX_ADD + ui.currentAddingElement](ui.linkSource.model, ui.linkTarget.model);
-        }
-        else {
+        } else {
             alert('Sorry, it is not possible to add a \'' + newLink +
                 '\' link from a ' + ui.linkSource.model.get('type') + ' to a ' +
                 ui.linkTarget.model.get('type'));
@@ -262,48 +447,40 @@ ui.addLinkBetweenActors = function(newLink, targetCellView) {
 function addDependency(source, dependencyType, target) {
     var sourceParentId;
     var targetParentId;
-    if ( source.isKindOfActor() ) {
+    if (source.isKindOfActor()) {
         sourceParentId = source.id;
-    }
-    else if ( source.isKindOfInnerElement() ) {
+    } else if (source.isKindOfInnerElement()) {
         sourceParentId = source.attributes.parent;
     }
 
-    if ( target.isKindOfActor() ) {
+    if (target.isKindOfActor()) {
         targetParentId = target.id;
-    }
-    else if ( target.isKindOfInnerElement() ) {
+    } else if (target.isKindOfInnerElement()) {
         targetParentId = target.attributes.parent;
     }
 
-    if ( source === target ) {
+    if (source === target) {
         console.log('INVALID: you cannot create a dependency from an element to itself.');
         alert('INVALID: you cannot create a dependency from an element to itself.');
-    }
-    else if ( source.isLink() || target.isLink() ) {
+    } else if (source.isLink() || target.isLink()) {
         console.log('INVALID: you cannot create a dependency from/to another link.');
         alert('INVALID: you cannot create a dependency from/to another link.');
-    }
-    else if ( source.isDependum() || target.isDependum() ) {
+    } else if (source.isDependum() || target.isDependum()) {
         console.log('INVALID: you cannot create a dependency from/to a dependum.');
         alert('INVALID: you cannot create a dependency from/to a dependum.');
-    }
-    else if ( sourceParentId === targetParentId ) {
+    } else if (sourceParentId === targetParentId) {
         console.log('INVALID: you cannot create a dependency with a single actor.');
         alert('INVALID: you cannot create a dependency with a single actor.');
-    }
-    else if ( sourceParentId && targetParentId ) {
+    } else if (sourceParentId && targetParentId) {
         var node = '';
         var x = 10;
         var y = 10;
         var text = 'Dependum';
         if (dependencyType === 'QualityDependencyLink') {
             node = istar.addQuality(x, y, text);
-        }
-        else if (dependencyType === 'TaskDependencyLink') {
+        } else if (dependencyType === 'TaskDependencyLink') {
             node = istar.addTask(x, y, text);
-        }
-        else if (dependencyType === 'ResourceDependencyLink') {
+        } else if (dependencyType === 'ResourceDependencyLink') {
             node = istar.addResource(x, y, text);
         } else {
             node = istar.addGoal(x, y, text);
@@ -323,45 +500,43 @@ function addElementInPlace(clickedNode, callback, x, y) {
     //if the user clicked on an actor kind, the parent is the clicked element itself (i.e., the actor)
     //otherwise, if the user clicked on another element (e.g., a goal), then the parent of the new element will be the same parent of the clicked element
     var node;
-    if ( clickedNode.isKindOfActor() ){
-        node = callback(x,y);
+    if (clickedNode.isKindOfActor()) {
+        node = callback(x, y);
         clickedNode.embedNode(node);
-    }
-    else {
+    } else {
         var parent = istar.graph.getCell(clickedNode.attributes.parent);
-        if ( parent && parent.isKindOfActor() ) {
-            node = callback(x,y);
+        if (parent && parent.isKindOfActor()) {
+            node = callback(x, y);
             istar.graph.getCell(clickedNode.attributes.parent).embedNode(node);
         }
     }
 }
 
 
-
-ui.changeColorActorContainer = function(color) {
-    _.map(istar.getElements(), function(node) {
+ui.changeColorActorContainer = function (color) {
+    _.map(istar.getElements(), function (node) {
         if (node.isKindOfActor()) {
             //istar.paper.findViewByModel(node).highlight();
             node.attr('rect', {fill: color});
         }
     });
 };
-ui.connectLinksToShape = function() {
+ui.connectLinksToShape = function () {
     $('#modals *').css('cursor', 'wait');
     //do the processing after a small delay, in order to allow the browser to update the cursor icon
-    setTimeout(function() {
+    setTimeout(function () {
         istar.paper.options.linkConnectionPoint = joint.util.shapePerimeterConnectionPoint;
         //this translation is just to force re-rendering of links
-        _.each(istar.getElements(), function(e) {
+        _.each(istar.getElements(), function (e) {
             e.translate(1);
             e.translate(-1);
         });
         istar.paper.options.linkConnectionPoint = undefined;
         $('#modals *').css('cursor', 'auto');
-    },100);
+    }, 100);
 };
 
-$('#saveImageButton').click(function() {
+$('#saveImageButton').click(function () {
     //hide vertex tools before saving
     $('.marker-vertices, .link-tools, .marker-arrowheads, .remove-element').hide();
 
@@ -391,7 +566,7 @@ function addPngLink(pngData) {
     $('#saveImage').append(a);
 }
 
-$('#saveModelButton').click(function() {
+$('#saveModelButton').click(function () {
     var model = saveModel();
     csvData = 'data:text/json;charset=utf-8,' + escape(model);
     a = createDownloadLink('goalModel.txt', '◀ File', csvData, 'download goal model');
@@ -399,7 +574,7 @@ $('#saveModelButton').click(function() {
     $('#saveModel').show();
 });
 
-$('#runPRISMButton').click(function() {
+$('#runPRISMButton').click(function () {
     var model = saveModel();
     $.ajax({
         type: "POST",
@@ -407,14 +582,16 @@ $('#runPRISMButton').click(function() {
         data: {
             "content": model
         },
-        success: function() {
+        success: function () {
             window.location.href = 'prism.zip';
         },
-        error: function(){alert("Error!");}
+        error: function () {
+            alert("Error!");
+        }
     });
 });
 
-$('#runPARAMButton').click(function() {
+$('#runPARAMButton').click(function () {
     var model = saveModel();
     $.ajax({
         type: "POST",
@@ -422,24 +599,26 @@ $('#runPARAMButton').click(function() {
         data: {
             "content": model
         },
-        success: function() {
+        success: function () {
             window.location.href = 'param.zip';
         },
-        error: function(){alert("Error!");}
+        error: function () {
+            alert("Error!");
+        }
     });
 });
 
-$('#saveImage, a').click(function() {
+$('#saveImage, a').click(function () {
     $('#saveImage').hide(200);
 });
 
-$('#saveModel, a').click(function() {
+$('#saveModel, a').click(function () {
     $('#saveModel').hide(200);
 });
 $('#loadButton').click(function () {
     $(this).button('loading');
     //load the model with a small delay, giving time to the browser to display the 'loading' message
-    setTimeout(function (){
+    setTimeout(function () {
         //call the actual loading
         try {
             if ($('#actualFileInput')[0].files.length === 0) {
@@ -449,74 +628,72 @@ $('#loadButton').click(function () {
 
                 $('#loadModelModal').modal('hide');
                 $('#loadButton').button('reset');
-            }
-            else {
+            } else {
                 //else, load model from file
                 var file = $('#actualFileInput')[0].files[0];
                 if (file.type == 'text/plain') {
                     var fileReader = new FileReader();
-                    fileReader.onload = function(e) {
+                    fileReader.onload = function (e) {
                         fileManager.load(e.target.result);
 
                         $('#loadModelModal').modal('hide');
                         $('#loadButton').button('reset');
                     };
                     fileReader.readAsText(file);
-                }
-                else {
+                } else {
                     alert('Sorry, this kind of file is not valid');
                     $('#loadButton').button('reset');
                     $('#loadModelModal').modal('hide');
                 }
             }
-        }
-        catch(error) {
+        } catch (error) {
             $('#loadButton').button('reset');
             alert('Sorry, the input model is not valid.');
             console.log(error.stack);
         }
-    },20);
+    }, 20);
 });
 
-ui.setupUi = function() {
+ui.setupUi = function () {
     $('#saveImage').hide();
     $('#saveModel').hide();
     $('#diagramWidthInput').val(istar.paper.getArea().width);
     $('#diagramHeightInput').val(istar.paper.getArea().height);
 };
 
-$('#diagramSizeButton').click(function() {
+$('#diagramSizeButton').click(function () {
     istar.paper.setDimensions($('#diagramWidthInput').val(), $('#diagramHeightInput').val());
 });
 
-$('#whiteActorsButton').click(function() {
+$('#whiteActorsButton').click(function () {
     ui.changeColorActorContainer('white');
 });
 
-$('#analyseModelButton').click(function() {
+$('#analyseModelButton').click(function () {
     var numberOfElements = 'Number of elements: ' + istar.getNumberOfElements();
     var numberOfLinks = 'Number of links: ' + istar.getNumberOfLinks();
     alert(numberOfElements + '\n' + numberOfLinks + '\n\n' + 'OBS: each dependency counts as two links - one from the depender to the dependum, and another from the dependum to the dependee.');
 });
 
-$('#preciseLinksButton').click(function() {
+$('#preciseLinksButton').click(function () {
     ui.connectLinksToShape();
 });
 
-$('#clearButton').click(function() {
+$('#clearButton').click(function () {
     var confirmed = confirm('Are you sure you want to delete every element of this model?');
     if (confirmed) {
         ui.clearDiagram();
     }
 });
 
-ui.clearDiagram = function() {
+ui.clearDiagram = function () {
     istar.graph.clear();
     deleteRemoveElementButton();
 };
 
 
 var hoverButtons = [];
+
 function createButtons() {
     hoverButtons = [];
 
@@ -524,9 +701,11 @@ function createButtons() {
 }
 
 var removeElementButton;
+
 function deleteRemoveElementButton() {
     if (removeElementButton) removeElementButton.remove();
 }
+
 function createRemoveButton(position) {
     deleteRemoveElementButton();
 
@@ -536,7 +715,7 @@ function createRemoveButton(position) {
     return removeElementButton;
 }
 
-$('#instructionsTitle').click(function() {
+$('#instructionsTitle').click(function () {
     $('#instructionsContent').toggle(300);
 });
 $('#instructionsContent').toggle(0);
@@ -574,10 +753,10 @@ $('#feedbackArea').on('hide.bs.collapse', function () {
     $('#feedbackButton').removeClass('active');
 });
 
-$(document).keyup(function(e) {
+$(document).keyup(function (e) {
     if (ui.currentElement !== null) {
         if (ui.currentState === 'view') {
-            if (e.which==46) {  //delete
+            if (e.which == 46) {  //delete
                 ui.currentElement.remove();
                 deleteRemoveElementButton();
             }
@@ -594,18 +773,17 @@ ui.changeStateToView = function () {
 
 };
 
-ui.resetPointerStyles = function() {
+ui.resetPointerStyles = function () {
     $('#diagram').css('cursor', 'auto');
     $('#diagram g').css('cursor', 'move');
     $('#diagram .actorKindMain').css('cursor', 'move');
     $('.link-tools g').css('cursor', 'pointer');
 };
 
-ui._toggleSmoothness = function(link, vertices, something) {
+ui._toggleSmoothness = function (link, vertices, something) {
     if (vertices.length === 1) {
         link.set('smooth', true);
-    }
-    else if (vertices.length === 0) {
+    } else if (vertices.length === 0) {
         link.set('smooth', false);
     }
 };
