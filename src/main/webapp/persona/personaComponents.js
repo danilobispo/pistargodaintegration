@@ -603,7 +603,7 @@ app.DecompositionPreviewView = Backbone.View.extend({
     tag: 'div',
     el: "#decompositionPreviewView",
     initialize: function () {
-        this.$el.append("<span>Select a fact and a </span>");
+        this.$el.append("<span>Select a fact and a decomposition to start!</span>");
         this.$andDecomposition = $("#decompositionAndOptionRadio");
         this.$orDecomposition = $("#decompositionOrOptionRadio");
         this.decompositionType = this.$andDecomposition.is(':checked') ? "AND" : "OR";
