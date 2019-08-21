@@ -439,9 +439,16 @@ app.DecompositionModalView = Backbone.View.extend({
 
 });
 
-new app.DecompositionModalView();
+// Conforme eu fui avançando, a necessidade dessa view ficou cada vez mais explícita, a view serve para o seguinte:
+// O usuário precisa ver um preview de como vai ficar a decomposição que ele tá realizando, logo essa view fará:
+// Mostrará o(s) Fact(s) selecionados juntamente com a decomposição selecionada
+// Se for apenas um Fact, apenas o fact será mostrado(já que and ou or pra 1 fact apenas é true sempre)
+// Se forem 2 ou mais facts, é preciso adicionar a decomposição uma vez a cada n-1 facts
+
 app.selectedContext = new app.Context();
 app.selectedFacts = new app.FactCollection();
+
+new app.DecompositionModalView();
 app.selectedFactsForPersona = new app.FactCollection();
 // Criado para resolver o problema de fatos serem atualizados a cada nova criação de persona, então colocaremos em outro
 // objeto só para evitar esse conflito
@@ -559,10 +566,18 @@ app.FactCheckboxListItemView = Backbone.View.extend({
         return this;
     },
     unrender: function () {
-        // TODO: Arrumar linha abaixo
-        if (app.removedFact.id == $("#" + app.removedFact.attributes.factName).val()) {
-            // DEBUG
-            // console.log("vou unrender");
+
+        //DEBUG
+        // console.log("app.removedFact.id typeof: ",
+        // typeof (parseInt(app.removedFact.id)));
+        // console.log("app.removedFact.attributes.factName).val() typeof",
+        // typeof(parseInt($("#"+app.removedFact.attributes.factName).val())) );
+        // A linha abaixo continua sinalizando uma string vazia sendo passada, apenas no navegador Firefox isso acontece
+        // Eu fui pesquisar, e a referência disse que esse problema é específico do Firefox:
+        // https://pt.stackoverflow.com/questions/159754/string-vazia-passada-para-getelementbyid
+        // O Cast para number foi feito pois a IDE ficava reclamando, e de fato podia causar problemas de consistência,
+        // com javascript, qualquer cuidado é pouco...
+        if (parseInt(app.removedFact.id) === parseInt($("#" + app.removedFact.attributes.factName).val())) {
             this.$el.unbind();
             this.$el.remove();
         }
@@ -582,6 +597,57 @@ app.FactCheckboxListItemView = Backbone.View.extend({
  */
 app.factCheckboxListView = new app.FactCheckboxListView({model: app.factCollection, list: app.selectedFacts});
 $('#factCheckboxList').html(app.factCheckboxListView.render().el);
+
+
+app.DecompositionPreviewView = Backbone.View.extend({
+    tag: 'div',
+    el: "#decompositionPreviewView",
+    initialize: function () {
+        this.$el.append("<span>Select a fact and a </span>");
+        this.$andDecomposition = $("#decompositionAndOptionRadio");
+        this.$orDecomposition = $("#decompositionOrOptionRadio");
+        this.decompositionType = this.$andDecomposition.is(':checked') ? "AND" : "OR";
+
+        this.$andDecomposition.bind("change", this.redefineDecompositionType);
+        this.$orDecomposition.bind("change", this.redefineDecompositionType);
+        this.$andDecomposition.bind("change", this.render);
+        this.$orDecomposition.bind("change", this.render);
+
+        app.selectedFacts.bind("add remove", this.render);
+        this.render();
+    },
+    redefineDecompositionType: function() {
+        this.decompositionType = $("#decompositionAndOptionRadio").is(':checked') ? "AND" : "OR";
+    },
+    render: function() {
+        console.log("app.selectedFacts: ", app.selectedFacts);
+        this.decompositionType = $("#decompositionAndOptionRadio").is(':checked') ? "AND" : "OR";
+        this.$el = $("#decompositionPreviewView");
+        console.log("Decomposition type: ", this.decompositionType);
+        var size = app.selectedFacts.length;
+        if(size === 0){
+            this.$el.html("<span>Select a fact and a decomposition to start!</span>");
+        }
+        if(size === 1){
+            this.$el.html(app.selectedFacts.at(0).attributes.factName);
+        } else if(size > 1) {
+            var element = $("#decompositionPreviewView");
+            var expressao = "";
+            var i;
+            for(i=0; i < size; i++){
+                // DEBUG
+                // console.log("Expressão: ", expressao);
+                expressao += app.selectedFacts.at(i).attributes.factName + " ";
+                if(i !== size-1){
+                    expressao += this.decompositionType + " ";
+                }
+            }
+            this.$el.html(expressao);
+        }
+        return this;
+    }
+});
+new app.DecompositionPreviewView();
 
 /*
     Lista de personas criadas pelo usuário
