@@ -620,10 +620,8 @@ app.DecompositionPreviewView = Backbone.View.extend({
         this.decompositionType = $("#decompositionAndOptionRadio").is(':checked') ? "AND" : "OR";
     },
     render: function() {
-        console.log("app.selectedFacts: ", app.selectedFacts);
         this.decompositionType = $("#decompositionAndOptionRadio").is(':checked') ? "AND" : "OR";
         this.$el = $("#decompositionPreviewView");
-        console.log("Decomposition type: ", this.decompositionType);
         var size = app.selectedFacts.length;
         if(size === 0){
             this.$el.html("<span>Select a fact and a decomposition to start!</span>");
@@ -631,7 +629,6 @@ app.DecompositionPreviewView = Backbone.View.extend({
         if(size === 1){
             this.$el.html(app.selectedFacts.at(0).attributes.factName);
         } else if(size > 1) {
-            var element = $("#decompositionPreviewView");
             var expressao = "";
             var i;
             for(i=0; i < size; i++){
@@ -642,7 +639,7 @@ app.DecompositionPreviewView = Backbone.View.extend({
                     expressao += this.decompositionType + " ";
                 }
             }
-            this.$el.html(expressao);
+            this.$el.html("<span>"+expressao+"</span>");
         }
         return this;
     }
@@ -1063,6 +1060,53 @@ app.contextCheckboxListView =
         el: "#contextCheckboxListContextAssociation",
         model: app.contextList
     });
+
+app.ContextDecompositionPreviewView = Backbone.View.extend({
+    tag: 'div',
+    el: "#CAdecompositionPreviewView",
+    initialize: function () {
+        this.$el.append("<span>Select a decomposition and a context to start!</span>");
+        this.$andDecomposition = $("#CAdecompositionAndOptionRadio");
+        this.$orDecomposition = $("#CAdecompositionOrOptionRadio");
+        this.decompositionType = this.$andDecomposition.is(':checked') ? "AND" : "OR";
+
+        this.$andDecomposition.bind("change", this.redefineDecompositionType);
+        this.$orDecomposition.bind("change", this.redefineDecompositionType);
+        this.$andDecomposition.bind("change", this.render);
+        this.$orDecomposition.bind("change", this.render);
+
+        app.selectedContextsForGoalOrTask.bind("add remove", this.render);
+        this.render();
+    },
+    redefineDecompositionType: function() {
+        this.decompositionType = $("#CAdecompositionAndOptionRadio").is(':checked') ? "AND" : "OR";
+    },
+    render: function() {
+        this.decompositionType = $("#CAdecompositionAndOptionRadio").is(':checked') ? "AND" : "OR";
+        this.$el = $("#CAdecompositionPreviewView");
+        var size = app.selectedContextsForGoalOrTask.length;
+        if(size === 0){
+            this.$el.html("<span>Select a decomposition and a context to start!</span>");
+        }
+        if(size === 1){
+            this.$el.html(app.selectedContextsForGoalOrTask.at(0).attributes.contextName);
+        } else if(size > 1) {
+            var expressao = "";
+            var i;
+            for(i=0; i < size; i++){
+                // DEBUG
+                // console.log("Expressão: ", expressao);
+                expressao += app.selectedContextsForGoalOrTask.at(i).attributes.contextName + " ";
+                if(i !== size-1){
+                    expressao += this.decompositionType + " ";
+                }
+            }
+            this.$el.html("<span>"+expressao+"</span>");
+        }
+        return this;
+    }
+});
+new app.ContextDecompositionPreviewView();
 
 
 // Views

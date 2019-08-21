@@ -661,7 +661,13 @@
 
 <script type="text/template" id="tpl-review-persona-navbar-view">
     <h4>Description: </h4>
-    <h5><%= personaDescription %></h5>
+
+    <h5><% if(personaDescription.length !== 0) { %>
+        <%= personaDescription %>
+    <% } else { %>
+        <span>This persona has no description available...</span>
+        <% } %>
+    </h5>
     <ul class="list-unstyled components">
         <li>
             <a href="#factsSubmenu" data-toggle="collapse" aria-expanded="false" id="factsMenu"
@@ -981,6 +987,8 @@
                     <br/>
                     <h4>Select the contexts that you want in this association</h4>
                     <div id="contextCheckboxListContextAssociation"></div>
+                    <div>Context association preview: </div>
+                    <div id="CAdecompositionPreviewView"> </div>
                     <button id="CAdecompositionCreatorButton" class="btn"> Create!</button>
                     <span id="CAsuccessDecompositionMessage" hidden>Context association created!</span>
                 </div>
