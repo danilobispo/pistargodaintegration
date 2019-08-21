@@ -439,12 +439,6 @@ app.DecompositionModalView = Backbone.View.extend({
 
 });
 
-// Conforme eu fui avançando, a necessidade dessa view ficou cada vez mais explícita, a view serve para o seguinte:
-// O usuário precisa ver um preview de como vai ficar a decomposição que ele tá realizando, logo essa view fará:
-// Mostrará o(s) Fact(s) selecionados juntamente com a decomposição selecionada
-// Se for apenas um Fact, apenas o fact será mostrado(já que and ou or pra 1 fact apenas é true sempre)
-// Se forem 2 ou mais facts, é preciso adicionar a decomposição uma vez a cada n-1 facts
-
 app.selectedContext = new app.Context();
 app.selectedFacts = new app.FactCollection();
 
@@ -598,6 +592,12 @@ app.FactCheckboxListItemView = Backbone.View.extend({
 app.factCheckboxListView = new app.FactCheckboxListView({model: app.factCollection, list: app.selectedFacts});
 $('#factCheckboxList').html(app.factCheckboxListView.render().el);
 
+
+// Conforme eu fui avançando, a necessidade dessa view ficou cada vez mais explícita, a view serve para o seguinte:
+// O usuário precisa ver um preview de como vai ficar a decomposição que ele tá realizando, logo essa view fará:
+// Mostrará o(s) Fact(s) selecionados juntamente com a decomposição selecionada
+// Se for apenas um Fact, apenas o fact será mostrado(já que and ou or pra 1 fact apenas é true sempre)
+// Se forem 2 ou mais facts, é preciso adicionar a decomposição uma vez a cada n-1 facts
 
 app.DecompositionPreviewView = Backbone.View.extend({
     tag: 'div',
