@@ -25,6 +25,17 @@ import java.util.zip.ZipOutputStream;
 @RestController
 public class Controller {
 
+    // Persona Achievability Service
+    @RequestMapping(value = "/achievability", method = RequestMethod.POST)
+    public void achievability(@RequestParam Map<String,String> requestParams) {
+        String content = requestParams.get("content");
+        Gson gson = new GsonBuilder().create();
+        PistarModel model = gson.fromJson(content, PistarModel.class);
+        String persona = requestParams.get("persona");
+        System.out.println(model);
+        System.out.println(persona);
+    }
+
     @RequestMapping(value = "/prism-dtmc", method = RequestMethod.POST)
     public void prism(@RequestParam(value = "content") String content) {
         Gson gson = new GsonBuilder().create();

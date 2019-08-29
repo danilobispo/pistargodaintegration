@@ -958,6 +958,12 @@ app.ContextAssociationModalView = Backbone.View.extend({
     checkDataAndSubmit: function () {
         if (this.checkData()) {
             app.contextAssociationList.add(this.newAttributes());
+            if (! ui.currentElement.prop('customProperties/' + 'associatedContexts') ) {
+                ui.currentElement.prop('customProperties/' + 'associatedContexts',
+                    JSON.stringify(app.selectedContextsForGoalOrTask.toJSON()));
+                ui.currentElement.prop('customProperties/' + 'associatedContextDecomposition',
+                    this.$andDecomposition.is(':checked') ? "AND" : "OR");
+            }
             console.log(app.contextAssociationList);
         }
 

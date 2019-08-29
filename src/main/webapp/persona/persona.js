@@ -91,8 +91,27 @@ $('#personaArea').on('show.bs.collapse', function () {
             label: 'Run Achievability Algorithm', 
             name: 'run_off', 
             action: ui.STATE_VIEW, 
-            tooltip:'Create contexts', 
-            statusText:'Opens a modal, enabling context creation!'})}).render();
+            tooltip:'Create contexts'})}).render();
+    app.runAchievabilityAlgorithmButton.$el.click(function () {
+        var model = saveModel();
+        var persona = JSON.stringify(app.selectedPersona);
+        console.log(persona);
+        $.ajax({
+            type: "POST",
+            url: '/achievability',
+            data: {
+                "content": model,
+                "persona": persona
+            },
+            success: function () {
+                // window.location.href = 'prism.zip';
+                alert("Deu bom!");
+            },
+            error: function () {
+                alert("Error!");
+            }
+        });
+    })
 });
 $('#personaArea').on('hide.bs.collapse', function () {
     $('#personaButton').removeClass('active');
