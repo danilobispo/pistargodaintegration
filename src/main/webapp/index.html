@@ -521,7 +521,7 @@
 </script>
 
 <script type="text/template" id="tpl-fact-checkbox-list-item">
-    <label for="<%= factName %>">
+    <label id="labelFor<%= factName %>" for="<%= factName %>">
         <input id="<%= factName %>" type="checkbox" value="<%= id %>"><%= factName %>
     </label>
 </script>
@@ -701,6 +701,15 @@
     <h5> <b>Type:</b> <%= type.substring(6).toLowerCase() %></h5>
 </script>
 
+<script type="text/template" id="decompositionPreviewViewTemplate">
+    <div id="dpvExpressionView"></div>
+    <button id="createAnotherDecompositionButton"
+            class="btn-group-sm"
+            title="Finish this decomposition but add also other facts with another decomposition type">
+        Create another decomposition
+    </button>
+</script>
+
 <!--<script type="text/template" id="tpl-wine-details">-->
 
 <!--<div class="form-left-col">-->
@@ -859,7 +868,7 @@
                         <button id="removeContext">Remove selected context</button>
                     </div>
                     <div>
-                        <h4>Create new decomposition of facts</h4>
+                        <h4>Create new decomposition of facts for your context</h4>
                         <a data-toggle="modal" data-target="#decompositionModal">New decomposition</a>
                     </div>
                     <h4>Select the decompositions you want in this context: </h4>
@@ -904,13 +913,16 @@
                     <h4>Select the facts that you want in this decomposition</h4>
                     <div id="factCheckboxList"></div>
                     <div class="separator"></div>
-                    <div><h5>Decomposition Preview: </h5></div>
-                    <div id="decompositionPreviewView"></div>
+                    <div>
+                        Decomposition Preview:
+                    </div>
+                    <div id="decompositionPreviewView">
+                    </div>
                     <button id="decompositionCreatorButton" class="btn"> Create!</button>
                     <span id="successDecompositionMessage" hidden>Decomposition created!</span>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn" aria-label="Close" data-dismiss="modal">Close</button>
+                    <button id="closeDecompModal" type="button" class="btn" aria-label="Close" data-dismiss="modal">Close</button>
                 </div>
             </div>
         </div>
@@ -991,6 +1003,38 @@
                     <div id="CAdecompositionPreviewView"> </div>
                     <button id="CAdecompositionCreatorButton" class="btn"> Create!</button>
                     <span id="CAsuccessDecompositionMessage" hidden>Context association created!</span>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn" aria-label="Close" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="chooseDecompTypeModal" tabindex="-1" role="dialog"
+         aria-labelledby="chooseDecompTypeModalLabel">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close btn-close"
+                            data-dismiss="modal"
+                            aria-label="Close"><span
+                            aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="chooseDecompTypeTitle">
+                        Define the decomposition type related to the last decomposition
+                    </h4>
+                </div>
+                <div class="modal-body">
+                    <div id="previousDecompositionDecompositionTypeDiv">
+                        <div class="radio-inline" role="group" aria-label="aggregationTypes">
+                            <input id="previousDecompositionAndOptionRadio"
+                                   type="radio" value="and" name="previousAggrType" title="AND" PLACEHOLDER="AND"> AND
+                            <br/>
+                            <input id="previousDecompositionOrOptionRadio"
+                                   type="radio" value="or" name="previousAggrType" title="OR" placeholder="OR"> OR
+                            <br/>
+                        </div>
+                    </div>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn" aria-label="Close" data-dismiss="modal">Close</button>

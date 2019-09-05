@@ -31,6 +31,9 @@ public class Controller {
         String content = requestParams.get("content");
         Gson gson = new GsonBuilder().create();
         PistarModel model = gson.fromJson(content, PistarModel.class);
+        Set<Actor> selectedActors = new HashSet<>();
+        Set<Goal> selectedGoals = new HashSet<>();
+        transformToTao4meEntities(model, selectedActors, selectedGoals);
         String persona = requestParams.get("persona");
         System.out.println(model);
         System.out.println(persona);
