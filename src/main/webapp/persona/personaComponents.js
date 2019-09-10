@@ -29,8 +29,7 @@ app.FactsModalView = Backbone.View.extend({
                 app.factCollection.add(this.newAttributes());
                 this.$input.val('');
                 console.log(app.factCollection);
-            }
-            else {
+            } else {
                 alert("You have already named a fact with that name, please input another name!");
             }
         }
@@ -45,8 +44,7 @@ app.FactsModalView = Backbone.View.extend({
             } else {
                 alert("You have already named a fact with that name, please input another name!");
             }
-        }
-         else {
+        } else {
             alert("Type a name to add a fact!");
         }
     },
@@ -557,30 +555,26 @@ app.FactCheckboxListView = Backbone.View.extend({
         // console.log('lista de opções: ', this.optionsCollection);
         return this;
     },
-    recreateList: function (options){
+    recreateList: function (options) {
         var self = this;
         // this.model = options.list;
         // Apaga todas as views atuais
         // var allChildren = $(self.el).children("div").remove();
         var allChildren = $(self.el).children("div").children();
-        _.each(this.model.models, function(fact){
+        _.each(this.model.models, function (fact) {
             var i = 0;
-            for(i; i < allChildren.length; i++){
+            for (i; i < allChildren.length; i++) {
                 var factName = allChildren[i].attributes.for.nodeValue;
-                _.each(app.selectedFacts.models, function(selectedFacts){
-                    console.log('Selected Facts: ', selectedFacts.attributes.factName);
-                    console.log('fact: ', factName);
-                    if(factName === selectedFacts.attributes.factName){
+                _.each(app.selectedFacts.models, function (selectedFact) {
+                    // DEBUG
+                    // console.log('Selected Fact: ', selectedFact.attributes.factName);
+                    // console.log('fact: ', factName);
+                    if (factName === selectedFact.attributes.factName) {
                         allChildren[i].parentNode.remove(); // Remove div completa
                     }
                 });
             }
         });
-
-        // Apaga os fatos selecionados
-        // app.selectedFacts = new app.FactCollection();
-
-        // this.render({list: options.list});
 
     }
 });
@@ -640,7 +634,8 @@ app.factCheckboxListView = new app.FactCheckboxListView({model: app.factCollecti
 $('#factCheckboxList').html(app.factCheckboxListView.render().el);
 
 
-app.anotherDecompositionEnabled = false;
+app.fixedExpression = "";
+app.previousDecompositionType = "";
 // Conforme eu fui avançando, a necessidade dessa view ficou cada vez mais explícita, a view serve para o seguinte:
 // O usuário precisa ver um preview de como vai ficar a decomposição que ele tá realizando, logo essa view fará:
 // Mostrará o(s) Fact(s) selecionados juntamente com a decomposição selecionada
@@ -657,31 +652,22 @@ app.DecompositionPreviewView = Backbone.View.extend({
     initialize: function () {
         this.$andDecomposition = $("#decompositionAndOptionRadio");
         this.$orDecomposition = $("#decompositionOrOptionRadio");
-        this.$previousAndDecomposition = $("#previousDecompositionAndOptionRadio");
-        this.$previousOrDecomposition = $("#previousDecompositionOrOptionRadio");
         this.decompositionType = this.$andDecomposition.is(':checked') ? "AND" : "OR";
         this.$createAnotherDeoompButton = $('#createAnotherDecompositionButton');
 
         this.$andDecomposition.bind("change", this.redefineDecompositionType);
         this.$orDecomposition.bind("change", this.redefineDecompositionType);
-        this.$previousAndDecomposition.bind("change", this.redefineDecompositionType);
-        this.$previousOrDecomposition.bind("change", this.redefineDecompositionType);
         this.$andDecomposition.bind("change", this.render);
         this.$orDecomposition.bind("change", this.render);
-        this.$previousAndDecomposition.bind("change", this.render);
-        this.$previousOrDecomposition.bind("change", this.render);
 
         app.selectedFacts.bind("add remove", this.render);
         this.$el.html(this.template);
         this.render();
     },
-    redefineDecompositionType: function() {
+    redefineDecompositionType: function () {
         this.decompositionType = $("#decompositionAndOptionRadio").is(':checked') ? "AND" : "OR";
     },
-    redefinePreviousDecompositionType: function(){
-        this.previousDecompositionType = $("#previousDecompositionAndOptionRadio").is(':checked') ? "AND" : "OR";
-    },
-    finishAndStartNewExpression: function() {
+    finishAndStartNewExpression: function () {
         this.$expressionView = $("#dpvExpressionView");
         var expressaoAtual = this.$expressionView.text();
         // DEBUG
@@ -696,16 +682,18 @@ app.DecompositionPreviewView = Backbone.View.extend({
         console.log('SelectedFacts: ', selectedFactsNames);
         console.log('reducedCollection: ', reducedCollection);
 
-        if(reducedCollection.length === 0) { // Selecionou todos os fatos
+
+
+        if (reducedCollection.length === 0) { // Selecionou todos os fatos
             alert("You cannot create another decomposition, since you've selected all facts available.\n" +
                 "Please unselect some facts or create new ones to create another decomposition!");
-        } else if(app.selectedFacts.length === 0) {
+        } else if (app.selectedFacts.length === 0) {
             alert("You have not selected any facts, please select some and try again");
         } else { // Fatos sobrando são adicionados à nova view
             // Fecha parênteses
-            this.$expressionView.html("<span>("+expressaoAtual+")</span>");
+            this.$expressionView.html("<span>(" + expressaoAtual + ")</span>");
             var i = 0;
-            for(i; i < reducedCollection.length; i++){
+            for (i; i < reducedCollection.length; i++) {
                 var fact = app.factCollection.findWhere({factName: reducedCollection[i]});
                 newDecompCollection.add(fact);
                 // DEBUG
@@ -715,47 +703,116 @@ app.DecompositionPreviewView = Backbone.View.extend({
             // Por fim, cria uma nova view com as novas opções de decomposição, onde o usuário poderá fazer um OR ou um
             // AND novamente
             app.factCheckboxListView.recreateList({list: newDecompCollection});
-            $("#chooseDecompTypeModal").modal('show');
+            if(app.factCheckboxListView.$el.children().length === 0){ // Selecionou todos os fatos
+                // Porém, como a lista de decomposição foi alterada e alguns facts foram retirados via jquery
+                // (ver recreateList na linha acima)
+                // Essa checagem verifica de forma direta se todos os fatos foram selecionados
+                alert("You cannot create another decomposition, since you've selected all facts available!");
+            } else {
+                app.chooseDecompTypeModal.$el.modal({keyboard: false, backdrop: 'static'});
+            }
+
 
         }
     },
-    render: function() {
+    render: function () {
         var expressionDecomp = "";
         this.decompositionType = $("#decompositionAndOptionRadio").is(':checked') ? "AND" : "OR";
-        this.previousDecompositionType = $("#previousDecompositionAndOptionRadio").is(':checked') ? "AND" : "OR";
         this.$el = $("#decompositionPreviewView");
         this.$expressionView = $("#dpvExpressionView");
         var size = app.selectedFacts.length;
-        if(app.anotherDecompositionEnabled) {
-            var fixedExpression = expressionDecomp;
-            // Impedir que o que for escrito a partir de agora interfira na expressão anterior, que já foi "fechada"
-            expressionDecomp = fixedExpression.lastIndexOf(")");
-        }
-            if (size === 0) {
+        if (size === 0) {
+            if (app.fixedExpression.length === 0) {
                 this.$expressionView.html("<span>Select a fact and a decomposition to start!</span>");
+            } else {
+                this.$expressionView.html("<span>" + app.fixedExpression + "</span>");
             }
-            if (size === 1) {
+        }
+        if (size === 1) {
+            if (app.fixedExpression.length === 0) {
                 this.$expressionView.html(app.selectedFacts.at(0).attributes.factName);
-            } else if (size > 1) {
-                var i;
-                for (i = 0; i < size; i++) {
-                    if (i !== size - 1) {
-                        expressionDecomp += app.selectedFacts.at(i).attributes.factName + " ";
-                        expressionDecomp += this.decompositionType + " ";
-                    } else {
-                        expressionDecomp += app.selectedFacts.at(i).attributes.factName;
-                    }
-                }
-                // DEBUG
-                console.log("Expressão: ", expressionDecomp);
-                this.$expressionView.html("<span>" + expressionDecomp + "</span>");
+            } else {
+                expressionDecomp = app.fixedExpression + app.selectedFacts.at(0).attributes.factName;
+                this.$expressionView.html(expressionDecomp);
             }
+        } else if (size > 1) {
+            var i;
+            for (i = 0; i < size; i++) {
+                if (i !== size - 1) {
+                    expressionDecomp += app.selectedFacts.at(i).attributes.factName + " ";
+                    expressionDecomp += this.decompositionType + " ";
+                } else {
+                    expressionDecomp += app.selectedFacts.at(i).attributes.factName;
+                }
+            }
+            if(app.fixedExpression.length === 0) {
+                this.$expressionView.html("<span>" + expressionDecomp + "</span>");
+            } else {
+                this.$expressionView.html("<span>" + app.fixedExpression + expressionDecomp + "</span>");
+            }
+            // DEBUG
+            console.log("Expressão: ", expressionDecomp);
+        }
         return this;
+    },
+    fixExpressionAndStartNewOne: function (decompType) {
+        console.log("fixExpressionAndStartNewOne() init function");
+        console.log('Decomposition type: ', decompType);
+        // remove os fatos já selecionados, pra evitar bugs
+        app.selectedFacts.reset();
+        this.$expressionView = $("#dpvExpressionView");
+        var fixedExpression = this.$expressionView.text();
+        // Impedir que o que for escrito a partir de agora interfira na expressão anterior, que já foi "fechada"
+        expressionDecomp = fixedExpression.lastIndexOf(")");
+        console.log('decompExpression: ', expressionDecomp);
+        app.fixedExpression = fixedExpression.substring(0, expressionDecomp + 1);
+        // Adiciona a nova decomposição ao final da expressão, depois libera o uso da expressão para o usuário
+        app.fixedExpression += " " + decompType + " ";
     }
 });
 
-new app.DecompositionPreviewView();
+app.decompositionPreviewView = new app.DecompositionPreviewView();
 
+app.ChooseDecompTypeModal = Backbone.View.extend({
+    el: '#chooseDecompTypeModal',
+    events: {
+        'click button#confirmNewDecompositionType': 'checkDataAndSubmit',
+        'click button#closeChooseDecompModal': 'checkIfButtonIsChecked',
+        'click button.close.btn-close': 'checkIfButtonIsChecked',
+    },
+    initialize: function () {
+        // this.on('click', this.clickOutsideOfModal, this);
+
+        this.$name = this.$("#decompositionNameInput");
+        this.$previousAndDecomposition = this.$("#previousDecompositionAndOptionRadio");
+        this.$previousOrDecomposition = this.$("#previousDecompositionOrOptionRadio");
+    },
+    checkData: function () {
+        // DEBUG
+        console.log("and:", this.$previousAndDecomposition.is(':checked'));
+        console.log("Or:", this.$previousOrDecomposition.is(':checked'));
+        if (this.$previousOrDecomposition.is(':checked') || this.$previousAndDecomposition.is(':checked')) {
+            return true;
+        } else {
+            alert('Choose an decomposition type!');
+            return false;
+        }
+    },
+    checkIfButtonIsChecked: function () {
+        console.log("checkIfButtonIsChecked init function");
+        if (this.checkData()) {
+            this.submitPreviousDecomposition();
+        }
+    },
+    submitPreviousDecomposition: function () {
+        var decompType = this.$previousOrDecomposition.is(':checked') ? "OR" : "AND";
+        app.decompositionPreviewView.fixExpressionAndStartNewOne(decompType);
+        app.decompositionPreviewView.render();
+        this.$el.modal('hide');
+    }
+});
+
+app.chooseDecompTypeModal = new app.ChooseDecompTypeModal();
 
 /*
     Lista de personas criadas pelo usuário
@@ -778,8 +835,8 @@ app.PersonaModalView = Backbone.View.extend({
         this.$description = this.$("#personaCreationDescription");
     },
     checkData: function () {
-        if(this.$name.val().length > 0) {
-            if(app.selectedFactsForPersona.length > 0 || app.selectedContextsForPersona.length > 0){
+        if (this.$name.val().length > 0) {
+            if (app.selectedFactsForPersona.length > 0 || app.selectedContextsForPersona.length > 0) {
                 return true;
             } else {
                 alert("You must select at least one fact or context to create a valid Persona!");
@@ -1032,7 +1089,7 @@ app.ContextAssociationModalView = Backbone.View.extend({
         console.log("Or:", this.$orDecomposition.is(':checked'));
         if (this.$andDecomposition.is(':checked') || this.$orDecomposition.is(':checked')) {
             if (app.selectedContextsForGoalOrTask.length > 0) {
-                if(app.contextAssociationList.get(app.selectedElement.attributes.id) === undefined){
+                if (app.contextAssociationList.get(app.selectedElement.attributes.id) === undefined) {
                     // Novo goal ou task
                     //Animação para mostrar mensagem e depois apagar
                     this.$success.text("Context association created!");
@@ -1069,7 +1126,7 @@ app.ContextAssociationModalView = Backbone.View.extend({
     checkDataAndSubmit: function () {
         if (this.checkData()) {
             app.contextAssociationList.add(this.newAttributes());
-            if (! ui.currentElement.prop('customProperties/' + 'associatedContexts') ) {
+            if (!ui.currentElement.prop('customProperties/' + 'associatedContexts')) {
                 ui.currentElement.prop('customProperties/' + 'associatedContexts',
                     JSON.stringify(app.selectedContextsForGoalOrTask.toJSON()));
                 ui.currentElement.prop('customProperties/' + 'associatedContextDecomposition',
@@ -1182,7 +1239,7 @@ app.ContextDecompositionPreviewView = Backbone.View.extend({
     tag: 'div',
     el: "#CAdecompositionPreviewView",
     events: {
-      '#anotherDecompButton click': 'finishAndStartExpression'
+        '#anotherDecompButton click': 'finishAndStartExpression'
     },
     initialize: function () {
         this.$el.append("<span>Select a decomposition and a context to start!</span>");
@@ -1198,33 +1255,33 @@ app.ContextDecompositionPreviewView = Backbone.View.extend({
         app.selectedContextsForGoalOrTask.bind("add remove", this.render);
         this.render();
     },
-    redefineDecompositionType: function() {
+    redefineDecompositionType: function () {
         this.decompositionType = $("#CAdecompositionAndOptionRadio").is(':checked') ? "AND" : "OR";
     },
-    finishAndStartExpression: function(){
-      alert("Hello world!");
+    finishAndStartExpression: function () {
+        alert("Hello world!");
     },
-    render: function() {
+    render: function () {
         this.decompositionType = $("#CAdecompositionAndOptionRadio").is(':checked') ? "AND" : "OR";
         this.$el = $("#CAdecompositionPreviewView");
         var size = app.selectedContextsForGoalOrTask.length;
-        if(size === 0){
+        if (size === 0) {
             this.$el.html("<span>Select a decomposition and a context to start!</span>");
         }
-        if(size === 1){
+        if (size === 1) {
             this.$el.html(app.selectedContextsForGoalOrTask.at(0).attributes.contextName);
-        } else if(size > 1) {
+        } else if (size > 1) {
             var expressao = "";
             var i;
-            for(i=0; i < size; i++){
+            for (i = 0; i < size; i++) {
                 // DEBUG
                 // console.log("Expressão: ", expressaoDecomp);
                 expressao += app.selectedContextsForGoalOrTask.at(i).attributes.contextName + " ";
-                if(i !== size-1){
+                if (i !== size - 1) {
                     expressao += this.decompositionType + " ";
                 }
             }
-            this.$el.html("<span>"+expressaoDecomp+"</span>");
+            this.$el.html("<span>" + expressaoDecomp + "</span>");
         }
         return this;
     }
