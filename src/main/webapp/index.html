@@ -856,6 +856,38 @@
                     <h4 class="modal-title" id="defineContextsModalTitle">Define context by associating facts</h4>
                 </div>
                 <div class="modal-body">
+
+                    <div>
+                        <h4>Create new decomposition of facts for your context</h4>
+                        <a data-toggle="modal" data-target="#decompositionModal">New decomposition</a>
+                    </div>
+                    <h4>Select the decompositions you want in this context: </h4>
+                    <div id="aggrList" class="col-xs-12">
+
+                    </div>
+                    <button id="saveContext" class="btn-success">Create Context</button>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn close-modal-context" aria-label="Close">
+                        Close
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="contextAndDecompositionModal" tabindex="-1" role="dialog"
+         aria-labelledby="contextAndDecompositionModalLabel">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close btn-close"
+                            data-dismiss="modal"
+                            aria-label="Close"><span
+                            aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="contextAndDecompositionModalTitle">Define your context name, then choose your decomposition name and type</h4>
+                </div>
+                <div class="modal-body">
                     <input type="radio" name="createOrEdit" value="create-context">Create a new context
                     <br/>
                     <input type="radio" name="createOrEdit" value="edit-context">Edit existing context
@@ -867,39 +899,6 @@
                         <label for="selectContext"></label><select id="selectContext"></select>
                         <button id="removeContext">Remove selected context</button>
                     </div>
-                    <div>
-                        <h4>Create new decomposition of facts for your context</h4>
-                        <a data-toggle="modal" data-target="#decompositionModal">New decomposition</a>
-                    </div>
-                    <h4>Select the decompositions you want in this context: </h4>
-                    <div id="aggrList" class="col-xs-12">
-
-                    </div>
-                    <button id="saveContext" class="btn-success">Create Context</button>
-                    <span id="successContextMessage" hidden>Context created successfully!</span>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn close-modal-context" aria-label="Close">
-                        Close
-                    </button>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div class="modal fade" id="decompositionModal" tabindex="-1" role="dialog"
-         aria-labelledby="decompositionModalLabel">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="close btn-close"
-                            data-dismiss="modal"
-                            aria-label="Close"><span
-                            aria-hidden="true">&times;</span></button>
-                    <h4 class="modal-title" id="decompositionModalTitle">Choose your decomposition name and type</h4>
-                </div>
-                <div class="modal-body">
-                    <input id="decompositionNameInput" type="text" placeholder="New decomposition name" maxlength="20">
                     <h4>Select a decomposition type</h4>
                     <div class="radio-inline" role="group" aria-label="aggregationTypes">
                         <input id="decompositionAndOptionRadio"
@@ -918,8 +917,8 @@
                     </div>
                     <div id="decompositionPreviewView">
                     </div>
-                    <button id="decompositionCreatorButton" class="btn btn-success">Finish and create context</button>
-                    <span id="successDecompositionMessage" hidden>Decomposition created!</span>
+                    <button id="contextCreatorButton" class="btn btn-success">Finish and create context</button>
+                    <b id="successContextMessage" hidden>Context created!</b>
                 </div>
                 <div class="modal-footer">
                     <button id="closeDecompModal" type="button" class="btn" aria-label="Close" data-dismiss="modal">Close</button>

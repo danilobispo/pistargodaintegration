@@ -60,7 +60,7 @@ $('#personaArea').on('show.bs.collapse', function () {
             name: 'edit_contexts_off',
             tooltip:'Create contexts'})}).render();
     app.contextViewButton.$el.click(function () {
-        $("#contextAndFactsModal").modal('show');
+        $("#contextAndDecompositionModal").modal('show');
     });
     app.relateGoalsButton = new uiC.ButtonView({model: new uiC.ButtonModel({
             label: 'Relate contexts to goals or tasks', 

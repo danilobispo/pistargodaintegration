@@ -240,7 +240,7 @@ app.ContextModalView = Backbone.View.extend({
         'click #removeContext': 'removeContext',
         'click #saveContext': 'saveContext',
         'click .close-modal-context': 'exitContextModal',
-        'hidden.bs.modal': 'controlDoneButtons',
+        'hidden.bs.modal': 'resetControlsAndControlDoneButtons',
         'shown.bs.modal': 'displayMessageIfNoFacts'
     },
     initialize: function () {
@@ -361,7 +361,7 @@ app.ContextModalView = Backbone.View.extend({
             }
         }
     },
-    controlDoneButtons: function () {
+    resetControlsAndControlDoneButtons: function () {
         if (app.contextList.length > 0) {
             // Caso em que a seta deve aparecer verde e o X desaparecer
             $("#stepTwoDone").css("display", "");
@@ -383,7 +383,7 @@ app.ContextModalView = Backbone.View.extend({
 /*
     Instância criada para a modal de contexto
  */
-new app.ContextModalView();
+// new app.ContextModalView();
 
 /**
  * Lista de decomposições criadas pelo usuário
@@ -393,39 +393,81 @@ app.decompositionList = new app.DecompositionList();
 /**
  * Modal de decomposição, onde selecionamos os facts associados àquela decomposição
  */
-app.DecompositionModalView = Backbone.View.extend({
-    el: '#decompositionModal',
+app.ContextAndDecompositionModalView = Backbone.View.extend({
+    el: '#contextAndDecompositionModal',
     events: {
-        'click button#decompositionCreatorButton': 'checkDataAndSubmit',
+        'click button#contextCreatorButton': 'checkDataAndSubmit',
         'click button#closeDecompModal': 'recreateDecompCheckbox',
-        'click button.close.btn-close': 'recreateDecompCheckbox'
+        'click button.close.btn-close': 'recreateDecompCheckbox',
+        'click input[name="createOrEdit"]': 'createOrEditContextEvent',
+        'click #createContextName': 'addContextNameViaClick',
+        'keypress .context-input': 'addContext',
+        'click #removeContext': 'removeContext',
+        'click .close-modal-context': 'exitContextModal',
+        'hidden.bs.modal': 'resetControlsAndControlDoneButtons',
+        'shown.bs.modal': 'displayMessageIfNoFacts',
     },
     initialize: function () {
-        this.$name = this.$("#decompositionNameInput");
+        this.nameCounter = 0;
+        this.counter = 0;
+        this.$createContextOption = $("input[value=create-context]");
+        this.$editContextOption = $("input[value=edit-context]");
+        this.$nameInput = this.$('.context-input');
         this.$andDecomposition = this.$("#decompositionAndOptionRadio");
         this.$orDecomposition = this.$("#decompositionOrOptionRadio");
-        this.$success = this.$('#successDecompositionMessage');
+        this.$success = this.$('#successContextMessage');
+
+        this.collection = app.comboBoxContext.collection;
+        app.comboBoxContext.collection.length <= 0 ?
+            this.$editContextOption.attr('disabled', true) : this.$editContextOption.attr('disabled', false);
+        this.collection.on('remove', this.changeRadioButtonIfEmpty, this)
+    },
+    displayMessageIfNoFacts: function () {
+        if (app.factCollection.length <= 0) {
+            alert('There are not enough facts to create a decomposition!\n ' +
+                'Go back to the previous step and create at least one');
+            this.$el.modal('toggle');
+        }
+    },
+    createOrEditContextEvent: function (e) {
+        $this = $(e.target);
+        this.$('.createContext')[$this.val() === 'create-context' ? 'show' : 'hide']();
+        this.$('.editContext')[$this.val() === 'edit-context' ? 'show' : 'hide']();
+    },
+    addContextNameViaClick: function () {
+        if (this.$nameInput.val().trim()) {
+            app.comboBoxContext.add(new app.Context(this.newAttributes()));
+            this.$nameInput.val('');
+            alert("Done, now go edit your context!");
+            console.log(app.comboBoxContext.collection);
+        }
+    },
+    addContext: function (e) {
+        if (e.which === 13 && this.$nameInput.val().trim()) {
+            app.comboBoxContext.add(new app.Context(this.newAttributes()));
+            this.$nameInput.val('');
+            alert("Done, now go edit your context!");
+            console.log(app.comboBoxContext.collection);
+        }
+    },
+    removeContext: function () {
+        this.collection.remove(app.comboBoxContext.el.value);
+        // Remove da lista geral pra evitar bugs
+        app.contextList.remove(app.comboBoxContext.el.value);
+        console.log(app.comboBoxContext.collection);
+    },
+    changeRadioButtonIfEmpty: function () {
+        if (this.collection.length <= 0) {
+            this.$createContextOption.click();
+        }
     },
     checkData: function () {
-        if (this.$name.val().length > 0) {
+        if(app.selectedContext.attributes.contextName !== "") { // selecionou contexto válido
             // DEBUG
             // console.log("and:", this.$andDecomposition.is(':checked'));
             // console.log("Or:" , this.$orDecomposition.is(':checked'));
             if (this.$andDecomposition.is(':checked') || this.$orDecomposition.is(':checked')) {
                 if (app.selectedFacts.length > 0) {
-                    //Animação para mostrar mensagem e depois apagar
-                    this.$success.show();
-                    setTimeout(function () {
-                            $('#successDecompositionMessage').hide();
-                        }, 3000
-                    );
-                    // Reseta estados anteriores
-                    app.fixedExpression = "";
-                    app.selectedFacts.reset();
-                    // Refaz a lista original
-                    app.factCheckboxListView.startOver();
-                    app.decompositionPreviewView.initialize();
-                    $("#dpvExpressionView").html("<span>Select a fact and a decomposition to start!</span>");
                     return true;
                 } else {
                     alert("You have to choose at least one fact for this decomposition!");
@@ -435,39 +477,109 @@ app.DecompositionModalView = Backbone.View.extend({
                 return false;
             }
         } else {
-            alert('You must type a name!');
+            alert('You must select a context in the edit existing context option!');
             return false;
         }
     },
     checkDataAndSubmit: function () {
         if (this.checkData()) {
-            app.decompositionList.add(this.newAttributes());
-            this.$name.val('');
-            this.recreateDecompCheckbox();
-            console.log(app.decompositionList);
+            // app.decompositionList.add(this.newAttributes());
+            this.$expressionView = $("#dpvExpressionView");
+            // Fecha parênteses novamente(checar se é necessário depois)
+            var expressaoAtual = this.$expressionView.text();
+            this.$expressionView.html("<span>(" + expressaoAtual + ")</span>");
+
+            if (app.contextList.get(app.selectedContext.id) === undefined) {
+                // Novo context
+                app.contextList.add(new app.Context(this.newContextAttributes()));
+                this.$success.text("Context created succesfully!");
+                //Animação para mostrar mensagem e depois apagar
+                this.$success.show();
+                setTimeout(function () {
+                        this.$('#successContextMessage').hide();
+                    }, 3000
+                );
+            } else {
+                // Context a ser editado
+                var context = app.contextList.get(app.selectedContext.id);
+                context.set({
+                    contextName: app.selectedContext.attributes.contextName,
+                    // Facts are inside the decompositions
+                    decompositionExpression: this.$expressionView.text()
+                }, {remove: true});
+                this.$success.text("Context edited succesfully!");
+                //Animação para mostrar mensagem e depois apagar
+                this.$success.show();
+                setTimeout(function () {
+                        this.$('#successContextMessage').hide();
+                    }, 3000
+                );
+            }
+            // Reseta estados anteriores
+            app.fixedExpression = "";
+            app.selectedFacts.reset();
+            // Refaz a lista original
+            app.factCheckboxListView.startOver();
+            app.decompositionPreviewView.initialize();
+            this.$expressionView.html("<span>Select a fact and a decomposition to start!</span>");
+            this.$nameInput.val('');
+            console.log("app.contextList.models: ",app.contextList.models);
         }
 
     },
     newAttributes: function () {
         return {
-            name: this.$name.val(),
-            decompositionType: this.$andDecomposition.is(':checked') ? "AND" : "OR",
-            facts: new app.FactCollection(app.factCheckboxListView.optionsCollection.toJSON())
+            id: this.nameCounter++,
+            contextName: this.$nameInput.val().trim()
+        };
+    },
+    newContextAttributes: function () {
+        return {
+            id: this.counter++,
+            contextName: app.selectedContext.attributes.contextName,
+            decompositionExpression: $("#dpvExpressionView").text()
         }
     },
-    // A lista será re-renderizada, de forma a evitar que o usuário tenha problemas ao criar a nova decomposição
-    recreateDecompCheckbox: function () {
-        console.log('Selected facts: ', app.selectedFacts);
-        console.log('')
-        app.factCheckboxListView.recreateList({list: app.factCollection});
-    }
+    exitContextModal: function () {
+        if (app.contextList.length > 0) {
+            this.$el.modal('toggle');
+        } else {
+            if (confirm('You did not create any contexts, are you sure you want to exit?')) {
+                this.$el.modal('toggle');
+            }
+        }
+    },
+    resetControlsAndControlDoneButtons: function () {
+        // Reseta variáveis
+        app.fixedExpression = "";
+        app.selectedFacts.reset();
+        // Refaz a lista original
+        app.factCheckboxListView.startOver();
+        app.decompositionPreviewView.initialize();
+        this.$expressionView.html("<span>Select a fact and a decomposition to start!</span>");
 
+        if (app.contextList.length > 0) {
+            // Caso em que a seta deve aparecer verde e o X desaparecer
+            $("#stepTwoDone").css("display", "");
+            $("#stepTwoNotDone").css("display", "none");
+            app.contextViewButton.$el.children().children().attr("src", "images/edit_contexts_on.svg");
+            $("#stepTwoDone").css("color", "#00FF00");
+            $("#stepTwoLabel").html("Step 2: Edit contexts");
+        } else {
+            // Caso em que a seta deve desaparecer verde e o X aparecer
+            $("#stepTwoNotDone").css("display", "");
+            $("#stepTwoDone").css("display", "none");
+            app.contextViewButton.$el.children().children().attr("src", "images/edit_contexts_off.svg");
+            $("#stepTwoNotDone").css("color", "#FF0000");
+            $("#stepTwoLabel").html("Step 2: Define contexts");
+        }
+    }
 });
 
 app.selectedContext = new app.Context();
 app.selectedFacts = new app.FactCollection();
 
-new app.DecompositionModalView();
+new app.ContextAndDecompositionModalView();
 app.selectedFactsForPersona = new app.FactCollection();
 // Criado para resolver o problema de fatos serem atualizados a cada nova criação de persona, então colocaremos em outro
 // objeto só para evitar esse conflito
@@ -591,12 +703,15 @@ app.FactCheckboxListView = Backbone.View.extend({
         // Remove todos os elementos
         // $(self.el).children("div").remove();
         // Recria todos
-        _.each(this.model.models, function(fact) {
+        _.each(this.model.models, function (fact) {
             console.log('adding new view');
             $(self.el).append(new app.FactCheckboxListItemView({model: fact, list: app.selectedFacts}).render().el);
         });
         app.factCheckboxListView = new app.FactCheckboxListView({model: app.factCollection, list: app.selectedFacts});
-        $('#factCheckboxList').html(app.factCheckboxListView.render({model: app.factCollection, list: app.selectedFacts}).el);
+        $('#factCheckboxList').html(app.factCheckboxListView.render({
+            model: app.factCollection,
+            list: app.selectedFacts
+        }).el);
         // Uncheckar todos os selecionados anteriormente, se existe(m) algum(alguns)
         var checkboxes = app.factCheckboxListView.$el.children("div").children("label").children("input");
 
@@ -737,7 +852,7 @@ app.DecompositionPreviewView = Backbone.View.extend({
                     uncheckCounter++;
                 }
             });
-            if(uncheckCounter > 0) { // Então tem pelo menos um que não foi checked
+            if (uncheckCounter > 0) { // Então tem pelo menos um que não foi checked
                 // Fecha parênteses
                 this.$expressionView.html("<span>(" + expressaoAtual + ")</span>");
                 // Por fim, cria uma nova view com as novas opções de decomposição, onde o usuário poderá fazer um OR ou um
