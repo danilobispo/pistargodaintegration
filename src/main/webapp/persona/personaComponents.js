@@ -413,13 +413,19 @@ app.DecompositionModalView = Backbone.View.extend({
             // console.log("Or:" , this.$orDecomposition.is(':checked'));
             if (this.$andDecomposition.is(':checked') || this.$orDecomposition.is(':checked')) {
                 if (app.selectedFacts.length > 0) {
-
                     //Animação para mostrar mensagem e depois apagar
                     this.$success.show();
                     setTimeout(function () {
                             $('#successDecompositionMessage').hide();
                         }, 3000
                     );
+                    // Reseta estados anteriores
+                    app.fixedExpression = "";
+                    app.selectedFacts.reset();
+                    // Refaz a lista original
+                    app.factCheckboxListView.startOver();
+                    app.decompositionPreviewView.initialize();
+                    $("#dpvExpressionView").html("<span>Select a fact and a decomposition to start!</span>");
                     return true;
                 } else {
                     alert("You have to choose at least one fact for this decomposition!");
@@ -575,7 +581,31 @@ app.FactCheckboxListView = Backbone.View.extend({
                 });
             }
         });
+    },
+    /**
+     * Recria lista usando factCollection original
+     */
+    startOver: function () {
+        this.model = app.factCollection;
+        var self = this;
+        // Remove todos os elementos
+        // $(self.el).children("div").remove();
+        // Recria todos
+        _.each(this.model.models, function(fact) {
+            console.log('adding new view');
+            $(self.el).append(new app.FactCheckboxListItemView({model: fact, list: app.selectedFacts}).render().el);
+        });
+        app.factCheckboxListView = new app.FactCheckboxListView({model: app.factCollection, list: app.selectedFacts});
+        $('#factCheckboxList').html(app.factCheckboxListView.render({model: app.factCollection, list: app.selectedFacts}).el);
+        // Uncheckar todos os selecionados anteriormente, se existe(m) algum(alguns)
+        var checkboxes = app.factCheckboxListView.$el.children("div").children("label").children("input");
 
+        _.each(checkboxes, function (checkbox) {
+            console.log('Is', checkbox.id, 'checkbox checked:', checkbox.checked === true);
+            if (checkbox.checked === true) {
+                checkbox.attr("checked", false);
+            }
+        });
     }
 });
 
@@ -683,15 +713,12 @@ app.DecompositionPreviewView = Backbone.View.extend({
         console.log('reducedCollection: ', reducedCollection);
 
 
-
         if (reducedCollection.length === 0) { // Selecionou todos os fatos
             alert("You cannot create another decomposition, since you've selected all facts available.\n" +
                 "Please unselect some facts or create new ones to create another decomposition!");
         } else if (app.selectedFacts.length === 0) {
             alert("You have not selected any facts, please select some and try again");
         } else { // Fatos sobrando são adicionados à nova view
-            // Fecha parênteses
-            this.$expressionView.html("<span>(" + expressaoAtual + ")</span>");
             var i = 0;
             for (i; i < reducedCollection.length; i++) {
                 var fact = app.factCollection.findWhere({factName: reducedCollection[i]});
@@ -700,19 +727,26 @@ app.DecompositionPreviewView = Backbone.View.extend({
                 console.log('Unselected Fact: ', fact);
             }
             console.log('newDecompCollection: ', newDecompCollection.models);
-            // Por fim, cria uma nova view com as novas opções de decomposição, onde o usuário poderá fazer um OR ou um
-            // AND novamente
-            app.factCheckboxListView.recreateList({list: newDecompCollection});
-            if(app.factCheckboxListView.$el.children().length === 0){ // Selecionou todos os fatos
-                // Porém, como a lista de decomposição foi alterada e alguns facts foram retirados via jquery
-                // (ver recreateList na linha acima)
-                // Essa checagem verifica de forma direta se todos os fatos foram selecionados
-                alert("You cannot create another decomposition, since you've selected all facts available!");
-            } else {
+            var checkboxes = app.factCheckboxListView.$el.children("div").children("label").children("input");
+            console.log('checkboxes: ', checkboxes);
+            console.log("Are all checked?", checkboxes.not('checked').length <= 0);
+            var uncheckCounter = 0;
+            _.each(checkboxes, function (checkbox) {
+                console.log('Is', checkbox.id, 'checkbox checked:', checkbox.checked === true);
+                if (checkbox.checked === false) {
+                    uncheckCounter++;
+                }
+            });
+            if(uncheckCounter > 0) { // Então tem pelo menos um que não foi checked
+                // Fecha parênteses
+                this.$expressionView.html("<span>(" + expressaoAtual + ")</span>");
+                // Por fim, cria uma nova view com as novas opções de decomposição, onde o usuário poderá fazer um OR ou um
+                // AND novamente
+                app.factCheckboxListView.recreateList({list: newDecompCollection});
                 app.chooseDecompTypeModal.$el.modal({keyboard: false, backdrop: 'static'});
+            } else {
+                alert("You cannot create another decomposition, since you've selected all facts available!");
             }
-
-
         }
     },
     render: function () {
@@ -745,7 +779,7 @@ app.DecompositionPreviewView = Backbone.View.extend({
                     expressionDecomp += app.selectedFacts.at(i).attributes.factName;
                 }
             }
-            if(app.fixedExpression.length === 0) {
+            if (app.fixedExpression.length === 0) {
                 this.$expressionView.html("<span>" + expressionDecomp + "</span>");
             } else {
                 this.$expressionView.html("<span>" + app.fixedExpression + expressionDecomp + "</span>");
@@ -776,13 +810,11 @@ app.decompositionPreviewView = new app.DecompositionPreviewView();
 app.ChooseDecompTypeModal = Backbone.View.extend({
     el: '#chooseDecompTypeModal',
     events: {
-        'click button#confirmNewDecompositionType': 'checkDataAndSubmit',
+        'click button#confirmNewDecompositionType': 'checkData',
         'click button#closeChooseDecompModal': 'checkIfButtonIsChecked',
         'click button.close.btn-close': 'checkIfButtonIsChecked',
     },
     initialize: function () {
-        // this.on('click', this.clickOutsideOfModal, this);
-
         this.$name = this.$("#decompositionNameInput");
         this.$previousAndDecomposition = this.$("#previousDecompositionAndOptionRadio");
         this.$previousOrDecomposition = this.$("#previousDecompositionOrOptionRadio");
