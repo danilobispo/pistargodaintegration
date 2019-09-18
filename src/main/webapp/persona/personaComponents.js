@@ -483,7 +483,6 @@ app.ContextAndDecompositionModalView = Backbone.View.extend({
     },
     checkDataAndSubmit: function () {
         if (this.checkData()) {
-            // app.decompositionList.add(this.newAttributes());
             this.$expressionView = $("#dpvExpressionView");
             // Fecha parênteses novamente(checar se é necessário depois)
             var expressaoAtual = this.$expressionView.text();
@@ -673,7 +672,7 @@ app.FactCheckboxListView = Backbone.View.extend({
         // console.log('lista de opções: ', this.optionsCollection);
         return this;
     },
-    recreateList: function (options) {
+    recreateList: function () {
         var self = this;
         // this.model = options.list;
         // Apaga todas as views atuais
@@ -912,7 +911,7 @@ app.DecompositionPreviewView = Backbone.View.extend({
         this.$expressionView = $("#dpvExpressionView");
         var fixedExpression = this.$expressionView.text();
         // Impedir que o que for escrito a partir de agora interfira na expressão anterior, que já foi "fechada"
-        expressionDecomp = fixedExpression.lastIndexOf(")");
+        var expressionDecomp = fixedExpression.lastIndexOf(")");
         console.log('decompExpression: ', expressionDecomp);
         app.fixedExpression = fixedExpression.substring(0, expressionDecomp + 1);
         // Adiciona a nova decomposição ao final da expressão, depois libera o uso da expressão para o usuário
@@ -1236,31 +1235,6 @@ app.ContextAssociationModalView = Backbone.View.extend({
         console.log("Or:", this.$orDecomposition.is(':checked'));
         if (this.$andDecomposition.is(':checked') || this.$orDecomposition.is(':checked')) {
             if (app.selectedContextsForGoalOrTask.length > 0) {
-                if (app.contextAssociationList.get(app.selectedElement.attributes.id) === undefined) {
-                    // Novo goal ou task
-                    //Animação para mostrar mensagem e depois apagar
-                    this.$success.text("Context association created!");
-                    this.$success.show();
-                    setTimeout(function () {
-                            $('#CAsuccessDecompositionMessage').hide();
-                        }, 3000
-                    );
-                } else {
-                    // Goal ou task editado
-                    var goalOrTask = app.contextAssociationList.get(app.selectedElement.attributes.id);
-                    goalOrTask.set({
-                        contexts: new app.ContextAssociationList(app.selectedContextsForGoalOrTask.toJSON()),
-                        decompositionType: this.$andDecomposition.is(':checked') ? "AND" : "OR",
-                    }, {remove: true});
-                    this.$success.text("Context association edited!");
-                    this.$success.show();
-                    //Animação para mostrar mensagem e depois apagar
-                    setTimeout(function () {
-                            $('#CAsuccessDecompositionMessage').hide();
-                        }, 3000
-                    );
-                }
-
                 return true;
             } else {
                 alert("You have to choose at least one context for this context association!");
@@ -1272,14 +1246,51 @@ app.ContextAssociationModalView = Backbone.View.extend({
     },
     checkDataAndSubmit: function () {
         if (this.checkData()) {
-            app.contextAssociationList.add(this.newAttributes());
+            this.$expressionView = $("#caDpvExpressionView");
+            // Fecha parênteses novamente(checar se é necessário depois)
+            var expressaoAtual = this.$expressionView.text();
+            this.$expressionView.html("<span>(" + expressaoAtual + ")</span>");
+
+            if (app.contextAssociationList.get(app.selectedElement.attributes.id) === undefined) {
+                // Novo goal ou task
+                //Animação para mostrar mensagem e depois apagar
+                app.contextAssociationList.add(this.newAttributes());
+                this.$success.text("Context association created!");
+                this.$success.show();
+                setTimeout(function () {
+                        $('#CAsuccessDecompositionMessage').hide();
+                    }, 3000
+                );
+            } else {
+                // Goal ou task editado
+                var goalOrTask = app.contextAssociationList.get(app.selectedElement.attributes.id);
+                goalOrTask.set({
+                    contextExpression: $("#caDpvExpressionView").text()
+                    // decompositionType: this.$andDecomposition.is(':checked') ? "AND" : "OR",
+                }, {remove: true});
+                this.$success.text("Context association edited!");
+                this.$success.show();
+                //Animação para mostrar mensagem e depois apagar
+                setTimeout(function () {
+                        $('#CAsuccessDecompositionMessage').hide();
+                    }, 3000
+                );
+            }
+
             if (!ui.currentElement.prop('customProperties/' + 'associatedContexts')) {
                 ui.currentElement.prop('customProperties/' + 'associatedContexts',
-                    JSON.stringify(app.selectedContextsForGoalOrTask.toJSON()));
-                ui.currentElement.prop('customProperties/' + 'associatedContextDecomposition',
-                    this.$andDecomposition.is(':checked') ? "AND" : "OR");
+                    this.$expressionView.text());
+                // ui.currentElement.prop('customProperties/' + 'associatedContextDecomposition',
+                //     this.$andDecomposition.is(':checked') ? "AND" : "OR");
             }
-            console.log(app.contextAssociationList);
+            // Reseta estados anteriores
+            app.contextAsssociationFixedExpression = "";
+            app.selectedContextsForGoalOrTask.reset();
+            // Refaz a lista original
+            app.contextCheckboxListView.startOver();
+            app.contextAssociationDecompositionPreviewView.initialize();
+            this.$expressionView.html("<span>Select a context and a decomposition to start!</span>");
+            console.log("app.contextAssociationList.models: ", app.contextAssociationList.models);
         }
 
     },
@@ -1287,8 +1298,8 @@ app.ContextAssociationModalView = Backbone.View.extend({
         return {
             id: app.selectedElement.attributes.id,
             goalOrTask: app.selectedElement.attributes.type.substr(6).toString(),
-            contexts: new app.ContextAssociationList(app.selectedContextsForGoalOrTask.toJSON()),
-            decompositionType: this.$andDecomposition.is(':checked') ? "AND" : "OR",
+            contextExpression: $("#caDpvExpressionView").text()
+            // ,decompositionType: this.$andDecomposition.is(':checked') ? "AND" : "OR",
 
         }
     },
@@ -1302,6 +1313,8 @@ app.ContextAssociationModalView = Backbone.View.extend({
         $("#status").text("");
     }
 });
+
+app.contextAssociationModalView = new app.ContextAssociationModalView({element: ui.currentElement});
 
 app.GoalOrTaskInfoView = Backbone.View.extend({
     el: "#goalOrTaskInfo",
@@ -1348,6 +1361,57 @@ app.CAContextCheckboxListView = Backbone.View.extend({
             $(this.el).append(new app.CAContextCheckboxListItemView({model: context}).render().el);
         }, this);
         return this;
+    },
+    recreateList: function(){
+        var self = this;
+        // this.model = options.list;
+        // Apaga todas as views atuais
+        // var allChildren = $(self.el).children("div").remove();
+        var allChildren = $(self.el).children("div").children();
+        _.each(this.model.models, function (fact) {
+            var i = 0;
+            for (i; i < allChildren.length; i++) {
+                var contextName = allChildren[i].attributes.for.nodeValue;
+                _.each(app.selectedContextsForGoalOrTask.models, function (selectedContext) {
+                    // DEBUG
+                    // console.log('Selected Fact: ', selectedFact.attributes.factName);
+                    // console.log('fact: ', factName);
+                    if (contextName === selectedContext.attributes.contextName) {
+                        allChildren[i].parentNode.remove(); // Remove div completa
+                    }
+                });
+            }
+        });
+    },
+    /**
+     * Recria lista usando contextList original
+     */
+    startOver: function () {
+        this.model = app.contextList;
+        var self = this;
+        // Remove todos os elementos
+        $(self.el).children("div").remove();
+        // Recria todos
+        _.each(this.model.models, function (context) {
+            console.log('adding new view');
+            $(self.el).append(new app.CAContextCheckboxListItemView({model: context}).render().el);
+        });
+        app.contextCheckboxListView =
+            new app.CAContextCheckboxListView({
+                el: "#contextCheckboxListContextAssociation",
+                model: app.contextList
+            });
+        // $('#contextCheckboxListContextAssociation').html(app.contextCheckboxListView.render({
+        //     model: app.contextList}).el);
+        // Uncheckar todos os selecionados anteriormente, se existe(m) algum(alguns)
+        var checkboxes = app.contextCheckboxListView.$el.children("div").children("label").children("input");
+
+        _.each(checkboxes, function (checkbox) {
+            console.log('Is', checkbox.id, 'checkbox checked:', checkbox.checked === true);
+            if (checkbox.checked === true) {
+                checkbox.attr("checked", false);
+            }
+        });
     }
 });
 
@@ -1374,25 +1438,26 @@ app.CAContextCheckboxListItemView = Backbone.View.extend({
         console.log('Opção selecionada: ', e.target.value);
     }
 });
-
-app.contextAssociationModalView = new app.ContextAssociationModalView({element: ui.currentElement});
 app.contextCheckboxListView =
     new app.CAContextCheckboxListView({
         el: "#contextCheckboxListContextAssociation",
         model: app.contextList
     });
 
-app.ContextDecompositionPreviewView = Backbone.View.extend({
+app.contextAsssociationFixedExpression = "";
+
+app.ContextAssociationDecompositionPreviewView = Backbone.View.extend({
     tag: 'div',
-    el: "#CAdecompositionPreviewView",
+    el: '#CAdecompositionPreviewView',
+    template: _.template($('#CADecompositionPreviewViewTemplate').html()),
     events: {
-        '#anotherDecompButton click': 'finishAndStartExpression'
+        'click #contextAssociationCreateAnotherDecompositionButton': 'finishAndStartNewExpression'
     },
     initialize: function () {
-        this.$el.append("<span>Select a decomposition and a context to start!</span>");
         this.$andDecomposition = $("#CAdecompositionAndOptionRadio");
         this.$orDecomposition = $("#CAdecompositionOrOptionRadio");
         this.decompositionType = this.$andDecomposition.is(':checked') ? "AND" : "OR";
+        this.$createAnotherDeoompButton = $('#contextAssociationCreateAnotherDecompositionButton');
 
         this.$andDecomposition.bind("change", this.redefineDecompositionType);
         this.$orDecomposition.bind("change", this.redefineDecompositionType);
@@ -1400,41 +1465,161 @@ app.ContextDecompositionPreviewView = Backbone.View.extend({
         this.$orDecomposition.bind("change", this.render);
 
         app.selectedContextsForGoalOrTask.bind("add remove", this.render);
+        this.$el.html(this.template);
         this.render();
     },
     redefineDecompositionType: function () {
         this.decompositionType = $("#CAdecompositionAndOptionRadio").is(':checked') ? "AND" : "OR";
     },
-    finishAndStartExpression: function () {
-        alert("Hello world!");
+    finishAndStartNewExpression: function () {
+        this.$expressionView = $("#caDpvExpressionView");
+        var expressaoAtual = this.$expressionView.text();
+        // DEBUG
+        console.log('Expressão atual: ', expressaoAtual);
+
+        var newDecompCollection = new app.ContextList();
+        var selectedContextsNames = app.selectedContextsForGoalOrTask.pluck('contextName');
+        var contextListNames = app.contextList.pluck('contextName');
+        var reducedCollection = _.difference(contextListNames, selectedContextsNames);
+        // DEBUG
+        console.log('contextList: ', contextListNames);
+        console.log('selectedContextsNames: ', selectedContextsNames);
+        console.log('reducedCollection: ', reducedCollection);
+
+
+        if (reducedCollection.length === 0) { // Selecionou todos os contextos
+            alert("You cannot create another decomposition, since you've selected all contexts available.\n" +
+                "Please unselect some contexts or create new ones to create another decomposition!");
+        } else if (app.selectedContextsForGoalOrTask.length === 0) {
+            alert("You have not selected any contexts, please select some and try again");
+        } else { // Contextos sobrando são adicionados à nova view
+            var i = 0;
+            for (i; i < reducedCollection.length; i++) {
+                var context = app.contextList.findWhere({contextName: reducedCollection[i]});
+                newDecompCollection.add(context);
+                // DEBUG
+                console.log('Unselected context: ', context);
+            }
+            console.log('newDecompCollection: ', newDecompCollection.models);
+            var checkboxes = app.contextCheckboxListView.$el.children("div").children("label").children("input");
+            console.log('checkboxes: ', checkboxes);
+            console.log("Are all checked?", checkboxes.not('checked').length <= 0);
+            var uncheckCounter = 0;
+            _.each(checkboxes, function (checkbox) {
+                console.log('Is', checkbox.id, 'checkbox checked:', checkbox.checked === true);
+                if (checkbox.checked === false) {
+                    uncheckCounter++;
+                }
+            });
+            if (uncheckCounter > 0) { // Então tem pelo menos um que não foi checked
+                // Fecha parênteses
+                this.$expressionView.html("<span>(" + expressaoAtual + ")</span>");
+                // Por fim, cria uma nova view com as novas opções de decomposição, onde o usuário poderá fazer um OR ou um
+                // AND novamente
+                app.contextCheckboxListView.recreateList({list: newDecompCollection});
+                app.contextAssociationChooseDecompTypeModal.$el.modal({keyboard: false, backdrop: 'static'});
+            } else {
+                alert("You cannot create another decomposition, since you've selected all facts available!");
+            }
+        }
     },
     render: function () {
+        var expressionDecomp = "";
         this.decompositionType = $("#CAdecompositionAndOptionRadio").is(':checked') ? "AND" : "OR";
         this.$el = $("#CAdecompositionPreviewView");
+        this.$expressionView = $("#caDpvExpressionView");
         var size = app.selectedContextsForGoalOrTask.length;
         if (size === 0) {
-            this.$el.html("<span>Select a decomposition and a context to start!</span>");
+            if (app.contextAsssociationFixedExpression.length === 0) {
+                this.$expressionView.html("<span>Select a context and a decomposition to start!</span>");
+            } else {
+                this.$expressionView.html("<span>" + app.contextAsssociationFixedExpression + "</span>");
+            }
         }
         if (size === 1) {
-            this.$el.html(app.selectedContextsForGoalOrTask.at(0).attributes.contextName);
+            if (app.contextAsssociationFixedExpression.length === 0) {
+                this.$expressionView.html(app.selectedContextsForGoalOrTask.at(0).attributes.contextName);
+            } else {
+                expressionDecomp = app.contextAsssociationFixedExpression +
+                    app.selectedContextsForGoalOrTask.at(0).attributes.contextName;
+                this.$expressionView.html(expressionDecomp);
+            }
         } else if (size > 1) {
-            var expressao = "";
             var i;
             for (i = 0; i < size; i++) {
-                // DEBUG
-                // console.log("Expressão: ", expressaoDecomp);
-                expressao += app.selectedContextsForGoalOrTask.at(i).attributes.contextName + " ";
                 if (i !== size - 1) {
-                    expressao += this.decompositionType + " ";
+                    expressionDecomp += app.selectedContextsForGoalOrTask.at(i).attributes.contextName + " ";
+                    expressionDecomp += this.decompositionType + " ";
+                } else {
+                    expressionDecomp += app.selectedContextsForGoalOrTask.at(i).attributes.contextName;
                 }
             }
-            this.$el.html("<span>" + expressaoDecomp + "</span>");
+            if (app.contextAsssociationFixedExpression.length === 0) {
+                this.$expressionView.html("<span>" + expressionDecomp + "</span>");
+            } else {
+                this.$expressionView.html("<span>" + app.contextAsssociationFixedExpression + expressionDecomp + "</span>");
+            }
+            // DEBUG
+            console.log("Expressão: ", expressionDecomp);
         }
         return this;
+    },
+    fixExpressionAndStartNewOne: function (decompType) {
+        console.log("fixExpressionAndStartNewOne() init function");
+        console.log('Decomposition type: ', decompType);
+        // remove os fatos já selecionados, pra evitar bugs
+        app.selectedContextsForGoalOrTask.reset();
+        this.$expressionView = $("#caDpvExpressionView");
+        var fixedExpression = this.$expressionView.text();
+        // Impedir que o que for escrito a partir de agora interfira na expressão anterior, que já foi "fechada"
+        var expressionDecomp = fixedExpression.lastIndexOf(")");
+        console.log('decompExpression: ', expressionDecomp);
+        app.contextAsssociationFixedExpression = fixedExpression.substring(0, expressionDecomp + 1);
+        // Adiciona a nova decomposição ao final da expressão, depois libera o uso da expressão para o usuário
+        app.contextAsssociationFixedExpression += " " + decompType + " ";
     }
 });
-new app.ContextDecompositionPreviewView();
+app.contextAssociationDecompositionPreviewView = new app.ContextAssociationDecompositionPreviewView();
 
+app.CAChooseDecompTypeModal = Backbone.View.extend({
+    el: '#chooseDecompTypeModal',
+    events: {
+        'click button#confirmNewDecompositionType': 'checkData',
+        'click button#closeChooseDecompModal': 'checkIfButtonIsChecked',
+        'click button.close.btn-close': 'checkIfButtonIsChecked',
+    },
+    initialize: function () {
+        this.$name = this.$("#decompositionNameInput");
+        this.$previousAndDecomposition = this.$("#previousDecompositionAndOptionRadio");
+        this.$previousOrDecomposition = this.$("#previousDecompositionOrOptionRadio");
+    },
+    checkData: function () {
+        // DEBUG
+        console.log("and:", this.$previousAndDecomposition.is(':checked'));
+        console.log("Or:", this.$previousOrDecomposition.is(':checked'));
+        if (this.$previousOrDecomposition.is(':checked') || this.$previousAndDecomposition.is(':checked')) {
+            return true;
+        } else {
+            alert('Choose an decomposition type!');
+            return false;
+        }
+    },
+    checkIfButtonIsChecked: function () {
+        // DEBUG
+        console.log("CA checkIfButtonIsChecked init function");
+        if (this.checkData()) {
+            this.submitPreviousDecomposition();
+        }
+    },
+    submitPreviousDecomposition: function () {
+        var decompType = this.$previousOrDecomposition.is(':checked') ? "OR" : "AND";
+        app.contextAssociationDecompositionPreviewView.fixExpressionAndStartNewOne(decompType);
+        app.contextAssociationDecompositionPreviewView.render();
+        this.$el.modal('hide');
+    }
+});
+
+app.contextAssociationChooseDecompTypeModal = new app.CAChooseDecompTypeModal();
 
 // Views
 // window.WineListView = Backbone.View.extend({
