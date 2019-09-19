@@ -528,7 +528,7 @@
 
 <script type="text/template" id="tpl-context-checkbox-list-item">
     <label for="<%= contextName %>">
-        <input id="<%= contextName %>" type="checkbox" value="<%= contextName %>"><%= contextName %>
+        <input id="<%= contextName %>" type="checkbox" value="<%= id %>"><%= contextName %>
     </label>
 </script>
 
@@ -1048,6 +1048,37 @@
             </div>
         </div>
     </div>
+
+    <div class="modal fade" id="CAchooseDecompTypeModal" tabindex="-1" role="dialog"
+         aria-labelledby="chooseDecompTypeModalLabel">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title" id="chooseDecompTypeTitle">
+                        Define the decomposition type related to the last decomposition
+                    </h4>
+                </div>
+                <div class="modal-body">
+                    <div id="previousDecompositionDecompositionTypeDiv">
+                        <div class="radio-inline" role="group" aria-label="aggregationTypes">
+                            <input id="previousDecompositionAndOptionRadio"
+                                   type="radio" value="and" name="previousAggrType" title="AND" PLACEHOLDER="AND"> AND
+                            <br/>
+                            <input id="previousDecompositionOrOptionRadio"
+                                   type="radio" value="or" name="previousAggrType" title="OR" placeholder="OR"> OR
+                            <br/>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button id="closeChooseDecompModal" type="button"
+                            class="btn btn-success"
+                            aria-label="Close">Save choice and close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
 
 </div>
 </body>

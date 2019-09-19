@@ -389,7 +389,7 @@ app.ContextModalView = Backbone.View.extend({
  * Lista de decomposições criadas pelo usuário
  */
 app.decompositionList = new app.DecompositionList();
-
+app.removedContext = new app.Context();
 /**
  * Modal de decomposição, onde selecionamos os facts associados àquela decomposição
  */
@@ -436,33 +436,93 @@ app.ContextAndDecompositionModalView = Backbone.View.extend({
     },
     addContextNameViaClick: function () {
         if (this.$nameInput.val().trim()) {
-            app.comboBoxContext.add(new app.Context(this.newAttributes()));
-            this.$nameInput.val('');
-            alert("Done, now go edit your context!");
-            console.log(app.comboBoxContext.collection);
+            var contextName = this.$nameInput.val().trim();
+            var nameInput = this.$nameInput;
+            var self = this;
+            var repeatedNameFlag = 0;
+            console.log('contextName: ', contextName);
+            if (app.comboBoxContext.collection.length > 0) {
+                _.each(app.comboBoxContext.collection.models, function (context) {
+                    console.log('context: ', context.attributes.contextName);
+                    if (context.attributes.contextName === contextName) {
+                        repeatedNameFlag = 1;
+                        alert("There's already a context with the name: "
+                            + contextName + "\nPlease select another name for your context");
+                        nameInput.val('');
+                    }
+                });
+                if (repeatedNameFlag === 0) {
+                    app.comboBoxContext.add(new app.Context(self.newAttributes()));
+                    nameInput.val('');
+                    alert("Done, now go edit your context!");
+                    console.log(app.comboBoxContext.collection);
+                }
+            } else {
+                app.comboBoxContext.add(new app.Context(this.newAttributes()));
+                nameInput.val('');
+                alert("Done, now go edit your context!");
+                console.log(app.comboBoxContext.collection);
+            }
         }
     },
     addContext: function (e) {
         if (e.which === 13 && this.$nameInput.val().trim()) {
-            app.comboBoxContext.add(new app.Context(this.newAttributes()));
-            this.$nameInput.val('');
-            alert("Done, now go edit your context!");
-            console.log(app.comboBoxContext.collection);
+            var self = this;
+            var contextName = this.$nameInput.val().trim();
+            var nameInput = this.$nameInput;
+            var repeatedNameFlag = 0;
+            // DEBUG
+            // console.log('contextName: ', contextName);
+            if (app.comboBoxContext.collection.length > 0) {
+                _.each(app.comboBoxContext.collection.models, function (context) {
+                    // DEBUG
+                    // console.log('context: ', context.attributes.contextName);
+                    if (context.attributes.contextName === contextName) {
+                        repeatedNameFlag = 1;
+                        alert("There's already a context with the name: "
+                            + contextName + "\nPlease select another name for your context");
+                        nameInput.val('');
+                    }
+                });
+                if (repeatedNameFlag === 0) {
+                    app.comboBoxContext.add(new app.Context(self.newAttributes()));
+                    nameInput.val('');
+                    alert("Done, now go edit your context!");
+                    // DEBUG
+                    console.log("app.comboBoxContext.collection", app.comboBoxContext.collection);
+                }
+            } else {
+                app.comboBoxContext.add(new app.Context(this.newAttributes()));
+                nameInput.val('');
+                alert("Done, now go edit your context!");
+                // DEBUG
+                console.log("app.comboBoxContext.collection", app.comboBoxContext.collection);
+            }
         }
     },
     removeContext: function () {
+        console.log("app.comboBoxContext.el.value: ", app.comboBoxContext.el.value);
+        app.removedContext = app.comboBoxContext.collection.get(app.comboBoxContext.el.value);
+        console.log('app.removedContext:', app.removedContext);
         this.collection.remove(app.comboBoxContext.el.value);
-        // Remove da lista geral pra evitar bugs
-        app.contextList.remove(app.comboBoxContext.el.value);
-        console.log(app.comboBoxContext.collection);
-    },
+        if (app.contextList.get(app.removedContext) !== undefined) {
+            // Remove da lista geral pra evitar bugs
+            app.contextList.remove(app.removedContext);
+            console.log("removed from contextlist also");
+            console.log("app.contextList.models", app.contextList.models);
+        }
+        console.log("app.comboBoxContext.collection", app.comboBoxContext.collection);
+
+    }
+    ,
     changeRadioButtonIfEmpty: function () {
         if (this.collection.length <= 0) {
             this.$createContextOption.click();
         }
-    },
+    }
+    ,
     checkData: function () {
-        if(app.selectedContext.attributes.contextName !== "") { // selecionou contexto válido
+        if (app.selectedContext.attributes.contextName !== "") { // selecionou contexto válido
             // DEBUG
             // console.log("and:", this.$andDecomposition.is(':checked'));
             // console.log("Or:" , this.$orDecomposition.is(':checked'));
@@ -480,13 +540,14 @@ app.ContextAndDecompositionModalView = Backbone.View.extend({
             alert('You must select a context in the edit existing context option!');
             return false;
         }
-    },
+    }
+    ,
     checkDataAndSubmit: function () {
         if (this.checkData()) {
             this.$expressionView = $("#dpvExpressionView");
             // Fecha parênteses novamente(checar se é necessário depois)
-            var expressaoAtual = this.$expressionView.text();
-            this.$expressionView.html("<span>(" + expressaoAtual + ")</span>");
+            // var expressaoAtual = this.$expressionView.text();
+            // this.$expressionView.html("<span>(" + expressaoAtual + ")</span>");
 
             if (app.contextList.get(app.selectedContext.id) === undefined) {
                 // Novo context
@@ -522,23 +583,26 @@ app.ContextAndDecompositionModalView = Backbone.View.extend({
             app.decompositionPreviewView.initialize();
             this.$expressionView.html("<span>Select a fact and a decomposition to start!</span>");
             this.$nameInput.val('');
-            console.log("app.contextList.models: ",app.contextList.models);
+            console.log("app.contextList.models: ", app.contextList.models);
         }
 
-    },
+    }
+    ,
     newAttributes: function () {
         return {
             id: this.nameCounter++,
             contextName: this.$nameInput.val().trim()
         };
-    },
+    }
+    ,
     newContextAttributes: function () {
         return {
-            id: this.counter++,
+            id: app.selectedContext.attributes.id,
             contextName: app.selectedContext.attributes.contextName,
             decompositionExpression: $("#dpvExpressionView").text()
         }
-    },
+    }
+    ,
     exitContextModal: function () {
         if (app.contextList.length > 0) {
             this.$el.modal('toggle');
@@ -547,8 +611,10 @@ app.ContextAndDecompositionModalView = Backbone.View.extend({
                 this.$el.modal('toggle');
             }
         }
-    },
+    }
+    ,
     resetControlsAndControlDoneButtons: function () {
+        this.$expressionView = $("#dpvExpressionView");
         // Reseta variáveis
         app.fixedExpression = "";
         app.selectedFacts.reset();
@@ -573,7 +639,8 @@ app.ContextAndDecompositionModalView = Backbone.View.extend({
             $("#stepTwoLabel").html("Step 2: Define contexts");
         }
     }
-});
+})
+;
 
 app.selectedContext = new app.Context();
 app.selectedFacts = new app.FactCollection();
@@ -715,7 +782,8 @@ app.FactCheckboxListView = Backbone.View.extend({
         var checkboxes = app.factCheckboxListView.$el.children("div").children("label").children("input");
 
         _.each(checkboxes, function (checkbox) {
-            console.log('Is', checkbox.id, 'checkbox checked:', checkbox.checked === true);
+            // DEBUG
+            // console.log('Is', checkbox.id, 'checkbox checked:', checkbox.checked === true);
             if (checkbox.checked === true) {
                 checkbox.attr("checked", false);
             }
@@ -796,7 +864,7 @@ app.DecompositionPreviewView = Backbone.View.extend({
     initialize: function () {
         this.$andDecomposition = $("#decompositionAndOptionRadio");
         this.$orDecomposition = $("#decompositionOrOptionRadio");
-        this.decompositionType = this.$andDecomposition.is(':checked') ? "AND" : "OR";
+        this.decompositionType = this.$andDecomposition.is(':checked') ? "&" : "|";
         this.$createAnotherDeoompButton = $('#createAnotherDecompositionButton');
 
         this.$andDecomposition.bind("change", this.redefineDecompositionType);
@@ -809,7 +877,7 @@ app.DecompositionPreviewView = Backbone.View.extend({
         this.render();
     },
     redefineDecompositionType: function () {
-        this.decompositionType = $("#decompositionAndOptionRadio").is(':checked') ? "AND" : "OR";
+        this.decompositionType = $("#decompositionAndOptionRadio").is(':checked') ? "&" : "|";
     },
     finishAndStartNewExpression: function () {
         this.$expressionView = $("#dpvExpressionView");
@@ -846,7 +914,8 @@ app.DecompositionPreviewView = Backbone.View.extend({
             console.log("Are all checked?", checkboxes.not('checked').length <= 0);
             var uncheckCounter = 0;
             _.each(checkboxes, function (checkbox) {
-                console.log('Is', checkbox.id, 'checkbox checked:', checkbox.checked === true);
+                // DEBUG
+                // console.log('Is', checkbox.id, 'checkbox checked:', checkbox.checked === true);
                 if (checkbox.checked === false) {
                     uncheckCounter++;
                 }
@@ -865,7 +934,7 @@ app.DecompositionPreviewView = Backbone.View.extend({
     },
     render: function () {
         var expressionDecomp = "";
-        this.decompositionType = $("#decompositionAndOptionRadio").is(':checked') ? "AND" : "OR";
+        this.decompositionType = $("#decompositionAndOptionRadio").is(':checked') ? "&" : "|";
         this.$el = $("#decompositionPreviewView");
         this.$expressionView = $("#dpvExpressionView");
         var size = app.selectedFacts.length;
@@ -911,11 +980,14 @@ app.DecompositionPreviewView = Backbone.View.extend({
         this.$expressionView = $("#dpvExpressionView");
         var fixedExpression = this.$expressionView.text();
         // Impedir que o que for escrito a partir de agora interfira na expressão anterior, que já foi "fechada"
-        var expressionDecomp = fixedExpression.lastIndexOf(")");
-        console.log('decompExpression: ', expressionDecomp);
-        app.fixedExpression = fixedExpression.substring(0, expressionDecomp + 1);
+        var expressionDecompPosition = fixedExpression.lastIndexOf(")");
+        console.log('decompExpressionPosition: ', expressionDecompPosition);
+        if (expressionDecompPosition !== -1) {
+            app.fixedExpression = fixedExpression.substring(0, expressionDecompPosition + 1);
+        }
         // Adiciona a nova decomposição ao final da expressão, depois libera o uso da expressão para o usuário
         app.fixedExpression += " " + decompType + " ";
+        console.log("app.fixedExpression", app.fixedExpression);
     }
 });
 
@@ -951,7 +1023,7 @@ app.ChooseDecompTypeModal = Backbone.View.extend({
         }
     },
     submitPreviousDecomposition: function () {
-        var decompType = this.$previousOrDecomposition.is(':checked') ? "OR" : "AND";
+        var decompType = this.$previousOrDecomposition.is(':checked') ? "|" : "&";
         app.decompositionPreviewView.fixExpressionAndStartNewOne(decompType);
         app.decompositionPreviewView.render();
         this.$el.modal('hide');
@@ -1037,15 +1109,21 @@ app.personaModalFactCheckboxListView = new app.FactCheckboxListView({
 app.ContextCheckboxListView = Backbone.View.extend({
     tagName: 'div',
     initialize: function () {
-        this.model.bind("reset", this.render, this);
         var self = this;
+        this.model.bind("reset", this.render, this);
         this.model.bind("add", function (context) {
-            $(self.el).append(new app.ContextCheckboxListItemView({model: context}).render().el);
+            $(self.el).append(new app.ContextCheckboxListItemView({
+                model: context,
+                list: app.selectedContextsForPersona
+            }).render().el);
         });
     },
     render: function (eventName) {
         _.each(this.model.models, function (context) {
-            $(this.el).append(new app.ContextCheckboxListItemView({model: context}).render().el);
+            $(this.el).append(new app.ContextCheckboxListItemView({
+                model: context,
+                list: app.selectedContextsForPersona
+            }).render().el);
         }, this);
         return this;
     }
@@ -1059,8 +1137,10 @@ app.ContextCheckboxListItemView = Backbone.View.extend({
         'click input': 'setAsSelectedOrUnselect'
     },
     template: _.template($('#tpl-context-checkbox-list-item').html()),
-    initialize: function () {
+    initialize: function (options) {
+        this.collection = options.list;
         this.model.bind("change", this.render, this);
+        this.model.bind("remove", this.unrender, this);
         // this.model.bind("destroy", this.close, this);
     },
     render: function (eventName) {
@@ -1068,9 +1148,29 @@ app.ContextCheckboxListItemView = Backbone.View.extend({
         console.log(this.model);
         return this;
     },
+    unrender: function () {
+        console.log("Unrender called");
+        //DEBUG
+        // console.log("app.removedFact.id typeof: ",
+        // typeof (parseInt(app.removedFact.id)));
+        // console.log("app.removedFact.attributes.factName).val() typeof",
+        // typeof(parseInt($("#"+app.removedFact.attributes.factName).val())) );
+        // A linha abaixo continua sinalizando uma string vazia sendo passada, apenas no navegador Firefox isso acontece
+        // Eu fui pesquisar, e a referência disse que esse problema é específico do Firefox:
+        // https://pt.stackoverflow.com/questions/159754/string-vazia-passada-para-getelementbyid
+        // O Cast para number foi feito pois a IDE ficava reclamando, e de fato podia causar problemas de consistência,
+        // com javascript, qualquer cuidado é pouco...
+        console.log("this.$el", this.$el);
+        if (parseInt(app.removedContext.id) === parseInt($("#" + app.removedContext.attributes.contextName).val())) {
+            this.$el.unbind();
+            this.$el.remove();
+        }
+    },
     setAsSelectedOrUnselect: function (e) {
-        e.target.checked ? app.selectedContextsForPersona.add(this.model) : app.selectedContextsForPersona.remove(this.model);
+        e.target.checked ? this.collection.add(this.model) : this.collection.remove(this.model);
         console.log('Opção selecionada: ', e.target.value);
+        console.log('ContextCheckboxListItemView setAsSelectedOrUnselect this.collection.models: ',
+            this.collection.models);
     }
 });
 app.personaModalContextCheckboxListView = new app.ContextCheckboxListView({
@@ -1248,8 +1348,8 @@ app.ContextAssociationModalView = Backbone.View.extend({
         if (this.checkData()) {
             this.$expressionView = $("#caDpvExpressionView");
             // Fecha parênteses novamente(checar se é necessário depois)
-            var expressaoAtual = this.$expressionView.text();
-            this.$expressionView.html("<span>(" + expressaoAtual + ")</span>");
+            // var expressaoAtual = this.$expressionView.text();
+            // this.$expressionView.html("<span>(" + expressaoAtual + ")</span>");
 
             if (app.contextAssociationList.get(app.selectedElement.attributes.id) === undefined) {
                 // Novo goal ou task
@@ -1277,11 +1377,9 @@ app.ContextAssociationModalView = Backbone.View.extend({
                 );
             }
 
-            if (!ui.currentElement.prop('customProperties/' + 'associatedContexts')) {
-                ui.currentElement.prop('customProperties/' + 'associatedContexts',
+            if (!ui.currentElement.prop('customProperties/' + 'assertionCondition')) {
+                ui.currentElement.prop('customProperties/' + 'assertionCondition',
                     this.$expressionView.text());
-                // ui.currentElement.prop('customProperties/' + 'associatedContextDecomposition',
-                //     this.$andDecomposition.is(':checked') ? "AND" : "OR");
             }
             // Reseta estados anteriores
             app.contextAsssociationFixedExpression = "";
@@ -1353,16 +1451,22 @@ app.CAContextCheckboxListView = Backbone.View.extend({
         this.model.bind("reset", this.render, this);
         var self = this;
         this.model.bind("add", function (context) {
-            $(self.el).append(new app.CAContextCheckboxListItemView({model: context}).render().el);
+            $(self.el).append(new app.CAContextCheckboxListItemView({
+                model: context,
+                list: app.selectedContextsForGoalOrTask
+            }).render().el);
         });
     },
     render: function (eventName) {
         _.each(this.model.models, function (context) {
-            $(this.el).append(new app.CAContextCheckboxListItemView({model: context}).render().el);
+            $(this.el).append(new app.CAContextCheckboxListItemView({
+                model: context,
+                list: app.selectedContextsForGoalOrTask
+            }).render().el);
         }, this);
         return this;
     },
-    recreateList: function(){
+    recreateList: function () {
         var self = this;
         // this.model = options.list;
         // Apaga todas as views atuais
@@ -1394,7 +1498,10 @@ app.CAContextCheckboxListView = Backbone.View.extend({
         // Recria todos
         _.each(this.model.models, function (context) {
             console.log('adding new view');
-            $(self.el).append(new app.CAContextCheckboxListItemView({model: context}).render().el);
+            $(self.el).append(new app.CAContextCheckboxListItemView({
+                model: context,
+                list: app.contextList
+            }).render().el);
         });
         app.contextCheckboxListView =
             new app.CAContextCheckboxListView({
@@ -1407,7 +1514,8 @@ app.CAContextCheckboxListView = Backbone.View.extend({
         var checkboxes = app.contextCheckboxListView.$el.children("div").children("label").children("input");
 
         _.each(checkboxes, function (checkbox) {
-            console.log('Is', checkbox.id, 'checkbox checked:', checkbox.checked === true);
+            DEBUG
+            // console.log('Is', checkbox.id, 'checkbox checked:', checkbox.checked === true);
             if (checkbox.checked === true) {
                 checkbox.attr("checked", false);
             }
@@ -1423,19 +1531,39 @@ app.CAContextCheckboxListItemView = Backbone.View.extend({
         'click input': 'setAsSelectedOrUnselect'
     },
     template: _.template($('#tpl-context-checkbox-list-item').html()),
-    initialize: function () {
+    initialize: function (options) {
+        this.collection = options.list;
         this.model.bind("change", this.render, this);
-        // this.model.bind("destroy", this.close, this);
+        this.model.bind("remove", this.unrender, this);
     },
     render: function (eventName) {
         $(this.el).html(this.template(this.model.toJSON()));
         console.log(this.model);
         return this;
     },
+    unrender: function () {
+        console.log("Unrender called");
+        //DEBUG
+        // console.log("app.removedFact.id typeof: ",
+        // typeof (parseInt(app.removedFact.id)));
+        // console.log("app.removedFact.attributes.factName).val() typeof",
+        // typeof(parseInt($("#"+app.removedFact.attributes.factName).val())) );
+        // A linha abaixo continua sinalizando uma string vazia sendo passada, apenas no navegador Firefox isso acontece
+        // Eu fui pesquisar, e a referência disse que esse problema é específico do Firefox:
+        // https://pt.stackoverflow.com/questions/159754/string-vazia-passada-para-getelementbyid
+        // O Cast para number foi feito pois a IDE ficava reclamando, e de fato podia causar problemas de consistência,
+        // com javascript, qualquer cuidado é pouco...
+        if (parseInt(app.removedContext.id) === parseInt($("#" + app.removedContext.attributes.contextName).val())) {
+            this.$el.unbind();
+            this.$el.remove();
+        }
+    },
     setAsSelectedOrUnselect: function (e) {
-        e.target.checked ? app.selectedContextsForGoalOrTask.add(this.model)
-            : app.selectedContextsForGoalOrTask.remove(this.model);
+        e.target.checked ? this.collection.add(this.model)
+            : this.collection.remove(this.model);
         console.log('Opção selecionada: ', e.target.value);
+        console.log('CAContextCheckboxListItemView setAsSelectedOrUnselect this.collection.models: ',
+            this.collection.models);
     }
 });
 app.contextCheckboxListView =
@@ -1456,7 +1584,7 @@ app.ContextAssociationDecompositionPreviewView = Backbone.View.extend({
     initialize: function () {
         this.$andDecomposition = $("#CAdecompositionAndOptionRadio");
         this.$orDecomposition = $("#CAdecompositionOrOptionRadio");
-        this.decompositionType = this.$andDecomposition.is(':checked') ? "AND" : "OR";
+        this.decompositionType = this.$andDecomposition.is(':checked') ? "&" : "|";
         this.$createAnotherDeoompButton = $('#contextAssociationCreateAnotherDecompositionButton');
 
         this.$andDecomposition.bind("change", this.redefineDecompositionType);
@@ -1469,7 +1597,7 @@ app.ContextAssociationDecompositionPreviewView = Backbone.View.extend({
         this.render();
     },
     redefineDecompositionType: function () {
-        this.decompositionType = $("#CAdecompositionAndOptionRadio").is(':checked') ? "AND" : "OR";
+        this.decompositionType = $("#CAdecompositionAndOptionRadio").is(':checked') ? "&" : "|";
     },
     finishAndStartNewExpression: function () {
         this.$expressionView = $("#caDpvExpressionView");
@@ -1506,7 +1634,8 @@ app.ContextAssociationDecompositionPreviewView = Backbone.View.extend({
             console.log("Are all checked?", checkboxes.not('checked').length <= 0);
             var uncheckCounter = 0;
             _.each(checkboxes, function (checkbox) {
-                console.log('Is', checkbox.id, 'checkbox checked:', checkbox.checked === true);
+                // DEBUG
+                // console.log('Is', checkbox.id, 'checkbox checked:', checkbox.checked === true);
                 if (checkbox.checked === false) {
                     uncheckCounter++;
                 }
@@ -1525,7 +1654,7 @@ app.ContextAssociationDecompositionPreviewView = Backbone.View.extend({
     },
     render: function () {
         var expressionDecomp = "";
-        this.decompositionType = $("#CAdecompositionAndOptionRadio").is(':checked') ? "AND" : "OR";
+        this.decompositionType = $("#CAdecompositionAndOptionRadio").is(':checked') ? "&" : "|";
         this.$el = $("#CAdecompositionPreviewView");
         this.$expressionView = $("#caDpvExpressionView");
         var size = app.selectedContextsForGoalOrTask.length;
@@ -1567,7 +1696,7 @@ app.ContextAssociationDecompositionPreviewView = Backbone.View.extend({
     fixExpressionAndStartNewOne: function (decompType) {
         console.log("fixExpressionAndStartNewOne() init function");
         console.log('Decomposition type: ', decompType);
-        // remove os fatos já selecionados, pra evitar bugs
+        // remove os contextos já selecionados, pra evitar bugs
         app.selectedContextsForGoalOrTask.reset();
         this.$expressionView = $("#caDpvExpressionView");
         var fixedExpression = this.$expressionView.text();
@@ -1582,7 +1711,7 @@ app.ContextAssociationDecompositionPreviewView = Backbone.View.extend({
 app.contextAssociationDecompositionPreviewView = new app.ContextAssociationDecompositionPreviewView();
 
 app.CAChooseDecompTypeModal = Backbone.View.extend({
-    el: '#chooseDecompTypeModal',
+    el: '#CAchooseDecompTypeModal',
     events: {
         'click button#confirmNewDecompositionType': 'checkData',
         'click button#closeChooseDecompModal': 'checkIfButtonIsChecked',
@@ -1612,7 +1741,7 @@ app.CAChooseDecompTypeModal = Backbone.View.extend({
         }
     },
     submitPreviousDecomposition: function () {
-        var decompType = this.$previousOrDecomposition.is(':checked') ? "OR" : "AND";
+        var decompType = this.$previousOrDecomposition.is(':checked') ? "|" : "&";
         app.contextAssociationDecompositionPreviewView.fixExpressionAndStartNewOne(decompType);
         app.contextAssociationDecompositionPreviewView.render();
         this.$el.modal('hide');
