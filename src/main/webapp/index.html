@@ -177,7 +177,7 @@
         <!--</li>-->
         <!--</ul>-->
 
-        <button class="btn-success"> Run achievability algorithm</button>
+        <button class="btn-success" id="runAchievabilityButton"> Run achievability algorithm</button>
 
 
         <!--<div class="sidebar-header">
@@ -669,7 +669,7 @@
         <% } %>
     </h5>
     <ul class="list-unstyled components">
-        <li>
+        <!--<li>
             <a href="#factsSubmenu" data-toggle="collapse" aria-expanded="false" id="factsMenu"
                class="sidebar-list">Facts</a>
             <ul class="collapse list-unstyled" id="factsSubmenu">
@@ -677,7 +677,7 @@
                 <li><span><%- fact.attributes.factName %></span></li>
                 <% }); %>
             </ul>
-        </li>
+        </li>-->
         <li>
             <a href="#contextsSubmenu" data-toggle="collapse" aria-expanded="false" id="contextsMenu"
                class="sidebar-list">Contexts</a>
@@ -961,11 +961,13 @@
                                   maxlength="90"
                                   id="personaCreationDescription" rows="5" cols="30"
                                   placeholder="Set a description(optional) (Max length: 90 characters)"></textarea>
-                        <h4>Select facts about this persona</h4>
+                        <!--Essa sessão foi comentada pois não será implementada na primeira versão do Persona PiStar
+                        GODA, porém a chamada funciona-->
+                        <!--<h4>Select facts about this persona</h4>
                         <div id="personaFactCheckboxList" class="col-xs-12">
                         </div>
-                        <hr/>
-                        <h4>Or select contexts directly</h4>
+                        <hr/>-->
+                        <h4>Select the contexts</h4>
                         <div id="personaContextList" class="col-xs-12">
                         </div>
                         <hr/>

@@ -44,6 +44,29 @@ function removerDiagramaAtual() {
     istar.clearModel();
 }
 
+function runAchievability() {
+    return function () {
+        var model = saveModel();
+        var persona = JSON.stringify(app.selectedPersona);
+        console.log(persona);
+        $.ajax({
+            type: "POST",
+            url: '/achievability',
+            data: {
+                "content": model,
+                "persona": persona
+            },
+            success: function () {
+                // window.location.href = 'prism.zip';
+                alert("Deu bom!");
+            },
+            error: function () {
+                alert("Error!");
+            }
+        });
+    };
+}
+
 $('#personaArea').on('show.bs.collapse', function () {
     $('#personaButton').addClass('active');
     //Persona buttons
@@ -92,26 +115,8 @@ $('#personaArea').on('show.bs.collapse', function () {
             name: 'run_off', 
             action: ui.STATE_VIEW, 
             tooltip:'Create contexts'})}).render();
-    app.runAchievabilityAlgorithmButton.$el.click(function () {
-        var model = saveModel();
-        var persona = JSON.stringify(app.selectedPersona);
-        console.log(persona);
-        $.ajax({
-            type: "POST",
-            url: '/achievability',
-            data: {
-                "content": model,
-                "persona": persona
-            },
-            success: function () {
-                // window.location.href = 'prism.zip';
-                alert("Deu bom!");
-            },
-            error: function () {
-                alert("Error!");
-            }
-        });
-    })
+    app.runAchievabilityAlgorithmButton.$el.click(runAchievability())
+    $('#runAchievabilityButton').click(runAchievability());
 });
 $('#personaArea').on('hide.bs.collapse', function () {
     $('#personaButton').removeClass('active');

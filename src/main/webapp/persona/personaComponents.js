@@ -646,7 +646,7 @@ app.selectedContext = new app.Context();
 app.selectedFacts = new app.FactCollection();
 
 new app.ContextAndDecompositionModalView();
-app.selectedFactsForPersona = new app.FactCollection();
+// app.selectedFactsForPersona = new app.FactCollection();
 // Criado para resolver o problema de fatos serem atualizados a cada nova criação de persona, então colocaremos em outro
 // objeto só para evitar esse conflito
 // Eg persona A possui os Facts 1, 2 e 3. Persona A é criada
@@ -1054,11 +1054,12 @@ app.PersonaModalView = Backbone.View.extend({
     },
     checkData: function () {
         if (this.$name.val().length > 0) {
-            if (app.selectedFactsForPersona.length > 0 || app.selectedContextsForPersona.length > 0) {
-                return true;
-            } else {
-                alert("You must select at least one fact or context to create a valid Persona!");
-            }
+            // if (app.selectedFactsForPersona.length > 0 || app.selectedContextsForPersona.length > 0) {
+            //     return true;
+            // } else {
+            //     alert("You must select at least one fact or context to create a valid Persona!");
+            // }
+            return true;
         } else {
             alert("You must give a name to your persona!");
             return false;
@@ -1068,7 +1069,7 @@ app.PersonaModalView = Backbone.View.extend({
         if (this.checkData()) {
             console.log("Name: ", this.$name.val());
             console.log("description:", this.$description.val());
-            console.log('Selected facts in persona modal:', app.personaModalFactCheckboxListView.optionsCollection);
+            // console.log('Selected facts in persona modal:', app.personaModalFactCheckboxListView.optionsCollection);
 
             app.personaList.add(new app.Persona(this.newAttributes()));
             if (app.personaList.length === 1) {
@@ -1086,7 +1087,7 @@ app.PersonaModalView = Backbone.View.extend({
             id: this.counter++,
             personaName: this.$name.val(),
             personaDescription: this.$description.val(),
-            personaFacts: new app.FactCollection(app.selectedFactsForPersona.toJSON()),
+            // personaFacts: new app.FactCollection(app.selectedFactsForPersona.toJSON()),
             personaContexts: new app.ContextList(app.selectedContextsForPersona.toJSON())
         }
     }
@@ -1096,11 +1097,13 @@ app.PersonaModalView = Backbone.View.extend({
     Utilizamos aqui uma instância da factCheckboxListView mas alteramos o elemento(onde ela será exibida)
     e a lista que ela guardará com os elementos selecionados(app.selectedFactsForPersona)
  */
-app.personaModalFactCheckboxListView = new app.FactCheckboxListView({
-    el: "#personaFactCheckboxList",
-    model: app.factCollection,
-    list: app.selectedFactsForPersona // Pois será usada na modal de criar persona, sendo portanto uma lista diferente
-});
+/*24-09-2019 - Essa checkboxListView, apesar de funcional, será comentada pois não será utilizada na primeira versão do
+Persona PiStarGODA, apesar de funcional*/
+// app.personaModalFactCheckboxListView = new app.FactCheckboxListView({
+//     el: "#personaFactCheckboxList",
+//     model: app.factCollection,
+//     list: app.selectedFactsForPersona // Pois será usada na modal de criar persona, sendo portanto uma lista diferente
+// });
 
 
 /**
