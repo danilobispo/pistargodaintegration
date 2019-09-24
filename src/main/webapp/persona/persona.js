@@ -92,7 +92,7 @@ $('#personaArea').on('show.bs.collapse', function () {
             statusText: 'Click on a goal or task and assign created contexts to it!'})}).render();
     app.relateGoalsButton.$el.click(function () {
         app.stepThreeSelected = true;
-    })
+    });
     app.createPersonaViewButton = new uiC.ButtonView({model: new uiC.ButtonModel({
             label: 'Create persona', 
             name: 'define_personas_off', 

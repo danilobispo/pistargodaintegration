@@ -32,7 +32,7 @@ app.Persona = Backbone.Model.extend({
     defaults: {
         personaName: "",
         personaDescription: "",
-        personaFacts: "",
+        // personaFacts: "",
         personaContexts: ""
     }
 });
