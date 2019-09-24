@@ -1160,7 +1160,7 @@ app.ContextCheckboxListItemView = Backbone.View.extend({
         // https://pt.stackoverflow.com/questions/159754/string-vazia-passada-para-getelementbyid
         // O Cast para number foi feito pois a IDE ficava reclamando, e de fato podia causar problemas de consistência,
         // com javascript, qualquer cuidado é pouco...
-        console.log("this.$el", this.$el);
+        // console.log("this.$el", this.$el);
         if (parseInt(app.removedContext.id) === parseInt($("#" + app.removedContext.attributes.contextName).val())) {
             this.$el.unbind();
             this.$el.remove();
@@ -1407,8 +1407,16 @@ app.ContextAssociationModalView = Backbone.View.extend({
     closeModal: function () {
         // Desativa o modo de associação de contextos
         app.stepThreeSelected = false;
-        // Esvazia o texto para não confundir o usuário a pensar que o modo ainda está ativo
-        $("#status").text("");
+        this.$expressionView = $("#caDpvExpressionView");
+        // Reseta variáveis
+        app.fixedExpression = "";
+        app.selectedContextsForGoalOrTask.reset();
+        // Refaz a lista original
+        app.contextCheckboxListView.startOver();
+        app.contextAssociationDecompositionPreviewView.initialize();
+        this.$expressionView.html("<span>Select a context and a decomposition to start!</span>");
+        // DEBUG
+        console.log("app.contextAssociationList.models: ", app.contextAssociationList.models);
     }
 });
 
@@ -1446,7 +1454,6 @@ app.GoalOrTaskNodeInfoView = Backbone.View.extend({
  * Checkbox utilizada na modal de associação de contextos para mostrar os contextos criados pelo usuário
  */
 app.CAContextCheckboxListView = Backbone.View.extend({
-    tagName: 'div',
     initialize: function () {
         this.model.bind("reset", this.render, this);
         var self = this;
@@ -1500,7 +1507,7 @@ app.CAContextCheckboxListView = Backbone.View.extend({
             console.log('adding new view');
             $(self.el).append(new app.CAContextCheckboxListItemView({
                 model: context,
-                list: app.contextList
+                list: app.selectedContextsForGoalOrTask
             }).render().el);
         });
         app.contextCheckboxListView =
@@ -1510,16 +1517,6 @@ app.CAContextCheckboxListView = Backbone.View.extend({
             });
         // $('#contextCheckboxListContextAssociation').html(app.contextCheckboxListView.render({
         //     model: app.contextList}).el);
-        // Uncheckar todos os selecionados anteriormente, se existe(m) algum(alguns)
-        var checkboxes = app.contextCheckboxListView.$el.children("div").children("label").children("input");
-
-        _.each(checkboxes, function (checkbox) {
-            DEBUG
-            // console.log('Is', checkbox.id, 'checkbox checked:', checkbox.checked === true);
-            if (checkbox.checked === true) {
-                checkbox.attr("checked", false);
-            }
-        });
     }
 });
 
@@ -1533,10 +1530,11 @@ app.CAContextCheckboxListItemView = Backbone.View.extend({
     template: _.template($('#tpl-context-checkbox-list-item').html()),
     initialize: function (options) {
         this.collection = options.list;
-        this.model.bind("change", this.render, this);
+        // this.model.bind("change", this.render, this);
         this.model.bind("remove", this.unrender, this);
     },
     render: function (eventName) {
+        console.log('É PORQUE EU TÔ RENDERIZANDO NO CHANGE NE');
         $(this.el).html(this.template(this.model.toJSON()));
         console.log(this.model);
         return this;
@@ -1561,6 +1559,7 @@ app.CAContextCheckboxListItemView = Backbone.View.extend({
     setAsSelectedOrUnselect: function (e) {
         e.target.checked ? this.collection.add(this.model)
             : this.collection.remove(this.model);
+        // DEBUG
         console.log('Opção selecionada: ', e.target.value);
         console.log('CAContextCheckboxListItemView setAsSelectedOrUnselect this.collection.models: ',
             this.collection.models);
