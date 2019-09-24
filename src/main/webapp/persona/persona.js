@@ -115,7 +115,7 @@ $('#personaArea').on('show.bs.collapse', function () {
             name: 'run_off', 
             action: ui.STATE_VIEW, 
             tooltip:'Create contexts'})}).render();
-    app.runAchievabilityAlgorithmButton.$el.click(runAchievability())
+    app.runAchievabilityAlgorithmButton.$el.click(runAchievability());
     $('#runAchievabilityButton').click(runAchievability());
 });
 $('#personaArea').on('hide.bs.collapse', function () {
