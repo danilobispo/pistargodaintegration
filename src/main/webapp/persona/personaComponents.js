@@ -1261,7 +1261,7 @@ app.PersonaReviewInfoView = Backbone.View.extend({
     initialize: function () {
         this.model = app.selectedPersona;
         this.listenTo(this.model, 'change', this.render);
-        this.$factsMenu = this.$('#factsMenu');
+        // this.$factsMenu = this.$('#factsMenu');
         this.$contextsMenu = this.$('#contextsMenu');
         // this.$factsMenu.empty();
         // this.$contextsMenu.empty();

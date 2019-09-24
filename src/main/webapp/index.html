@@ -669,15 +669,7 @@
         <% } %>
     </h5>
     <ul class="list-unstyled components">
-        <!--<li>
-            <a href="#factsSubmenu" data-toggle="collapse" aria-expanded="false" id="factsMenu"
-               class="sidebar-list">Facts</a>
-            <ul class="collapse list-unstyled" id="factsSubmenu">
-                <% _.each(personaFacts.models, function (fact) { %>
-                <li><span><%- fact.attributes.factName %></span></li>
-                <% }); %>
-            </ul>
-        </li>-->
+
         <li>
             <a href="#contextsSubmenu" data-toggle="collapse" aria-expanded="false" id="contextsMenu"
                class="sidebar-list">Contexts</a>
@@ -689,6 +681,16 @@
         </li>
     </ul>
 </script>
+<!--Comentário movido para cá pois acho que scripts não aceitam comentários-->
+<!--<li>
+            <a href="#factsSubmenu" data-toggle="collapse" aria-expanded="false" id="factsMenu"
+               class="sidebar-list">Facts</a>
+            <ul class="collapse list-unstyled" id="factsSubmenu">
+                <% _.each(personaFacts.models, function (fact) { %>
+                <li><span><%- fact.attributes.factName %></span></li>
+                <% }); %>
+            </ul>
+        </li>-->
 
 <script type="text/template" id="selectedGoalOrTaskTemplate">
     <%= type.substring(6).toLowerCase() %>
@@ -1011,8 +1013,8 @@
                     <div id="contextCheckboxListContextAssociation"></div>
                     <div>Context association preview: </div>
                     <div id="CAdecompositionPreviewView"> </div>
-                    <button id="CAdecompositionCreatorButton" class="btn"> Create!</button>
-                    <span id="CAsuccessDecompositionMessage" hidden>Context association created!</span>
+                    <button id="CAdecompositionCreatorButton" class="btn btn-success"> Create!</button>
+                    <b id="CAsuccessDecompositionMessage" hidden>Context association created!</b>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn" aria-label="Close" data-dismiss="modal">Close</button>
