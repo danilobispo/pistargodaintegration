@@ -1054,12 +1054,12 @@ app.PersonaModalView = Backbone.View.extend({
     },
     checkData: function () {
         if (this.$name.val().length > 0) {
-            // if (app.selectedFactsForPersona.length > 0 || app.selectedContextsForPersona.length > 0) {
-            //     return true;
-            // } else {
-            //     alert("You must select at least one fact or context to create a valid Persona!");
-            // }
-            return true;
+            if (app.selectedContextsForPersona.length > 0) {
+                return true;
+            } else {
+                alert("You must select at least one context to create a valid Persona!");
+                return false;
+            }
         } else {
             alert("You must give a name to your persona!");
             return false;
@@ -1078,8 +1078,8 @@ app.PersonaModalView = Backbone.View.extend({
             }
             alert('Persona created!');
             console.log('PersonaList: ', app.personaList);
-            this.$name.val().trim();
-            this.$description.val().trim();
+            this.$name.val('');
+            this.$description.val('');
         }
     },
     newAttributes: function () {
