@@ -1176,12 +1176,13 @@ app.ContextCheckboxListItemView = Backbone.View.extend({
             this.collection.models);
     }
 });
-app.personaModalContextCheckboxListView = new app.ContextCheckboxListView({
-    el: "#personaContextList",
-    model: app.contextList
-});
 app.selectedContextsForPersona = new app.ContextList();
 new app.PersonaModalView();
+app.personaModalContextCheckboxListView = new app.ContextCheckboxListView({
+    el: "#personaContextList",
+    model: app.contextList,
+    list: app.selectedContextsForPersona
+});
 
 /////////////////////
 /////////////////////
@@ -1516,7 +1517,8 @@ app.CAContextCheckboxListView = Backbone.View.extend({
         app.contextCheckboxListView =
             new app.CAContextCheckboxListView({
                 el: "#contextCheckboxListContextAssociation",
-                model: app.contextList
+                model: app.contextList,
+                list: app.selectedContextsForGoalOrTask
             });
         // $('#contextCheckboxListContextAssociation').html(app.contextCheckboxListView.render({
         //     model: app.contextList}).el);
@@ -1537,7 +1539,6 @@ app.CAContextCheckboxListItemView = Backbone.View.extend({
         this.model.bind("remove", this.unrender, this);
     },
     render: function (eventName) {
-        console.log('É PORQUE EU TÔ RENDERIZANDO NO CHANGE NE');
         $(this.el).html(this.template(this.model.toJSON()));
         console.log(this.model);
         return this;
@@ -1571,7 +1572,8 @@ app.CAContextCheckboxListItemView = Backbone.View.extend({
 app.contextCheckboxListView =
     new app.CAContextCheckboxListView({
         el: "#contextCheckboxListContextAssociation",
-        model: app.contextList
+        model: app.contextList,
+        list: app.selectedContextsForGoalOrTask
     });
 
 app.contextAsssociationFixedExpression = "";
