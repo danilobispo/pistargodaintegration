@@ -1410,6 +1410,8 @@ app.ContextAssociationModalView = Backbone.View.extend({
         this.$el.modal('show');
     },
     closeModal: function () {
+        // Remove a tooltip do topo, pra não confundir que o modo ainda está ativo
+        ui.changeStatus('');
         // Desativa o modo de associação de contextos
         app.stepThreeSelected = false;
         this.$expressionView = $("#caDpvExpressionView");
