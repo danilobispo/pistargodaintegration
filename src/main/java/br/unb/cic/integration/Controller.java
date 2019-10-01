@@ -37,6 +37,10 @@ public class Controller {
         String persona = requestParams.get("persona");
         System.out.println(model);
         System.out.println(persona);
+        System.out.print("Selected actors: ");
+        System.out.println(selectedActors);
+        System.out.print("Selected goals: ");
+        System.out.println(selectedGoals);
     }
 
     @RequestMapping(value = "/prism-dtmc", method = RequestMethod.POST)

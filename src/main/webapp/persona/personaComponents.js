@@ -1147,6 +1147,7 @@ app.ContextCheckboxListItemView = Backbone.View.extend({
         // this.model.bind("destroy", this.close, this);
     },
     render: function (eventName) {
+        console.log("app.ContextCheckboxListItemView render called");
         $(this.el).html(this.template(this.model.toJSON()));
         console.log(this.model);
         return this;
@@ -1535,10 +1536,11 @@ app.CAContextCheckboxListItemView = Backbone.View.extend({
     template: _.template($('#tpl-context-checkbox-list-item').html()),
     initialize: function (options) {
         this.collection = options.list;
-        // this.model.bind("change", this.render, this);
+        this.model.bind("change", this.render, this);
         this.model.bind("remove", this.unrender, this);
     },
     render: function (eventName) {
+        console.log("app.CAContextCheckboxListItemView render called");
         $(this.el).html(this.template(this.model.toJSON()));
         console.log(this.model);
         return this;
