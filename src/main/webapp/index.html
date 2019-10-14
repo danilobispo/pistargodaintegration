@@ -444,7 +444,6 @@
                         class="btn btn-xs persona-fact-button"
                         data-toggle="button"
                         aria-pressed="false">
-                    kkkkkkkkkk
                 </button>
             </li>
         </ul>
@@ -696,6 +695,10 @@
     <%= type.substring(6).toLowerCase() %>
 </script>
 
+<script type="text/template" id="selectedContextViewTemplate">
+    <h4>Selected context: <%= contextName %></h4>
+</script>
+
 <script type="text/template" id="goalOrTaskInfoTemplate">
     <h4> Selected node info</h4>
     <h5> <b>id:</b> <%= id %> </h5>
@@ -892,7 +895,7 @@
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <button type="button" class="close btn-close"
+                    <button type="button" class="close btn-close close-modal-context"
                             data-dismiss="modal"
                             aria-label="Close"><span
                             aria-hidden="true">&times;</span></button>
@@ -909,6 +912,11 @@
                     <div class="editContext" hidden>
                         <label for="selectContext"></label><select id="selectContext"></select>
                         <button id="removeContext">Remove selected context</button>
+                        <button id="associateWorldPredicatesButton"
+                                data-toggle="modal"
+                                data-target="#worldPredicateAssociationModal">
+                            Associate selected context with world predicates
+                        </button>
                     </div>
                     <h4>Select a decomposition type</h4>
                     <div class="radio-inline" role="group" aria-label="aggregationTypes">
@@ -1078,6 +1086,89 @@
                     <button id="closeChooseDecompModal" type="button"
                             class="btn btn-success"
                             aria-label="Close">Save choice and close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="wp-chooseDecompTypeModal" tabindex="-1" role="dialog"
+         aria-labelledby="wp-chooseDecompTypeModalLabel">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title" id="wp-chooseDecompTypeModalTitle">
+                        Define the decomposition type related to the context selected
+                    </h4>
+                </div>
+                <div class="modal-body">
+                    <div id="previousDecompositionDecompositionTypeDiv">
+                        <div class="radio-inline" role="group" aria-label="aggregationTypes">
+                            <input id="previousDecompositionAndOptionRadio"
+                                   type="radio" value="and" name="previousAggrType" title="AND" PLACEHOLDER="AND"> AND
+                            <br/>
+                            <input id="previousDecompositionOrOptionRadio"
+                                   type="radio" value="or" name="previousAggrType" title="OR" placeholder="OR"> OR
+                            <br/>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button id="closeChooseDecompModal" type="button"
+                            class="btn btn-success"
+                            aria-label="Close">Save choice and close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="worldPredicateAssociationModal" tabindex="-1" role="dialog"
+         aria-labelledby="worldPredicateAssociationModalLabel">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close btn-close close-modal-world-predicate"
+                            data-dismiss="modal"
+                            aria-label="Close"><span
+                            aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="worldPredicateAssociationModalTitle">
+                        Define one or more world predicates, then associate them with your context</h4>
+                </div>
+                <div class="modal-body">
+                    <div id="selectedContextInfo"></div>
+                    <input type="radio" name="createOrEdit" value="create-wp">Create a new world predicate
+                    <br/>
+                    <input type="radio" name="createOrEdit" value="edit-wp">Edit existing world predicate
+                    <div class="create-world-predicate" hidden>
+                        <input type="text" class="wp-input" placeholder="World predicate name" maxlength="20">
+                        <button id="createWorldPredicateName" title="Create World Predicate Name">
+                            Set name for world predicate</button>
+                    </div>
+                    <div class="edit-world-predicate" hidden>
+                        <label for="selectWorldPredicate"></label><select id="selectWorldPredicate"></select>
+                        <button id="removeWorldPredicate">Remove selected world predicate</button>
+                    </div>
+                    <h4>Select a decomposition type</h4>
+                    <div class="radio-inline" role="group" aria-label="aggregationTypes">
+                        <input id="wp-decompositionAndOptionRadio"
+                               type="radio" value="and" name="aggrType" title="AND" PLACEHOLDER="AND"> AND
+                        <br/>
+                        <input id="wp-decompositionOrOptionRadio"
+                               type="radio" value="or" name="aggrType" title="OR" placeholder="OR"> OR
+                        <br/>
+                    </div>
+                    <br/>
+                    <h4>Select the facts that you want in this decomposition</h4>
+                    <div id="wp-factCheckboxList"></div>
+                    <div class="separator"></div>
+                    <div>Decomposition Preview:</div>
+                    <div id="wp-decompositionPreviewView">
+                    </div>
+                    <button id="worldPredicateCreatorButton" class="btn btn-success">Finish and associate</button>
+                    <b id="successWorldPredicateMessage" hidden>World predicate created!</b>
+                </div>
+                <div class="modal-footer">
+                    <button id="worldPredicateAssociationCloseModal"
+                            type="button" class="btn" aria-label="Close" data-dismiss="modal">Close</button>
                 </div>
             </div>
         </div>

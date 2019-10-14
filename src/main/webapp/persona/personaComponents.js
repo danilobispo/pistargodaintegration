@@ -190,6 +190,7 @@ app.ComboBoxContext = Backbone.View.extend({
         this.collection.add(option);
         if (this.collection.length === 1) {
             app.selectedContext = option;
+            new app.SelectedContextViewTemplate({model: app.selectedContext});
         }
     },
     render: function (model) {
@@ -204,6 +205,7 @@ app.ComboBoxContext = Backbone.View.extend({
     change: function (e) {
         console.log('selectedContext: ', this.collection.get(e.target.value));
         app.selectedContext = this.collection.get(e.target.value);
+        new app.SelectedContextViewTemplate({model: app.selectedContext});
         var index = this.el.selectedIndex;
         var value = this.el.options[index].value;
         var text = this.el.options[index].text;
@@ -211,7 +213,6 @@ app.ComboBoxContext = Backbone.View.extend({
         console.log("index: " + index + ",  value: " + value + ", text: " + text);
     },
     remove: function (option) {
-
         this.collection.remove(option);
         console.log(this.collection);
     }
@@ -228,157 +229,157 @@ app.comboBoxContext.collection.bind("add remove change reset", function () {
         editContextOption.attr('disabled', true) : editContextOption.attr('disabled', false);
 });
 
-/**
- * Modal de criação de contextos e associação com decomposições com facts
- */
-app.ContextModalView = Backbone.View.extend({
-    el: '#contextAndFactsModal',
-    events: {
-        'click input[name="createOrEdit"]': 'createOrEditContextEvent',
-        'keypress .context-input': 'addContext',
-        'click #createContextName': 'addContextNameViaClick',
-        'click #removeContext': 'removeContext',
-        'click #saveContext': 'saveContext',
-        'click .close-modal-context': 'exitContextModal',
-        'hidden.bs.modal': 'resetControlsAndControlDoneButtons',
-        'shown.bs.modal': 'displayMessageIfNoFacts'
-    },
-    initialize: function () {
-        this.nameCounter = 0;
-        this.counter = 0;
-        this.$createContextOption = $("input[value=create-context]");
-        this.$editContextOption = $("input[value=edit-context]");
-        this.$input = this.$('.context-input');
-        this.$success = this.$('#successContextMessage');
-        this.collection = app.comboBoxContext.collection;
-        app.comboBoxContext.collection.length <= 0 ?
-            this.$editContextOption.attr('disabled', true) : this.$editContextOption.attr('disabled', false);
-        this.collection.on('remove', this.changeRadioButtonIfEmpty, this)
-    },
-    displayMessageIfNoFacts: function () {
-        if (app.factCollection.length <= 0) {
-            alert('There are not enough facts to create a decomposition!\n ' +
-                'Go back to the previous step and create at least one');
-            this.$el.modal('toggle');
-        }
-    },
-    createOrEditContextEvent: function (e) {
-        $this = $(e.target);
-        this.$('.createContext')[$this.val() === 'create-context' ? 'show' : 'hide']();
-        this.$('.editContext')[$this.val() === 'edit-context' ? 'show' : 'hide']();
-    },
-    addContext: function (e) {
-        if (e.which === 13 && this.$input.val().trim()) {
-            app.comboBoxContext.add(new app.Context(this.newAttributes()));
-            this.$input.val('');
-            alert("Done, now go edit your context!");
-            console.log(app.comboBoxContext.collection);
-        }
-    },
-    addContextNameViaClick: function () {
-        if (this.$input.val().trim()) {
-            app.comboBoxContext.add(new app.Context(this.newAttributes()));
-            this.$input.val('');
-            alert("Done, now go edit your context!");
-            console.log(app.comboBoxContext.collection);
-        }
-    },
-    newAttributes: function () {
-        return {
-            id: this.nameCounter++,
-            contextName: this.$input.val().trim()
-        };
-    },
-    removeContext: function () {
-        this.collection.remove(app.comboBoxContext.el.value);
-        // Remove da lista geral pra evitar bugs
-        app.contextList.remove(app.comboBoxContext.el.value);
-        console.log(app.comboBoxContext.collection);
-    },
-    changeRadioButtonIfEmpty: function () {
-        if (this.collection.length <= 0) {
-            this.$createContextOption.click();
-        }
-    },
-    createNewContext: function () {
-        return {
-            id: this.counter++,
-            contextName: app.selectedContext.attributes.contextName,
-            // Facts are inside the decompositions
-            decompositionsAndFacts: new app.DecompositionList(app.selectedDecompositionsForContext.toJSON())
-        }
-    },
-    saveContext: function () {
-        console.log('app.selectedContext:', app.selectedContext);
-        console.log('app.selectedContext contextName:', app.selectedContext.attributes.contextName);
-        console.log('app.selectedDecompositionsForContext:', app.selectedDecompositionsForContext);
-        this.checkDataAndSaveContext();
-
-        console.log("app.contextList:", app.contextList);
-    },
-    checkDataAndSaveContext: function () {
-        if (app.selectedDecompositionsForContext.length > 0) {
-            if (app.comboBoxContext.collection.length > 0 && app.selectedContext.attributes.contextName !== undefined) {
-                console.log("app.selectedContext.attributes.contextName", app.selectedContext.id);
-                if (app.contextList.get(app.selectedContext.id) === undefined) {
-                    // Novo context
-                    app.contextList.add(new app.Context(this.createNewContext()));
-                    this.$success.text("Context created succesfully!");
-                    this.$success.show();
-                    setTimeout(function () {
-                            this.$('#successContextMessage').hide();
-                        }, 3000
-                    );
-                } else {
-                    // Context a ser editado
-                    var context = app.contextList.get(app.selectedContext.id);
-                    context.set({
-                        contextName: app.selectedContext.attributes.contextName,
-                        // Facts are inside the decompositions
-                        decompositionsAndFacts: app.selectedDecompositionsForContext
-                    }, {remove: true});
-                    this.$success.text("Context edited succesfully!");
-                    //Animação para mostrar mensagem e depois apagar
-                    this.$success.show();
-                    setTimeout(function () {
-                            this.$('#successContextMessage').hide();
-                        }, 3000
-                    );
-                }
-            } else {
-                alert("You have to name at least one context, then select it in Edit Existing Context option!");
-            }
-        } else {
-            alert("You have to choose at least one created decomposition!");
-        }
-    },
-    exitContextModal: function () {
-        if (app.contextList.length > 0) {
-            this.$el.modal('toggle');
-        } else {
-            if (confirm('You did not create any contexts, are you sure you want to exit?')) {
-                this.$el.modal('toggle');
-            }
-        }
-    },
-    resetControlsAndControlDoneButtons: function () {
-        if (app.contextList.length > 0) {
-            // Caso em que a seta deve aparecer verde e o X desaparecer
-            $("#stepTwoDone").css("display", "");
-            $("#stepTwoNotDone").css("display", "none");
-            app.contextViewButton.$el.children().children().attr("src", "images/edit_contexts_on.svg");
-            $("#stepTwoDone").css("color", "#00FF00");
-            $("#stepTwoLabel").html("Step 2: Edit contexts");
-        } else {
-            // Caso em que a seta deve desaparecer verde e o X aparecer
-            $("#stepTwoNotDone").css("display", "");
-            $("#stepTwoDone").css("display", "none");
-            app.contextViewButton.$el.children().children().attr("src", "images/edit_contexts_off.svg");
-            $("#stepTwoNotDone").css("color", "#FF0000");
-            $("#stepTwoLabel").html("Step 2: Define contexts");
-        }
-    }
-});
+// /**
+//  * Modal de criação de contextos e associação com decomposições com facts
+//  */
+// app.ContextModalView = Backbone.View.extend({
+//     el: '#contextAndFactsModal',
+//     events: {
+//         'click input[name="createOrEdit"]': 'createOrEditContextEvent',
+//         'keypress .context-input': 'addContext',
+//         'click #createContextName': 'addContextNameViaClick',
+//         'click #removeContext': 'removeContext',
+//         'click #saveContext': 'saveContext',
+//         'click .close-modal-context': 'exitContextModal',
+//         'hidden.bs.modal': 'resetControlsAndControlDoneButtons',
+//         'shown.bs.modal': 'displayMessageIfNoFacts'
+//     },
+//     initialize: function () {
+//         this.nameCounter = 0;
+//         this.counter = 0;
+//         this.$createContextOption = $("input[value=create-context]");
+//         this.$editContextOption = $("input[value=edit-context]");
+//         this.$input = this.$('.context-input');
+//         this.$success = this.$('#successContextMessage');
+//         this.collection = app.comboBoxContext.collection;
+//         app.comboBoxContext.collection.length <= 0 ?
+//             this.$editContextOption.attr('disabled', true) : this.$editContextOption.attr('disabled', false);
+//         this.collection.on('remove', this.changeRadioButtonIfEmpty, this)
+//     },
+//     displayMessageIfNoFacts: function () {
+//         if (app.factCollection.length <= 0) {
+//             alert('There are not enough facts to create a decomposition!\n ' +
+//                 'Go back to the previous step and create at least one');
+//             this.$el.modal('toggle');
+//         }
+//     },
+//     createOrEditContextEvent: function (e) {
+//         $this = $(e.target);
+//         this.$('.createContext')[$this.val() === 'create-context' ? 'show' : 'hide']();
+//         this.$('.editContext')[$this.val() === 'edit-context' ? 'show' : 'hide']();
+//     },
+//     addContext: function (e) {
+//         if (e.which === 13 && this.$input.val().trim()) {
+//             app.comboBoxContext.add(new app.Context(this.newAttributes()));
+//             this.$input.val('');
+//             alert("Done, now go edit your context!");
+//             console.log(app.comboBoxContext.collection);
+//         }
+//     },
+//     addContextNameViaClick: function () {
+//         if (this.$input.val().trim()) {
+//             app.comboBoxContext.add(new app.Context(this.newAttributes()));
+//             this.$input.val('');
+//             alert("Done, now go edit your context!");
+//             console.log(app.comboBoxContext.collection);
+//         }
+//     },
+//     newAttributes: function () {
+//         return {
+//             id: this.nameCounter++,
+//             contextName: this.$input.val().trim()
+//         };
+//     },
+//     removeContext: function () {
+//         this.collection.remove(app.comboBoxContext.el.value);
+//         // Remove da lista geral pra evitar bugs
+//         app.contextList.remove(app.comboBoxContext.el.value);
+//         console.log(app.comboBoxContext.collection);
+//     },
+//     changeRadioButtonIfEmpty: function () {
+//         if (this.collection.length <= 0) {
+//             this.$createContextOption.click();
+//         }
+//     },
+//     createNewContext: function () {
+//         return {
+//             id: this.counter++,
+//             contextName: app.selectedContext.attributes.contextName,
+//             // Facts are inside the decompositions
+//             decompositionsAndFacts: new app.DecompositionList(app.selectedDecompositionsForContext.toJSON())
+//         }
+//     },
+//     saveContext: function () {
+//         console.log('app.selectedContext:', app.selectedContext);
+//         console.log('app.selectedContext contextName:', app.selectedContext.attributes.contextName);
+//         console.log('app.selectedDecompositionsForContext:', app.selectedDecompositionsForContext);
+//         this.checkDataAndSaveContext();
+//
+//         console.log("app.contextList:", app.contextList);
+//     },
+//     checkDataAndSaveContext: function () {
+//         if (app.selectedDecompositionsForContext.length > 0) {
+//             if (app.comboBoxContext.collection.length > 0 && app.selectedContext.attributes.contextName !== undefined) {
+//                 console.log("app.selectedContext.attributes.contextName", app.selectedContext.id);
+//                 if (app.contextList.get(app.selectedContext.id) === undefined) {
+//                     // Novo context
+//                     app.contextList.add(new app.Context(this.createNewContext()));
+//                     this.$success.text("Context created succesfully!");
+//                     this.$success.show();
+//                     setTimeout(function () {
+//                             this.$('#successContextMessage').hide();
+//                         }, 3000
+//                     );
+//                 } else {
+//                     // Context a ser editado
+//                     var context = app.contextList.get(app.selectedContext.id);
+//                     context.set({
+//                         contextName: app.selectedContext.attributes.contextName,
+//                         // Facts are inside the decompositions
+//                         decompositionsAndFacts: app.selectedDecompositionsForContext
+//                     }, {remove: true});
+//                     this.$success.text("Context edited succesfully!");
+//                     //Animação para mostrar mensagem e depois apagar
+//                     this.$success.show();
+//                     setTimeout(function () {
+//                             this.$('#successContextMessage').hide();
+//                         }, 3000
+//                     );
+//                 }
+//             } else {
+//                 alert("You have to name at least one context, then select it in Edit Existing Context option!");
+//             }
+//         } else {
+//             alert("You have to choose at least one created decomposition!");
+//         }
+//     },
+//     exitContextModal: function () {
+//         if (app.contextList.length > 0) {
+//             this.$el.modal('toggle');
+//         } else {
+//             if (confirm('You did not create any contexts, are you sure you want to exit?')) {
+//                 this.$el.modal('toggle');
+//             }
+//         }
+//     },
+//     resetControlsAndControlDoneButtons: function () {
+//         if (app.contextList.length > 0) {
+//             // Caso em que a seta deve aparecer verde e o X desaparecer
+//             $("#stepTwoDone").css("display", "");
+//             $("#stepTwoNotDone").css("display", "none");
+//             app.contextViewButton.$el.children().children().attr("src", "images/edit_contexts_on.svg");
+//             $("#stepTwoDone").css("color", "#00FF00");
+//             $("#stepTwoLabel").html("Step 2: Edit contexts");
+//         } else {
+//             // Caso em que a seta deve desaparecer verde e o X aparecer
+//             $("#stepTwoNotDone").css("display", "");
+//             $("#stepTwoDone").css("display", "none");
+//             app.contextViewButton.$el.children().children().attr("src", "images/edit_contexts_off.svg");
+//             $("#stepTwoNotDone").css("color", "#FF0000");
+//             $("#stepTwoLabel").html("Step 2: Define contexts");
+//         }
+//     }
+// });
 
 /*
     Instância criada para a modal de contexto
@@ -391,7 +392,7 @@ app.ContextModalView = Backbone.View.extend({
 app.decompositionList = new app.DecompositionList();
 app.removedContext = new app.Context();
 /**
- * Modal de decomposição, onde selecionamos os facts associados àquela decomposição
+ * Modal de decomposição e contextos, onde selecionamos os facts associados àquela decomposição
  */
 app.ContextAndDecompositionModalView = Backbone.View.extend({
     el: '#contextAndDecompositionModal',
@@ -639,12 +640,12 @@ app.ContextAndDecompositionModalView = Backbone.View.extend({
             $("#stepTwoLabel").html("Step 2: Define contexts");
         }
     }
-})
-;
+});
 
 app.selectedContext = new app.Context();
 app.selectedFacts = new app.FactCollection();
 
+// Instância da modal de contexto
 new app.ContextAndDecompositionModalView();
 // app.selectedFactsForPersona = new app.FactCollection();
 // Criado para resolver o problema de fatos serem atualizados a cada nova criação de persona, então colocaremos em outro
@@ -1031,6 +1032,334 @@ app.ChooseDecompTypeModal = Backbone.View.extend({
 });
 
 app.chooseDecompTypeModal = new app.ChooseDecompTypeModal();
+
+// // // // // // // // //
+// // // // // // // // //
+// World Predicate stuff//
+// // // // // // // // //
+// // // // // // // // //
+// // // // // // // // //
+
+app.WorldPredicateComboBox = Backbone.View.extend({
+    el: $('#selectWorldPredicate'),
+    template: _.template('<option data-id="${id}" value="<%= id%>" ><%= contextName %></option>'),
+
+    // Na inicialização unimos a coleção e a visão e
+    // também definimos o evento `add` para executar
+    // o callback `this.render`
+    initialize: function () {
+        this.collection = new app.ContextList(null, this);
+        this.collection.on('add', this.render, this);
+        this.collection.on('remove', this.unrender, this);
+        this.on('click option', this.change, this);
+    },
+    events: {
+        'click option': 'change',
+    },
+    add: function (option) {
+        this.collection.add(option);
+        if (this.collection.length === 1) {
+            app.selectedWorldPredicate = option;
+        }
+    },
+    render: function (model) {
+        this.$el.append(this.template(model.attributes));
+    },
+    unrender: function () {
+        $('#selectWorldPredicate option:selected').remove();
+    },
+    // Este método é executado a cada click na combo (select).
+    // Com as informações obtidas poderíamos, inclusive,
+    // realizar uma requisação AJAX, por exemplo.
+    change: function (e) {
+        console.log('selectedWorldPredicate: ', this.collection.get(e.target.value));
+        app.selectedWorldPredicate = this.collection.get(e.target.value);
+        var index = this.el.selectedIndex;
+        var value = this.el.options[index].value;
+        var text = this.el.options[index].text;
+        // DEBUG
+        console.log("index: " + index + ",  value: " + value + ", text: " + text);
+    },
+    remove: function (option) {
+        this.collection.remove(option);
+        console.log(this.collection);
+    }
+});
+
+app.worldPredicateList = new app.ContextList();
+app.worldPredicateComboBox = new app.WorldPredicateComboBox();
+var worldPredicateEditContextOption = $("input[value=edit-wp]");
+app.worldPredicateComboBox.collection.bind("add remove change reset", function () {
+    app.worldPredicateComboBox.collection.length <= 0 ?
+        worldPredicateEditContextOption.attr('disabled', true) : worldPredicateEditContextOption.attr('disabled', false);
+});
+
+app.selectedWorldPredicate = new app.Context();
+app.removedWorldPredicate = new app.Context();
+app.selectedFactsForWorldPredicates = new app.FactCollection();
+app.fixedExpressionForWorldPredicate = "";
+
+/**
+ * Modal de decomposição, onde selecionamos os facts associados àquela decomposição
+ */
+
+app.WorldPredicateAssociationModalView = Backbone.View.extend({
+    el: '#worldPredicateAssociationModal',
+    events: {
+        'click button#worldPredicateCreatorButton': 'checkDataAndSubmit',
+        'click button#worldPredicateAssociationCloseModal': 'recreateDecompCheckbox',
+        'click button.close.btn-close': 'recreateDecompCheckbox',
+        'click input[name="createOrEdit"]': 'createOrEditContextEvent',
+        'click #createWorldPredicateName': 'addContextNameViaClick',
+        'keypress .wp-input': 'addContext',
+        'click #removeWorldPredicate': 'removeContext',
+        'click .close-modal-world-predicate': 'exitContextModal',
+        'hidden.bs.modal': 'resetControlsAndControlDoneButtons',
+        'shown.bs.modal': 'displayMessageIfNoFacts',
+    },
+    initialize: function () {
+        this.nameCounter = 0;
+        this.$createContextOption = $("input[value=create-wp]");
+        this.$editContextOption = $("input[value=edit-wp]");
+        this.$nameInput = this.$('.wp-input');
+        this.$andDecomposition = this.$("#wp-decompositionAndOptionRadio");
+        this.$orDecomposition = this.$("#wp-decompositionOrOptionRadio");
+        this.$success = this.$('#successWorldPredicateMessage');
+
+        this.collection = app.worldPredicateComboBox.collection;
+        app.worldPredicateComboBox.collection.length <= 0 ?
+            this.$editContextOption.attr('disabled', true) : this.$editContextOption.attr('disabled', false);
+        this.collection.on('remove', this.changeRadioButtonIfEmpty, this)
+    },
+    displayMessageIfNoFacts: function () {
+        if (app.factCollection.length <= 0) {
+            alert('There are not enough facts to create a decomposition!\n ' +
+                'Go back to the previous step and create at least one');
+            this.$el.modal('toggle');
+        }
+    },
+    createOrEditContextEvent: function (e) {
+        $this = $(e.target);
+        this.$('.create-world-predicate')[$this.val() === 'create-wp' ? 'show' : 'hide']();
+        this.$('.edit-world-predicate')[$this.val() === 'edit-wp' ? 'show' : 'hide']();
+    },
+    addContextNameViaClick: function () {
+        if (this.$nameInput.val().trim()) {
+            var contextName = this.$nameInput.val().trim();
+            var nameInput = this.$nameInput;
+            var self = this;
+            var repeatedNameFlag = 0;
+            console.log('contextName: ', contextName);
+            if (app.worldPredicateComboBox.collection.length > 0) {
+                _.each(app.worldPredicateComboBox.collection.models, function (context) {
+                    console.log('context: ', context.attributes.contextName);
+                    if (context.attributes.contextName === contextName) {
+                        repeatedNameFlag = 1;
+                        alert("There's already a context with the name: "
+                            + contextName + "\nPlease select another name for your context");
+                        nameInput.val('');
+                    }
+                });
+                if (repeatedNameFlag === 0) {
+                    app.worldPredicateComboBox.add(new app.Context(self.newAttributes()));
+                    nameInput.val('');
+                    alert("Done, now go edit your context!");
+                    console.log(app.worldPredicateComboBox.collection);
+                }
+            } else {
+                app.worldPredicateComboBox.add(new app.Context(this.newAttributes()));
+                nameInput.val('');
+                alert("Done, now go edit your context!");
+                console.log(app.worldPredicateComboBox.collection);
+            }
+        }
+    },
+    addContext: function (e) {
+        if (e.which === 13 && this.$nameInput.val().trim()) {
+            var self = this;
+            var contextName = this.$nameInput.val().trim();
+            var nameInput = this.$nameInput;
+            var repeatedNameFlag = 0;
+            // DEBUG
+            // console.log('contextName: ', contextName);
+            if (app.worldPredicateComboBox.collection.length > 0) {
+                _.each(app.worldPredicateComboBox.collection.models, function (context) {
+                    // DEBUG
+                    // console.log('context: ', context.attributes.contextName);
+                    if (context.attributes.contextName === contextName) {
+                        repeatedNameFlag = 1;
+                        alert("There's already a context with the name: "
+                            + contextName + "\nPlease select another name for your context");
+                        nameInput.val('');
+                    }
+                });
+                if (repeatedNameFlag === 0) {
+                    app.worldPredicateComboBox.add(new app.Context(self.newAttributes()));
+                    nameInput.val('');
+                    alert("Done, now go edit your context!");
+                    // DEBUG
+                    console.log("app.worldPredicateComboBox.collection", app.worldPredicateComboBox.collection);
+                }
+            } else {
+                app.worldPredicateComboBox.add(new app.Context(this.newAttributes()));
+                nameInput.val('');
+                alert("Done, now go edit your context!");
+                // DEBUG
+                console.log("app.worldPredicateComboBox.collection", app.worldPredicateComboBox.collection);
+            }
+        }
+    },
+    removeContext: function () {
+        console.log("app.worldPredicateComboBox.el.value: ", app.worldPredicateComboBox.el.value);
+        app.removedWorldPredicate = app.worldPredicateComboBox.collection.get(app.worldPredicateComboBox.el.value);
+        console.log('app.removedWorldPredicate:', app.removedWorldPredicate);
+        this.collection.remove(app.worldPredicateComboBox.el.value);
+        if (app.worldPredicateList.get(app.removedWorldPredicate) !== undefined) {
+            // Remove da lista geral pra evitar bugs
+            app.worldPredicateList.remove(app.removedWorldPredicate);
+            console.log("removed from worldPredicateList also");
+            console.log("app.worldPredicateList.models", app.worldPredicateList.models);
+        }
+        console.log("app.worldPredicateComboBox.collection", app.worldPredicateComboBox.collection);
+
+    }
+    ,
+    changeRadioButtonIfEmpty: function () {
+        if (this.collection.length <= 0) {
+            this.$createContextOption.click();
+        }
+    }
+    ,
+    checkData: function () {
+        if (app.selectedWorldPredicate.attributes.contextName !== "") { // selecionou contexto válido
+            // DEBUG
+            // console.log("and:", this.$andDecomposition.is(':checked'));
+            // console.log("Or:" , this.$orDecomposition.is(':checked'));
+            if (this.$andDecomposition.is(':checked') || this.$orDecomposition.is(':checked')) {
+                if (app.selectedFactsForWorldPredicates.length > 0) {
+                    return true;
+                } else {
+                    alert("You have to choose at least one fact for this decomposition!");
+                }
+            } else {
+                alert('Choose an decomposition type!');
+                return false;
+            }
+        } else {
+            alert('You must select a context in the edit existing context option!');
+            return false;
+        }
+    }
+    ,
+    checkDataAndSubmit: function () {
+        if (this.checkData()) {
+            this.$expressionView = $("#dpvExpressionView");
+            // Fecha parênteses novamente(checar se é necessário depois)
+            // var expressaoAtual = this.$expressionView.text();
+            // this.$expressionView.html("<span>(" + expressaoAtual + ")</span>");
+
+            if (app.worldPredicateList.get(app.selectedWorldPredicate.id) === undefined) {
+                // Novo context
+                app.worldPredicateList.add(new app.Context(this.newContextAttributes()));
+                this.$success.text("World predicate created succesfully!");
+                //Animação para mostrar mensagem e depois apagar
+                this.$success.show();
+                setTimeout(function () {
+                        this.$('#successWorldPredicateMessage').hide();
+                    }, 3000
+                );
+            } else {
+                // Context a ser editado
+                var context = app.worldPredicateList.get(app.selectedWorldPredicate.id);
+                context.set({
+                    contextName: app.selectedWorldPredicate.attributes.contextName,
+                    // Facts are inside the decompositions
+                    decompositionExpression: this.$expressionView.text()
+                }, {remove: true});
+                this.$success.text("World predicate edited succesfully!");
+                //Animação para mostrar mensagem e depois apagar
+                this.$success.show();
+                setTimeout(function () {
+                        this.$('#successWorldPredicateMessage').hide();
+                    }, 3000
+                );
+            }
+            // Reseta estados anteriores
+            app.fixedExpressionForWorldPredicate = "";
+            app.selectedFactsForWorldPredicates.reset();
+            // Refaz a lista original
+            app.factCheckboxListView.startOver();
+            app.decompositionPreviewView.initialize();
+            this.$expressionView.html("<span>Select a fact and a decomposition to start!</span>");
+            this.$nameInput.val('');
+            console.log("app.worldPredicateList.models: ", app.worldPredicateList.models);
+        }
+
+    }
+    ,
+    newAttributes: function () {
+        return {
+            id: this.nameCounter++,
+            contextName: this.$nameInput.val().trim()
+        };
+    }
+    ,
+    newContextAttributes: function () {
+        return {
+            id: app.selectedWorldPredicate.attributes.id,
+            contextName: app.selectedWorldPredicate.attributes.contextName,
+            decompositionExpression: $("#dpvExpressionView").text()
+        }
+    }
+    ,
+    exitContextModal: function () {
+        if (app.worldPredicateList.length > 0) {
+            this.$el.modal('toggle');
+        } else {
+            if (confirm('You did not create any contexts, are you sure you want to exit?')) {
+                this.$el.modal('toggle');
+            }
+        }
+    }
+    ,
+    resetControlsAndControlDoneButtons: function () {
+        this.$expressionView = $("#dpvExpressionView");
+        // Reseta variáveis
+        app.fixedExpression = "";
+        app.selectedFacts.reset();
+        // Refaz a lista original
+        app.factCheckboxListView.startOver();
+        app.decompositionPreviewView.initialize();
+        this.$expressionView.html("<span>Select a fact and a decomposition to start!</span>");
+
+        if (app.worldPredicateList.length > 0) {
+            // Caso em que a seta deve aparecer verde e o X desaparecer
+            $("#stepTwoDone").css("display", "");
+            $("#stepTwoNotDone").css("display", "none");
+            app.contextViewButton.$el.children().children().attr("src", "images/edit_contexts_on.svg");
+            $("#stepTwoDone").css("color", "#00FF00");
+            $("#stepTwoLabel").html("Step 2: Edit contexts");
+        } else {
+            // Caso em que a seta deve desaparecer verde e o X aparecer
+            $("#stepTwoNotDone").css("display", "");
+            $("#stepTwoDone").css("display", "none");
+            app.contextViewButton.$el.children().children().attr("src", "images/edit_contexts_off.svg");
+            $("#stepTwoNotDone").css("color", "#FF0000");
+            $("#stepTwoLabel").html("Step 2: Define contexts");
+        }
+    }
+});
+
+new app.WorldPredicateAssociationModalView();
+
+
+// // // // // // // // // // //
+// // // // // // // // // // //
+// END World Predicate stuff //
+// // // // // // // // // // //
+// // // // // // // // // // //
+// // // // // // // // // // //
+
 
 /*
     Lista de personas criadas pelo usuário
@@ -1456,6 +1785,21 @@ app.GoalOrTaskNodeInfoView = Backbone.View.extend({
         return this;
     }
 });
+
+app.SelectedContextViewTemplate = Backbone.View.extend({
+    el: "#selectedContextInfo",
+    template: _.template($('#selectedContextViewTemplate').html()),
+    initialize: function (options) {
+        console.log("Options SelectedContextViewTemplate: ", options);
+        console.log("model attributes SelectedContextViewTemplate: ", this.model.attributes);
+        this.render();
+    },
+    render: function () {
+        $(this.el).html(this.template(this.model.attributes));
+        return this;
+    }
+});
+
 
 /**
  * Checkbox utilizada na modal de associação de contextos para mostrar os contextos criados pelo usuário
