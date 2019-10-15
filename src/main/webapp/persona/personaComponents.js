@@ -577,10 +577,7 @@ app.ContextAndDecompositionModalView = Backbone.View.extend({
                 );
             }
             // Reseta estados anteriores
-            app.fixedExpression = "";
-            app.selectedFacts.reset();
-            // Refaz a lista original
-            app.factCheckboxListView.startOver();
+            resetDecompositionPreviewViewAndCheckboxes();
             app.decompositionPreviewView.initialize();
             this.$expressionView.html("<span>Select a fact and a decomposition to start!</span>");
             this.$nameInput.val('');
@@ -617,11 +614,7 @@ app.ContextAndDecompositionModalView = Backbone.View.extend({
     resetControlsAndControlDoneButtons: function () {
         this.$expressionView = $("#dpvExpressionView");
         // Reseta variáveis
-        app.fixedExpression = "";
-        app.selectedFacts.reset();
-        // Refaz a lista original
-        app.factCheckboxListView.startOver();
-        app.decompositionPreviewView.initialize();
+        resetDecompositionPreviewViewAndCheckboxes();
         this.$expressionView.html("<span>Select a fact and a decomposition to start!</span>");
 
         if (app.contextList.length > 0) {
@@ -1040,64 +1033,22 @@ app.chooseDecompTypeModal = new app.ChooseDecompTypeModal();
 // // // // // // // // //
 // // // // // // // // //
 
-app.WorldPredicateComboBox = Backbone.View.extend({
-    el: $('#selectWorldPredicate'),
-    template: _.template('<option data-id="${id}" value="<%= id%>" ><%= contextName %></option>'),
+app.worldPredicateList = new app.WorldPredicateCollection();
+app.selectedWorldPredicates = new app.WorldPredicateCollection();
+// app.worldPredicateComboBox = new app.WorldPredicateComboBox();
 
-    // Na inicialização unimos a coleção e a visão e
-    // também definimos o evento `add` para executar
-    // o callback `this.render`
-    initialize: function () {
-        this.collection = new app.ContextList(null, this);
-        this.collection.on('add', this.render, this);
-        this.collection.on('remove', this.unrender, this);
-        this.on('click option', this.change, this);
-    },
-    events: {
-        'click option': 'change',
-    },
-    add: function (option) {
-        this.collection.add(option);
-        if (this.collection.length === 1) {
-            app.selectedWorldPredicate = option;
-        }
-    },
-    render: function (model) {
-        this.$el.append(this.template(model.attributes));
-    },
-    unrender: function () {
-        $('#selectWorldPredicate option:selected').remove();
-    },
-    // Este método é executado a cada click na combo (select).
-    // Com as informações obtidas poderíamos, inclusive,
-    // realizar uma requisação AJAX, por exemplo.
-    change: function (e) {
-        console.log('selectedWorldPredicate: ', this.collection.get(e.target.value));
-        app.selectedWorldPredicate = this.collection.get(e.target.value);
-        var index = this.el.selectedIndex;
-        var value = this.el.options[index].value;
-        var text = this.el.options[index].text;
-        // DEBUG
-        console.log("index: " + index + ",  value: " + value + ", text: " + text);
-    },
-    remove: function (option) {
-        this.collection.remove(option);
-        console.log(this.collection);
-    }
-});
+// app.selectedWorldPredicate = new app.Context();
+// app.removedWorldPredicate = new app.Context();
+// app.selectedFactsForWorldPredicates = new app.FactCollection();
+// app.fixedExpressionForWorldPredicate = "";
 
-app.worldPredicateList = new app.ContextList();
-app.worldPredicateComboBox = new app.WorldPredicateComboBox();
-var worldPredicateEditContextOption = $("input[value=edit-wp]");
-app.worldPredicateComboBox.collection.bind("add remove change reset", function () {
-    app.worldPredicateComboBox.collection.length <= 0 ?
-        worldPredicateEditContextOption.attr('disabled', true) : worldPredicateEditContextOption.attr('disabled', false);
-});
-
-app.selectedWorldPredicate = new app.Context();
-app.removedWorldPredicate = new app.Context();
-app.selectedFactsForWorldPredicates = new app.FactCollection();
-app.fixedExpressionForWorldPredicate = "";
+function resetDecompositionPreviewViewAndCheckboxes() {
+    app.fixedExpression = "";
+    app.selectedFacts.reset();
+    // Refaz a lista original
+    app.factCheckboxListView.startOver();
+    app.decompositionPreviewView.initialize();
+}
 
 /**
  * Modal de decomposição, onde selecionamos os facts associados àquela decomposição
@@ -1107,250 +1058,175 @@ app.WorldPredicateAssociationModalView = Backbone.View.extend({
     el: '#worldPredicateAssociationModal',
     events: {
         'click button#worldPredicateCreatorButton': 'checkDataAndSubmit',
-        'click button#worldPredicateAssociationCloseModal': 'recreateDecompCheckbox',
-        'click button.close.btn-close': 'recreateDecompCheckbox',
-        'click input[name="createOrEdit"]': 'createOrEditContextEvent',
         'click #createWorldPredicateName': 'addContextNameViaClick',
         'keypress .wp-input': 'addContext',
-        'click #removeWorldPredicate': 'removeContext',
-        'click .close-modal-world-predicate': 'exitContextModal',
-        'hidden.bs.modal': 'resetControlsAndControlDoneButtons',
         'shown.bs.modal': 'displayMessageIfNoFacts',
     },
     initialize: function () {
         this.nameCounter = 0;
-        this.$createContextOption = $("input[value=create-wp]");
-        this.$editContextOption = $("input[value=edit-wp]");
         this.$nameInput = this.$('.wp-input');
-        this.$andDecomposition = this.$("#wp-decompositionAndOptionRadio");
-        this.$orDecomposition = this.$("#wp-decompositionOrOptionRadio");
-        this.$success = this.$('#successWorldPredicateMessage');
-
-        this.collection = app.worldPredicateComboBox.collection;
-        app.worldPredicateComboBox.collection.length <= 0 ?
-            this.$editContextOption.attr('disabled', true) : this.$editContextOption.attr('disabled', false);
-        this.collection.on('remove', this.changeRadioButtonIfEmpty, this)
-    },
-    displayMessageIfNoFacts: function () {
-        if (app.factCollection.length <= 0) {
-            alert('There are not enough facts to create a decomposition!\n ' +
-                'Go back to the previous step and create at least one');
-            this.$el.modal('toggle');
-        }
-    },
-    createOrEditContextEvent: function (e) {
-        $this = $(e.target);
-        this.$('.create-world-predicate')[$this.val() === 'create-wp' ? 'show' : 'hide']();
-        this.$('.edit-world-predicate')[$this.val() === 'edit-wp' ? 'show' : 'hide']();
     },
     addContextNameViaClick: function () {
         if (this.$nameInput.val().trim()) {
-            var contextName = this.$nameInput.val().trim();
+            var worldPredicateName = this.$nameInput.val().trim();
             var nameInput = this.$nameInput;
             var self = this;
             var repeatedNameFlag = 0;
-            console.log('contextName: ', contextName);
-            if (app.worldPredicateComboBox.collection.length > 0) {
-                _.each(app.worldPredicateComboBox.collection.models, function (context) {
-                    console.log('context: ', context.attributes.contextName);
-                    if (context.attributes.contextName === contextName) {
+            console.log('worldPredicateName: ', worldPredicateName);
+            if (app.worldPredicateList.length > 0) {
+                _.each(app.worldPredicateList.models, function (worldPredicate) {
+                    console.log('worldPredicateName: ', worldPredicate.attributes.worldPredicateName);
+                    if (worldPredicate.attributes.worldPredicateName === worldPredicateName) {
                         repeatedNameFlag = 1;
-                        alert("There's already a context with the name: "
-                            + contextName + "\nPlease select another name for your context");
+                        alert("There's already a world predicate with the name: "
+                            + worldPredicateName + "\nPlease select another name for your world predicate");
                         nameInput.val('');
                     }
                 });
                 if (repeatedNameFlag === 0) {
-                    app.worldPredicateComboBox.add(new app.Context(self.newAttributes()));
+                    app.worldPredicateList.add(new app.WorldPredicate(self.newAttributes()));
                     nameInput.val('');
-                    alert("Done, now go edit your context!");
-                    console.log(app.worldPredicateComboBox.collection);
+                    resetDecompositionPreviewViewAndCheckboxes();
+                    alert("Your world predicate has been created!");
+                    console.log("app.worldPredicateList.models", app.worldPredicateList.models);
+                    self.$el.modal('toggle');
                 }
             } else {
-                app.worldPredicateComboBox.add(new app.Context(this.newAttributes()));
+                app.worldPredicateList.add(new app.WorldPredicate(this.newAttributes()));
                 nameInput.val('');
-                alert("Done, now go edit your context!");
-                console.log(app.worldPredicateComboBox.collection);
+                resetDecompositionPreviewViewAndCheckboxes()
+                alert("Your world predicate has been created!");
+                console.log("app.worldPredicateList.models", app.worldPredicateList.models);
+                this.$el.modal('toggle');
             }
         }
     },
     addContext: function (e) {
         if (e.which === 13 && this.$nameInput.val().trim()) {
             var self = this;
-            var contextName = this.$nameInput.val().trim();
+            var worldPredicateName = this.$nameInput.val().trim();
             var nameInput = this.$nameInput;
             var repeatedNameFlag = 0;
             // DEBUG
-            // console.log('contextName: ', contextName);
-            if (app.worldPredicateComboBox.collection.length > 0) {
-                _.each(app.worldPredicateComboBox.collection.models, function (context) {
+            // console.log('worldPredicateName: ', worldPredicateName);
+            if (app.worldPredicateList.length > 0) {
+                _.each(app.worldPredicateList.models, function (worldPredicate) {
                     // DEBUG
-                    // console.log('context: ', context.attributes.contextName);
-                    if (context.attributes.contextName === contextName) {
+                    // console.log('worldPredicate: ', worldPredicate.attributes.worldPredicateName);
+                    if (worldPredicate.attributes.worldPredicateName === worldPredicateName) {
                         repeatedNameFlag = 1;
-                        alert("There's already a context with the name: "
-                            + contextName + "\nPlease select another name for your context");
+                        alert("There's already a world predicate with the name: "
+                            + worldPredicateName + "\nPlease select another name for your world predicate");
                         nameInput.val('');
                     }
                 });
                 if (repeatedNameFlag === 0) {
-                    app.worldPredicateComboBox.add(new app.Context(self.newAttributes()));
+                    app.worldPredicateList.add(new app.WorldPredicate(self.newAttributes()));
                     nameInput.val('');
-                    alert("Done, now go edit your context!");
+                    resetDecompositionPreviewViewAndCheckboxes();
+                    alert("Your world predicate has been created!");
                     // DEBUG
-                    console.log("app.worldPredicateComboBox.collection", app.worldPredicateComboBox.collection);
+                    console.log("app.worldPredicateList.models", app.worldPredicateList.models);
+                    self.$el.modal('toggle');
                 }
             } else {
-                app.worldPredicateComboBox.add(new app.Context(this.newAttributes()));
+                app.worldPredicateList.add(new app.WorldPredicate(this.newAttributes()));
                 nameInput.val('');
-                alert("Done, now go edit your context!");
+                resetDecompositionPreviewViewAndCheckboxes();
+                alert("Your world predicate has been created!");
                 // DEBUG
-                console.log("app.worldPredicateComboBox.collection", app.worldPredicateComboBox.collection);
-            }
-        }
-    },
-    removeContext: function () {
-        console.log("app.worldPredicateComboBox.el.value: ", app.worldPredicateComboBox.el.value);
-        app.removedWorldPredicate = app.worldPredicateComboBox.collection.get(app.worldPredicateComboBox.el.value);
-        console.log('app.removedWorldPredicate:', app.removedWorldPredicate);
-        this.collection.remove(app.worldPredicateComboBox.el.value);
-        if (app.worldPredicateList.get(app.removedWorldPredicate) !== undefined) {
-            // Remove da lista geral pra evitar bugs
-            app.worldPredicateList.remove(app.removedWorldPredicate);
-            console.log("removed from worldPredicateList also");
-            console.log("app.worldPredicateList.models", app.worldPredicateList.models);
-        }
-        console.log("app.worldPredicateComboBox.collection", app.worldPredicateComboBox.collection);
-
-    }
-    ,
-    changeRadioButtonIfEmpty: function () {
-        if (this.collection.length <= 0) {
-            this.$createContextOption.click();
-        }
-    }
-    ,
-    checkData: function () {
-        if (app.selectedWorldPredicate.attributes.contextName !== "") { // selecionou contexto válido
-            // DEBUG
-            // console.log("and:", this.$andDecomposition.is(':checked'));
-            // console.log("Or:" , this.$orDecomposition.is(':checked'));
-            if (this.$andDecomposition.is(':checked') || this.$orDecomposition.is(':checked')) {
-                if (app.selectedFactsForWorldPredicates.length > 0) {
-                    return true;
-                } else {
-                    alert("You have to choose at least one fact for this decomposition!");
-                }
-            } else {
-                alert('Choose an decomposition type!');
-                return false;
-            }
-        } else {
-            alert('You must select a context in the edit existing context option!');
-            return false;
-        }
-    }
-    ,
-    checkDataAndSubmit: function () {
-        if (this.checkData()) {
-            this.$expressionView = $("#dpvExpressionView");
-            // Fecha parênteses novamente(checar se é necessário depois)
-            // var expressaoAtual = this.$expressionView.text();
-            // this.$expressionView.html("<span>(" + expressaoAtual + ")</span>");
-
-            if (app.worldPredicateList.get(app.selectedWorldPredicate.id) === undefined) {
-                // Novo context
-                app.worldPredicateList.add(new app.Context(this.newContextAttributes()));
-                this.$success.text("World predicate created succesfully!");
-                //Animação para mostrar mensagem e depois apagar
-                this.$success.show();
-                setTimeout(function () {
-                        this.$('#successWorldPredicateMessage').hide();
-                    }, 3000
-                );
-            } else {
-                // Context a ser editado
-                var context = app.worldPredicateList.get(app.selectedWorldPredicate.id);
-                context.set({
-                    contextName: app.selectedWorldPredicate.attributes.contextName,
-                    // Facts are inside the decompositions
-                    decompositionExpression: this.$expressionView.text()
-                }, {remove: true});
-                this.$success.text("World predicate edited succesfully!");
-                //Animação para mostrar mensagem e depois apagar
-                this.$success.show();
-                setTimeout(function () {
-                        this.$('#successWorldPredicateMessage').hide();
-                    }, 3000
-                );
-            }
-            // Reseta estados anteriores
-            app.fixedExpressionForWorldPredicate = "";
-            app.selectedFactsForWorldPredicates.reset();
-            // Refaz a lista original
-            app.factCheckboxListView.startOver();
-            app.decompositionPreviewView.initialize();
-            this.$expressionView.html("<span>Select a fact and a decomposition to start!</span>");
-            this.$nameInput.val('');
-            console.log("app.worldPredicateList.models: ", app.worldPredicateList.models);
-        }
-
-    }
-    ,
-    newAttributes: function () {
-        return {
-            id: this.nameCounter++,
-            contextName: this.$nameInput.val().trim()
-        };
-    }
-    ,
-    newContextAttributes: function () {
-        return {
-            id: app.selectedWorldPredicate.attributes.id,
-            contextName: app.selectedWorldPredicate.attributes.contextName,
-            decompositionExpression: $("#dpvExpressionView").text()
-        }
-    }
-    ,
-    exitContextModal: function () {
-        if (app.worldPredicateList.length > 0) {
-            this.$el.modal('toggle');
-        } else {
-            if (confirm('You did not create any contexts, are you sure you want to exit?')) {
+                console.log("app.worldPredicateList.models", app.worldPredicateList.models);
                 this.$el.modal('toggle');
             }
         }
-    }
-    ,
-    resetControlsAndControlDoneButtons: function () {
-        this.$expressionView = $("#dpvExpressionView");
-        // Reseta variáveis
-        app.fixedExpression = "";
-        app.selectedFacts.reset();
-        // Refaz a lista original
-        app.factCheckboxListView.startOver();
-        app.decompositionPreviewView.initialize();
-        this.$expressionView.html("<span>Select a fact and a decomposition to start!</span>");
-
-        if (app.worldPredicateList.length > 0) {
-            // Caso em que a seta deve aparecer verde e o X desaparecer
-            $("#stepTwoDone").css("display", "");
-            $("#stepTwoNotDone").css("display", "none");
-            app.contextViewButton.$el.children().children().attr("src", "images/edit_contexts_on.svg");
-            $("#stepTwoDone").css("color", "#00FF00");
-            $("#stepTwoLabel").html("Step 2: Edit contexts");
-        } else {
-            // Caso em que a seta deve desaparecer verde e o X aparecer
-            $("#stepTwoNotDone").css("display", "");
-            $("#stepTwoDone").css("display", "none");
-            app.contextViewButton.$el.children().children().attr("src", "images/edit_contexts_off.svg");
-            $("#stepTwoNotDone").css("color", "#FF0000");
-            $("#stepTwoLabel").html("Step 2: Define contexts");
-        }
+    },
+    newAttributes: function () {
+        return {
+            id: this.nameCounter++,
+            worldPredicateName: this.$nameInput.val().trim(),
+            worldPredicateExpression: $("#dpvExpressionView").text()
+        };
     }
 });
 
 new app.WorldPredicateAssociationModalView();
+
+app.WorldPredicateCheckboxListView = Backbone.View.extend({
+    tagName: 'div',
+    initialize: function () {
+        var self = this;
+        this.model.bind("reset", this.render, this);
+        this.model.bind("add", function (worldPredicate) {
+            $(self.el).append(new app.WorldPredicateCheckboxListItemView({
+                model: worldPredicate,
+                list: app.selectedWorldPredicates
+            }).render().el);
+        });
+    },
+    render: function (eventName) {
+        _.each(this.model.models, function (worldPredicate) {
+            $(this.el).append(new app.WorldPredicateCheckboxListItemView({
+                model: worldPredicate,
+                list: app.selectedWorldPredicates
+            }).render().el);
+        }, this);
+        return this;
+    }
+});
+
+/**
+ * View individual da checkbox usada na modal de criação personas para mostrar os contextos criados pelo usuário
+ */
+app.WorldPredicateCheckboxListItemView = Backbone.View.extend({
+    events: {
+        'click input': 'setAsSelectedOrUnselect'
+    },
+    template: _.template($('#tpl-world-predicate-checkbox-list-item').html()),
+    initialize: function (options) {
+        this.collection = options.list;
+        this.model.bind("change", this.render, this);
+        this.model.bind("remove", this.unrender, this);
+        // this.model.bind("destroy", this.close, this);
+    },
+    render: function (eventName) {
+        console.log("app.app.WorldPredicateCheckboxListItemView render called");
+        $(this.el).html(this.template(this.model.toJSON()));
+        console.log(this.model);
+        return this;
+    },
+    // Comentado pois wp's não terão opção pra remoção
+    /*unrender: function () {
+        console.log("Unrender called");
+        //DEBUG
+        // console.log("app.removedFact.id typeof: ",
+        // typeof (parseInt(app.removedFact.id)));
+        // console.log("app.removedFact.attributes.factName).val() typeof",
+        // typeof(parseInt($("#"+app.removedFact.attributes.factName).val())) );
+        // A linha abaixo continua sinalizando uma string vazia sendo passada, apenas no navegador Firefox isso acontece
+        // Eu fui pesquisar, e a referência disse que esse problema é específico do Firefox:
+        // https://pt.stackoverflow.com/questions/159754/string-vazia-passada-para-getelementbyid
+        // O Cast para number foi feito pois a IDE ficava reclamando, e de fato podia causar problemas de consistência,
+        // com javascript, qualquer cuidado é pouco...
+        // console.log("this.$el", this.$el);
+        if (parseInt(app.removedContext.id) === parseInt($("#" + app.removedContext.attributes.contextName).val())) {
+            this.$el.unbind();
+            this.$el.remove();
+        }
+    },*/
+    setAsSelectedOrUnselect: function (e) {
+        e.target.checked ? this.collection.add(this.model) : this.collection.remove(this.model);
+        console.log('Opção selecionada: ', e.target.value);
+        console.log('app.WorldPredicateCheckboxListItemView setAsSelectedOrUnselect this.collection.models: ',
+            this.collection.models);
+    }
+});
+
+app.worldPredicateCheckboxListView = new app.WorldPredicateCheckboxListView({
+    el: "#worldPredicateList",
+    model: app.worldPredicateList,
+    list: app.selectedWorldPredicates
+});
+
 
 
 // // // // // // // // // // //

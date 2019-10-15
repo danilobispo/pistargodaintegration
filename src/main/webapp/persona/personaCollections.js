@@ -27,7 +27,12 @@ app.PersonaList = Backbone.Collection.extend({
 // List of associated contexts
 app.ContextAssociationList = Backbone.Collection.extend({
     model: app.GoalOrTaskAndContexts
-})
+});
+
+// List of world predicates
+app.WorldPredicateCollection = Backbone.Collection.extend({
+    model: app.WorldPredicate
+});
 
 // window.WineCollection = Backbone.Collection.extend({
 //     model:Wine

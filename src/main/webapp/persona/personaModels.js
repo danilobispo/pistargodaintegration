@@ -13,6 +13,12 @@ app.Context = Backbone.Model.extend({
     }
 });
 
+app.WorldPredicate = Backbone.Model.extend({
+    defaults: {
+        worldPredicateName: ""
+    }
+});
+
 app.Decomposition = Backbone.Model.extend({
     defaults: {
         name: "",
