@@ -842,18 +842,22 @@ $('#factCheckboxList').html(app.factCheckboxListView.render().el);
 
 app.fixedExpression = "";
 app.previousDecompositionType = "";
+// Coisas de world predicate que eu precisei trazer a chamada mais pra cima
+app.worldPredicateList = new app.WorldPredicateCollection();
+app.selectedWorldPredicates = new app.WorldPredicateCollection();
+
 // Conforme eu fui avançando, a necessidade dessa view ficou cada vez mais explícita, a view serve para o seguinte:
 // O usuário precisa ver um preview de como vai ficar a decomposição que ele tá realizando, logo essa view fará:
 // Mostrará o(s) Fact(s) selecionados juntamente com a decomposição selecionada
 // Se for apenas um Fact, apenas o fact será mostrado(já que and ou or pra 1 fact apenas é true sempre)
 // Se forem 2 ou mais facts, é preciso adicionar a decomposição uma vez a cada n-1 facts
-
 app.DecompositionPreviewView = Backbone.View.extend({
     tag: 'div',
     el: "#decompositionPreviewView",
     template: _.template($('#decompositionPreviewViewTemplate').html()),
     events: {
-        'click #createAnotherDecompositionButton': 'finishAndStartNewExpression'
+        'click #createAnotherDecompositionButton': 'finishAndStartNewExpression',
+        'click #worldPredicateCreatorButton': 'openModal'
     },
     initialize: function () {
         this.$andDecomposition = $("#decompositionAndOptionRadio");
@@ -861,17 +865,38 @@ app.DecompositionPreviewView = Backbone.View.extend({
         this.decompositionType = this.$andDecomposition.is(':checked') ? "&" : "|";
         this.$createAnotherDeoompButton = $('#createAnotherDecompositionButton');
 
+
         this.$andDecomposition.bind("change", this.redefineDecompositionType);
         this.$orDecomposition.bind("change", this.redefineDecompositionType);
         this.$andDecomposition.bind("change", this.render);
         this.$orDecomposition.bind("change", this.render);
 
         app.selectedFacts.bind("add remove", this.render);
+        app.selectedWorldPredicates.bind("add remove", this.render);
+        app.selectedFacts.bind("add remove change", this.enableWorldPredicateButton);
+        app.selectedWorldPredicates.bind("add remove change", this.enableWorldPredicateButton);
+        this.enableWorldPredicateButton();
         this.$el.html(this.template);
         this.render();
     },
     redefineDecompositionType: function () {
         this.decompositionType = $("#decompositionAndOptionRadio").is(':checked') ? "&" : "|";
+    },
+    enableWorldPredicateButton: function () {
+        var size = app.selectedFacts.length;
+        var wpSize = app.selectedWorldPredicates.length;
+        this.$worldPredicateCreatorButton = $('#worldPredicateCreatorButton');
+        this.$expressionView = $("#dpvExpressionView");
+        if(this.$expressionView.text() === app.fixedExpression){
+            this.$worldPredicateCreatorButton.prop("disabled",true);
+        } else if(size === 0 && wpSize === 0 ) {
+            this.$worldPredicateCreatorButton.prop("disabled",true);
+        } else {
+            this.$worldPredicateCreatorButton.prop("disabled",false);
+        }
+    },
+    openModal: function () {
+        app.worldPredicateAssociationModalView.$el.modal('show');
     },
     finishAndStartNewExpression: function () {
         this.$expressionView = $("#dpvExpressionView");
@@ -888,12 +913,23 @@ app.DecompositionPreviewView = Backbone.View.extend({
         console.log('SelectedFacts: ', selectedFactsNames);
         console.log('reducedCollection: ', reducedCollection);
 
+        // World Predicates
+        var newWorldPredicateDecompCollection = new app.WorldPredicateCollection();
+        var selectedWorldPredicateNames = app.selectedWorldPredicates.pluck('worldPredicateName');
+        var worldPredicateListNames = app.factCollection.pluck('worldPredicateName');
+        var reducedCollectionWorldPredicates = _.difference(worldPredicateListNames, selectedWorldPredicateNames);
+        // DEBUG
+        console.log('worldPredicateListNames: ', worldPredicateListNames);
+        console.log('selectedWorldPredicateNames: ', selectedWorldPredicateNames);
+        console.log('reducedCollectionWorldPredicates: ', reducedCollectionWorldPredicates);
 
-        if (reducedCollection.length === 0) { // Selecionou todos os fatos
-            alert("You cannot create another decomposition, since you've selected all facts available.\n" +
-                "Please unselect some facts or create new ones to create another decomposition!");
-        } else if (app.selectedFacts.length === 0) {
-            alert("You have not selected any facts, please select some and try again");
+
+        // Selecionou todos os fatos e world predicates
+        if (reducedCollection.length === 0 && reducedCollectionWorldPredicates.length === 0) {
+            alert("You cannot create another decomposition, since you've selected all facts and world predicates " +
+                "available.\nPlease unselect some facts or create new ones to create another decomposition!");
+        } else if (app.selectedFacts.length === 0 && app.selectedWorldPredicates.length === 0) {
+            alert("You have not selected any facts or world predicates, please select some and try again");
         } else { // Fatos sobrando são adicionados à nova view
             var i = 0;
             for (i; i < reducedCollection.length; i++) {
@@ -902,14 +938,37 @@ app.DecompositionPreviewView = Backbone.View.extend({
                 // DEBUG
                 console.log('Unselected Fact: ', fact);
             }
+            // World predicates sobrando são adicionados à nova view
+            var i = 0;
+            for (i; i < reducedCollectionWorldPredicates.length; i++) {
+                var wp = app.worldPredicateList.findWhere({worldPredicateName: reducedCollectionWorldPredicates[i]});
+                newWorldPredicateDecompCollection.add(wp);
+                // DEBUG
+                console.log('Unselected world predicate: ', wp);
+            }
             console.log('newDecompCollection: ', newDecompCollection.models);
+            console.log('newWorldPredicateDecompCollection: ', newWorldPredicateDecompCollection.models);
             var checkboxes = app.factCheckboxListView.$el.children("div").children("label").children("input");
-            console.log('checkboxes: ', checkboxes);
-            console.log("Are all checked?", checkboxes.not('checked').length <= 0);
+            var worldPredicateCheckboxes =
+                app.worldPredicateCheckboxListView.$el.children("div").children("label").children("input");
+            // DEBUG
+            // console.log('checkboxes: ', checkboxes);
+            // console.log("Are all checked?", checkboxes.not('checked').length <= 0);
+            // console.log('worldPredicateCheckboxes: ', worldPredicateCheckboxes);
+            // console.log("Are all checked?", worldPredicateCheckboxes.not('checked').length <= 0);
             var uncheckCounter = 0;
+            // Verifica se alguma não foi selecionada
             _.each(checkboxes, function (checkbox) {
                 // DEBUG
-                // console.log('Is', checkbox.id, 'checkbox checked:', checkbox.checked === true);
+                console.log('Is', checkbox.id, 'checkbox checked:', checkbox.checked === true);
+                if (checkbox.checked === false) {
+                    uncheckCounter++;
+                }
+            });
+            // Também para world predicates
+            _.each(worldPredicateCheckboxes, function (checkbox) {
+                // DEBUG
+                console.log('Is', checkbox.id, 'checkbox checked:', checkbox.checked === true);
                 if (checkbox.checked === false) {
                     uncheckCounter++;
                 }
@@ -920,6 +979,7 @@ app.DecompositionPreviewView = Backbone.View.extend({
                 // Por fim, cria uma nova view com as novas opções de decomposição, onde o usuário poderá fazer um OR ou um
                 // AND novamente
                 app.factCheckboxListView.recreateList({list: newDecompCollection});
+                app.worldPredicateCheckboxListView.recreateList({list: newWorldPredicateDecompCollection});
                 app.chooseDecompTypeModal.$el.modal({keyboard: false, backdrop: 'static'});
             } else {
                 alert("You cannot create another decomposition, since you've selected all facts available!");
@@ -932,21 +992,28 @@ app.DecompositionPreviewView = Backbone.View.extend({
         this.$el = $("#decompositionPreviewView");
         this.$expressionView = $("#dpvExpressionView");
         var size = app.selectedFacts.length;
-        if (size === 0) {
-            if (app.fixedExpression.length === 0) {
-                this.$expressionView.html("<span>Select a fact and a decomposition to start!</span>");
+        var worldPredicateSize = app.selectedWorldPredicates.length;
+        console.log('size: ', size);
+        console.log('worldPredicateSize', worldPredicateSize);
+
+        if (size === 0 && worldPredicateSize === 0) {
+            if(app.fixedExpression.length === 0){
+                expressionDecomp = "Select a fact or world predicate and a decomposition to start!";
             } else {
-                this.$expressionView.html("<span>" + app.fixedExpression + "</span>");
+                expressionDecomp = app.fixedExpression;
             }
         }
-        if (size === 1) {
+        // Size 1 ou n e world predicate size = 0
+        if (size === 1 && worldPredicateSize === 0) {
             if (app.fixedExpression.length === 0) {
-                this.$expressionView.html(app.selectedFacts.at(0).attributes.factName);
+                expressionDecomp = app.selectedFacts.at(0).attributes.factName;
             } else {
                 expressionDecomp = app.fixedExpression + app.selectedFacts.at(0).attributes.factName;
-                this.$expressionView.html(expressionDecomp);
             }
-        } else if (size > 1) {
+            // size = n e world predicate size = 0
+        } else if (size > 1 && worldPredicateSize === 0) {
+            expressionDecomp = app.fixedExpression.length === 0 ?
+                expressionDecomp : app.fixedExpression + expressionDecomp;
             var i;
             for (i = 0; i < size; i++) {
                 if (i !== size - 1) {
@@ -956,14 +1023,88 @@ app.DecompositionPreviewView = Backbone.View.extend({
                     expressionDecomp += app.selectedFacts.at(i).attributes.factName;
                 }
             }
-            if (app.fixedExpression.length === 0) {
-                this.$expressionView.html("<span>" + expressionDecomp + "</span>");
-            } else {
-                this.$expressionView.html("<span>" + app.fixedExpression + expressionDecomp + "</span>");
-            }
-            // DEBUG
-            console.log("Expressão: ", expressionDecomp);
         }
+
+        // worldPredicateSize = 1 ou n e size = 0
+        if (worldPredicateSize === 1 && size === 0) {
+                expressionDecomp = app.fixedExpression.length === 0 ?
+                    app.selectedWorldPredicates.at(0).attributes.worldPredicateExpression :
+                    app.fixedExpression + app.selectedWorldPredicates.at(0).attributes.worldPredicateExpression;
+            // worldPredicateSize = n e size = 0
+        } else if (worldPredicateSize > 1 && size === 0) {
+            expressionDecomp = app.fixedExpression.length === 0 ?
+                expressionDecomp : app.fixedExpression + expressionDecomp;
+            for (i = 0; i < worldPredicateSize; i++) {
+                if (i !== worldPredicateSize - 1) {
+                    expressionDecomp += app.selectedWorldPredicates.at(i).attributes.worldPredicateExpression + " ";
+                    expressionDecomp += this.decompositionType + " ";
+                } else {
+                    expressionDecomp += app.selectedWorldPredicates.at(i).attributes.worldPredicateExpression;
+                }
+            }
+        }
+
+        // worldPredicateSize = 1 e size = 1
+        if(worldPredicateSize === 1 && size === 1) {
+            expressionDecomp = app.fixedExpression.length === 0 ?
+                expressionDecomp : app.fixedExpression + expressionDecomp;
+            expressionDecomp += app.selectedFacts.at(0).attributes.factName + " ";
+            expressionDecomp += this.decompositionType + " ";
+            expressionDecomp += app.selectedWorldPredicates.at(0).attributes.worldPredicateExpression;
+
+        }
+
+        // worldPredicateSize = n e size = 1
+        if(worldPredicateSize > 1 && size === 1) {
+            expressionDecomp = app.fixedExpression.length === 0 ?
+                expressionDecomp : app.fixedExpression + expressionDecomp;
+
+            expressionDecomp += app.selectedFacts.at(0).attributes.factName + " ";
+            expressionDecomp += this.decompositionType + " ";
+            for (i = 0; i < worldPredicateSize; i++) {
+                if (i !== worldPredicateSize - 1) {
+                    expressionDecomp += app.selectedWorldPredicates.at(i).attributes.worldPredicateExpression + " ";
+                    expressionDecomp += this.decompositionType + " ";
+                } else {
+                    expressionDecomp += app.selectedWorldPredicates.at(i).attributes.worldPredicateExpression;
+                }
+            }
+        }
+
+        // worldPredicateSize = 1 e size = n
+        if(worldPredicateSize === 1 && size > 1) {
+            expressionDecomp = app.fixedExpression.length === 0 ?
+                expressionDecomp : app.fixedExpression + expressionDecomp;
+            for (i = 0; i < size; i++) {
+                expressionDecomp += app.selectedFacts.at(i).attributes.factName + " ";
+                expressionDecomp += this.decompositionType + " ";
+            }
+            expressionDecomp += app.selectedWorldPredicates.at(0).attributes.worldPredicateExpression + " ";
+        }
+
+        // worldPredicateSize = n e size = n
+        if(worldPredicateSize > 1 && size > 1){
+            expressionDecomp = app.fixedExpression.length === 0 ?
+                expressionDecomp : app.fixedExpression + expressionDecomp;
+            for (i = 0; i < size; i++) {
+                expressionDecomp += app.selectedFacts.at(i).attributes.factName + " ";
+                expressionDecomp += this.decompositionType + " ";
+            }
+            for (i = 0; i < worldPredicateSize; i++) {
+                if (i !== worldPredicateSize - 1) {
+                    expressionDecomp += app.selectedWorldPredicates.at(i).attributes.worldPredicateExpression + " ";
+                    expressionDecomp += this.decompositionType + " ";
+                } else {
+                    expressionDecomp += app.selectedWorldPredicates.at(i).attributes.worldPredicateExpression;
+                }
+            }
+        }
+
+        // Desativa o botão logo após a operação de criar outra decomposição
+        $('#worldPredicateCreatorButton').prop('disabled', true);
+        // DEBUG
+        console.log("Expressão: ", expressionDecomp);
+        this.$expressionView.html(expressionDecomp);
         return this;
     },
     fixExpressionAndStartNewOne: function (decompType) {
@@ -1045,8 +1186,10 @@ app.selectedWorldPredicates = new app.WorldPredicateCollection();
 function resetDecompositionPreviewViewAndCheckboxes() {
     app.fixedExpression = "";
     app.selectedFacts.reset();
-    // Refaz a lista original
+    app.selectedWorldPredicates.reset();
+    // Refaz as listas originais
     app.factCheckboxListView.startOver();
+    app.worldPredicateCheckboxListView.startOver();
     app.decompositionPreviewView.initialize();
 }
 
@@ -1094,7 +1237,7 @@ app.WorldPredicateAssociationModalView = Backbone.View.extend({
             } else {
                 app.worldPredicateList.add(new app.WorldPredicate(this.newAttributes()));
                 nameInput.val('');
-                resetDecompositionPreviewViewAndCheckboxes()
+                resetDecompositionPreviewViewAndCheckboxes();
                 alert("Your world predicate has been created!");
                 console.log("app.worldPredicateList.models", app.worldPredicateList.models);
                 this.$el.modal('toggle');
@@ -1149,7 +1292,7 @@ app.WorldPredicateAssociationModalView = Backbone.View.extend({
     }
 });
 
-new app.WorldPredicateAssociationModalView();
+app.worldPredicateAssociationModalView = new app.WorldPredicateAssociationModalView();
 
 app.WorldPredicateCheckboxListView = Backbone.View.extend({
     tagName: 'div',
@@ -1171,6 +1314,57 @@ app.WorldPredicateCheckboxListView = Backbone.View.extend({
             }).render().el);
         }, this);
         return this;
+    },
+    recreateList: function () {
+        var self = this;
+        // this.model = options.list;
+        // Apaga todas as views atuais
+        // var allChildren = $(self.el).children("div").remove();
+        var allChildren = $(self.el).children("div").children();
+        _.each(this.model.models, function (fact) {
+            var i = 0;
+            for (i; i < allChildren.length; i++) {
+                var factName = allChildren[i].attributes.for.nodeValue;
+                _.each(app.selectedWorldPredicates.models, function (selectedWorldPredicates) {
+                    // DEBUG
+                    // console.log('Selected world predicate: ', selectedWorldPredicates.attributes.worldPredicateName);
+                    // console.log('world predicate: ', worldPredicateName);
+                    if (factName === selectedWorldPredicates.attributes.worldPredicateName) {
+                        allChildren[i].parentNode.remove(); // Remove div completa
+                    }
+                });
+            }
+        });
+    },
+    /**
+     * Recria lista usando worldPredicateList original
+     */
+    startOver: function () {
+        this.model = app.worldPredicateList;
+        var self = this;
+        // Remove todos os elementos
+        // $(self.el).children("div").remove();
+        // Recria todos
+        _.each(this.model.models, function (worldPredicate) {
+            console.log('adding new view');
+            $(self.el).append(new app.WorldPredicateCheckboxListItemView(
+                {model: worldPredicate, list: app.selectedWorldPredicates}).render().el);
+        });
+        app.worldPredicateCheckboxListView = new app.WorldPredicateCheckboxListView(
+            {model: app.worldPredicateList, list: app.selectedWorldPredicates});
+        $('#worldPredicateList').html(app.worldPredicateCheckboxListView.render({
+            model: app.worldPredicateList,
+            list: app.selectedWorldPredicates
+        }).el);
+        // Uncheckar todos os selecionados anteriormente, se existe(m) algum(alguns)
+        var checkboxes = app.worldPredicateCheckboxListView.$el.children("div").children("label").children("input");
+        _.each(checkboxes, function (checkbox) {
+            // DEBUG
+            // console.log('Is', checkbox.id, 'checkbox checked:', checkbox.checked === true);
+            if (checkbox.checked === true) {
+                checkbox.attr("checked", false);
+            }
+        });
     }
 });
 

@@ -532,12 +532,16 @@
 </script>
 
 <script type="text/template" id="tpl-world-predicate-checkbox-list-item">
-    <% if(app.worldPredicateList.length > 0) {%>
-    <h5>World predicates</h5>
-    <% } %>
     <label for="<%= worldPredicateName %>">
         <input id="<%= worldPredicateName %>" type="checkbox" value="<%= id %>"><%= worldPredicateName %>
     </label>
+</script>
+
+<!-- Não utilizado -->
+<script type="text/template" id="tpl-world-predicate-checkbox-list">
+    <% if(app.worldPredicateList.length > 0) {%>
+    <h5>World predicates</h5>
+    <% } %>
 </script>
 
 <script type="text/template" id="tpl-sidebar-persona-info">
@@ -721,6 +725,9 @@
             class="btn-group-sm"
             title="Finish this decomposition but add also other facts with another decomposition type">
         Create another decomposition
+    </button>
+    <button id="worldPredicateCreatorButton" class="btn-group-sm" disabled>
+        Set actual decomposition as world predicate
     </button>
 </script>
 
@@ -912,9 +919,6 @@
                     <div id="decompositionPreviewView"></div>
                     <div id="selectedContextInfo"></div>
                     <button id="contextCreatorButton" class="btn btn-success">Finish and create context</button>
-                    <button id="worldPredicateCreatorButton" class="btn btn-info" data-toggle="modal"
-                            data-target="#worldPredicateAssociationModal">
-                        Set actual decomposition as world predicate</button>
                     <b id="successContextMessage" hidden>Context created!</b>
                 </div>
                 <div class="modal-footer">
