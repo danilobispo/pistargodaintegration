@@ -1781,9 +1781,9 @@ app.ContextAssociationModalView = Backbone.View.extend({
                 );
             }
 
-            if (!ui.currentElement.prop('customProperties/' + 'assertionCondition')) {
-                ui.currentElement.prop('customProperties/' + 'assertionCondition',
-                    this.$expressionView.text());
+            if (!ui.currentElement.prop('customProperties/creationProperty')) {
+                ui.currentElement.prop('customProperties/creationProperty',
+                    'assertionCondition ' + this.$expressionView.text());
             }
             // Reseta estados anteriores
             app.contextAsssociationFixedExpression = "";
