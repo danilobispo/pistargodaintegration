@@ -1287,7 +1287,7 @@ app.WorldPredicateAssociationModalView = Backbone.View.extend({
         return {
             id: this.nameCounter++,
             worldPredicateName: this.$nameInput.val().trim(),
-            worldPredicateExpression: $("#dpvExpressionView").text()
+            worldPredicateExpression: "("+$("#dpvExpressionView").text()+")"
         };
     }
 });
