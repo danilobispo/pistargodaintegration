@@ -1,8 +1,11 @@
 package br.unb.cic.integration;
 
+import br.unb.cic.TreeBooleanEvaluator;
 import br.unb.cic.goda.model.*;
 import br.unb.cic.goda.rtgoretoprism.action.PRISMCodeGenerationAction;
 import br.unb.cic.goda.rtgoretoprism.action.RunParamAction;
+import br.unb.cic.goda.rtgoretoprism.generator.goda.parser.CtxParser;
+import br.unb.cic.goda.rtgoretoprism.model.ctx.ContextCondition;
 import br.unb.cic.pistar.model.PistarActor;
 import br.unb.cic.pistar.model.PistarLink;
 import br.unb.cic.pistar.model.PistarModel;
@@ -22,19 +25,33 @@ import java.util.stream.Collectors;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
+import static br.unb.cic.TreeBooleanEvaluator.doIt;
+
 @RestController
 public class Controller {
 
     // Persona Achievability Service
     @RequestMapping(value = "/achievability", method = RequestMethod.POST)
-    public void achievability(@RequestParam Map<String,String> requestParams) {
+    public void achievability(@RequestParam Map<String,String> requestParams) throws IOException {
         String content = requestParams.get("content");
         Gson gson = new GsonBuilder().create();
         PistarModel model = gson.fromJson(content, PistarModel.class);
         Set<Actor> selectedActors = new HashSet<>();
         Set<Goal> selectedGoals = new HashSet<>();
         transformToTao4meEntities(model, selectedActors, selectedGoals);
+
+        TreeBooleanEvaluator evaluator = new TreeBooleanEvaluator();
+        doIt(evaluator, "T & ( F | ( F & T ) )");
+        doIt(evaluator, "(T & T) | ( F & T )");
+
+        Object[] parsedModelCtx = CtxParser.parseRegex("assertion condition c1 & c2 | c3 | c4");
+        List<ContextCondition> ctxConditions = (List<ContextCondition>) parsedModelCtx[0];
+
         String persona = requestParams.get("persona");
+        System.out.println(parsedModelCtx);
+
+        Object[] parsedPersonaCtx = CtxParser.parseRegex("");
+
         System.out.println(model);
         System.out.println(persona);
         System.out.print("Selected actors: ");
