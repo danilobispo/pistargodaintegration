@@ -20,7 +20,7 @@ public class Persona {
         System.out.println(this.name);
         System.out.println(this.description);
         int i;
-        this.contexts = new ArrayList<>();
+        this.contexts = new ArrayList<String>();
         for(i = 0; i < contextArray.size(); i++){
             JsonObject context = contextArray.get(i).getAsJsonObject();
             String contextName = context.get("contextName").getAsString();
