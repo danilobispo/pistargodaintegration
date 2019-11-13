@@ -10,6 +10,30 @@ public class Persona {
     protected String description;
     protected ArrayList<String> contexts;
 
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public ArrayList<String> getContexts() {
+        return contexts;
+    }
+
+    public void setContexts(ArrayList<String> contexts) {
+        this.contexts = contexts;
+    }
+
     public Persona(String personaJSON) {
 
         JsonObject jsonObject = new JsonParser().parse(personaJSON).getAsJsonObject();

@@ -27,10 +27,10 @@ public class TreeBooleanEvaluator extends AbstractEvaluator<String> {
         PARAMETERS.addExpressionBracket(BracketPair.PARENTHESES);
     }
 
-    public TreeBooleanEvaluator(/*List<String> cgmContexts, List<String> personaContexts*/) {
+    public TreeBooleanEvaluator(List<String> personaContexts) {
         super(PARAMETERS);
 //        this.cgmContextList = cgmContexts;
-//        this.personaContextList = personaContexts;
+        this.personaContextList = personaContexts;
     }
 
     @Override
@@ -39,8 +39,8 @@ public class TreeBooleanEvaluator extends AbstractEvaluator<String> {
     }
 
     private boolean getValue(String literal) {
-        if ("T".equals(literal) || literal.endsWith("=true")) return true;
-        else if ("F".equals(literal) || literal.endsWith("=false")) return false;
+        if (this.personaContextList.contains(literal) || literal.endsWith("=true")) return true;
+        else if (!this.personaContextList.contains(literal) || literal.endsWith("=false")) return false;
         throw new IllegalArgumentException("Unknown literal : "+literal);
     }
 
@@ -48,8 +48,11 @@ public class TreeBooleanEvaluator extends AbstractEvaluator<String> {
     protected String evaluate(Operator operator, Iterator<String> operands,
                               Object evaluationContext) {
         List<String> tree = (List<String>) evaluationContext;
+
         String o1 = operands.next();
-        String o2 = operands.next();
+        String o2;
+        if(!operands.hasNext()){ o2 = o1; }
+        else{ o2 = operands.next(); }
         Boolean result;
         if (operator == OR) {
             result = getValue(o1) || getValue(o2);
@@ -70,6 +73,9 @@ public class TreeBooleanEvaluator extends AbstractEvaluator<String> {
 //    }
 
     public boolean doIt(TreeBooleanEvaluator evaluator, String expression) {
+        if(!expression.contains("&") && !expression.contains("|")){
+            expression = correctExpression(expression);
+        }
         List<String> sequence = new ArrayList<String>();
         evaluator.evaluate(expression, sequence);
         System.out.println ("Evaluation sequence for :"+expression);
@@ -78,6 +84,13 @@ public class TreeBooleanEvaluator extends AbstractEvaluator<String> {
         }
         int sequenceSize = sequence.size();
         return this.evaluateExpressionsResult(sequence.get(sequenceSize-1)); // última expressão
+    }
+
+    /*
+    Cuida de expressões com um só operando
+     */
+    private String correctExpression(String expression) {
+        return expression + " & " + expression;
     }
 
     private boolean evaluateExpressionsResult(String sequence){

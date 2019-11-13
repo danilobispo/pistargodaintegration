@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.lang.reflect.Array;
 import java.nio.file.*;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -39,25 +40,38 @@ public class Controller {
         Set<Goal> selectedGoals = new HashSet<>();
         transformToTao4meEntities(model, selectedActors, selectedGoals);
 
-        PersonaAchievability achievability = new PersonaAchievability(selectedGoals);
-        TreeBooleanEvaluator evaluator = new TreeBooleanEvaluator();
-        boolean result = evaluator.doIt(evaluator, "T & ( F | ( F & T ) & F )");
-        System.out.print(result);
-        result = evaluator.doIt(evaluator, "(T & T) | ( F & T )");
-        System.out.print(result);
+//        PersonaAchievability achievability = new PersonaAchievability(selectedGoals);
+//        String persona = requestParams.get("persona");
+//        Persona personaModel = new Persona(persona);
+//        System.out.println(personaModel);
+//        TreeBooleanEvaluator evaluator = new TreeBooleanEvaluator(personaModel.getContexts());
+        ArrayList<String> contextsMock = new ArrayList<String>();
+        contextsMock.add("c1");
+        contextsMock.add("c2");
+        contextsMock.add("c3");
+        contextsMock.add("c4");
+        TreeBooleanEvaluator evaluator = new TreeBooleanEvaluator(contextsMock);
 
+        boolean result = evaluator.doIt(evaluator, "c1 & c2 & c3 & c4");
+        System.out.println("Resultado expressão: " + result);
+        contextsMock.remove("c4");
+        evaluator = new TreeBooleanEvaluator(contextsMock);
+        result = evaluator.doIt(evaluator, "c1 & c2 & c3 & c4");
+        System.out.println("Resultado expressão: " + result);
+        result = evaluator.doIt(evaluator, "c1 & c2 & (c3 | c4)");
+        System.out.println("Resultado expressão: " + result);
+        result = evaluator.doIt(evaluator, "c1 & (c4 | c2) & c3");
+        System.out.println("Resultado expressão: " + result);
+        result = evaluator.doIt(evaluator, "c2");
+        System.out.println("Resultado expressão: " + result);
+        result = evaluator.doIt(evaluator, "c4");
+        System.out.println("Resultado expressão: " + result);
 
-        Object[] parsedModelCtx = CtxParser.parseRegex("assertion condition c1 & c2 | c3 | c4");
-        List<ContextCondition> ctxConditions = (List<ContextCondition>) parsedModelCtx[0];
-
-        String persona = requestParams.get("persona");
-        Persona personaModel = new Persona(persona);
-        System.out.println(personaModel);
-
-        Object[] parsedPersonaCtx = CtxParser.parseRegex("");
+//        result = evaluator.doIt(evaluator, "(T & T) | ( F & T )");
+//        System.out.println("Resultado expressão: " + result);
 
         System.out.println(model);
-        System.out.println(persona);
+//        System.out.println(persona);
         System.out.print("Selected actors: ");
         System.out.println(selectedActors);
         System.out.print("Selected goals: ");

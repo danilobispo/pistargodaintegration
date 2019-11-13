@@ -45,7 +45,7 @@ public class PersonaAchievability {
     }
 
     public PersonaAchievability(Set<Goal> selectedGoals) {
-        TreeBooleanEvaluator evaluator = new TreeBooleanEvaluator();
+//        TreeBooleanEvaluator evaluator = new TreeBooleanEvaluator();
         selectedGoals.forEach(goal -> {
             if (goal.isRootGoal()) {
                 this.rootGoal = goal;
@@ -134,16 +134,18 @@ public class PersonaAchievability {
         String goalContextCondition = goal.getCreationProperty();
         // Retira assertion condition da string
         goalContextCondition = goalContextCondition.substring(20);
-        TreeBooleanEvaluator evaluator = new TreeBooleanEvaluator();
-        return evaluator.doIt(evaluator, goalContextCondition);
+//        TreeBooleanEvaluator evaluator = new TreeBooleanEvaluator();
+//        return evaluator.doIt(evaluator, goalContextCondition);
+        return true;
     }
 
     public boolean evaluateTaskExpression(Plan task) {
         String taskContextCondition = task.getCreationProperty();
         // Retira assertion condition da string
         taskContextCondition = taskContextCondition.substring(20);
-        TreeBooleanEvaluator evaluator = new TreeBooleanEvaluator();
-        return evaluator.doIt(evaluator, taskContextCondition);
+//        TreeBooleanEvaluator evaluator = new TreeBooleanEvaluator();
+//        return evaluator.doIt(evaluator, taskContextCondition);
+        return true;
     }
 
     public void informFailure(String failedNodeName) {
