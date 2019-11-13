@@ -1,6 +1,7 @@
 package br.unb.cic.integration;
 
-import br.unb.cic.TreeBooleanEvaluator;
+import br.unb.cic.persona.PersonaAchievability;
+import br.unb.cic.persona.TreeBooleanEvaluator;
 import br.unb.cic.goda.model.*;
 import br.unb.cic.goda.rtgoretoprism.action.PRISMCodeGenerationAction;
 import br.unb.cic.goda.rtgoretoprism.action.RunParamAction;
@@ -25,8 +26,6 @@ import java.util.stream.Collectors;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
-import static br.unb.cic.TreeBooleanEvaluator.doIt;
-
 @RestController
 public class Controller {
 
@@ -40,15 +39,20 @@ public class Controller {
         Set<Goal> selectedGoals = new HashSet<>();
         transformToTao4meEntities(model, selectedActors, selectedGoals);
 
+        PersonaAchievability achievability = new PersonaAchievability(selectedGoals);
         TreeBooleanEvaluator evaluator = new TreeBooleanEvaluator();
-        doIt(evaluator, "T & ( F | ( F & T ) )");
-        doIt(evaluator, "(T & T) | ( F & T )");
+        boolean result = evaluator.doIt(evaluator, "T & ( F | ( F & T ) & F )");
+        System.out.print(result);
+        result = evaluator.doIt(evaluator, "(T & T) | ( F & T )");
+        System.out.print(result);
+
 
         Object[] parsedModelCtx = CtxParser.parseRegex("assertion condition c1 & c2 | c3 | c4");
         List<ContextCondition> ctxConditions = (List<ContextCondition>) parsedModelCtx[0];
 
         String persona = requestParams.get("persona");
-        System.out.println(parsedModelCtx);
+        Persona personaModel = new Persona(persona);
+        System.out.println(personaModel);
 
         Object[] parsedPersonaCtx = CtxParser.parseRegex("");
 

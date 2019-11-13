@@ -1,4 +1,4 @@
-package br.unb.cic;
+package br.unb.cic.persona;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -13,6 +13,9 @@ public class TreeBooleanEvaluator extends AbstractEvaluator<String> {
     final static Operator OR = new Operator("|", 2, Operator.Associativity.LEFT, 1);
 
     private static final Parameters PARAMETERS;
+    protected List<String> cgmContextList;
+    protected List<String> personaContextList;
+
 
     static {
         // Create the evaluator's parameters
@@ -24,9 +27,10 @@ public class TreeBooleanEvaluator extends AbstractEvaluator<String> {
         PARAMETERS.addExpressionBracket(BracketPair.PARENTHESES);
     }
 
-    public TreeBooleanEvaluator(/*List<String> allContexts, List<String> personaContexts*/) {
+    public TreeBooleanEvaluator(/*List<String> cgmContexts, List<String> personaContexts*/) {
         super(PARAMETERS);
-
+//        this.cgmContextList = cgmContexts;
+//        this.personaContextList = personaContexts;
     }
 
     @Override
@@ -59,19 +63,28 @@ public class TreeBooleanEvaluator extends AbstractEvaluator<String> {
         return eval;
     }
 
-    public static void main(String[] args) {
-        TreeBooleanEvaluator evaluator = new TreeBooleanEvaluator();
-        doIt(evaluator, "T & ( F | ( F & T ) )");
-        doIt(evaluator, "(T & T) | ( F & T )");
-    }
+//    public static void main(String[] args) {
+//        TreeBooleanEvaluator evaluator = new TreeBooleanEvaluator();
+//        doIt(evaluator, "T & ( F | ( F & T ) )");
+//        doIt(evaluator, "(T & T) | ( F & T )");
+//    }
 
-    public static void doIt(TreeBooleanEvaluator evaluator, String expression) {
+    public boolean doIt(TreeBooleanEvaluator evaluator, String expression) {
         List<String> sequence = new ArrayList<String>();
         evaluator.evaluate(expression, sequence);
         System.out.println ("Evaluation sequence for :"+expression);
         for (String string : sequence) {
             System.out.println (string);
         }
-        System.out.println ();
+        int sequenceSize = sequence.size();
+        return this.evaluateExpressionsResult(sequence.get(sequenceSize-1)); // última expressão
+    }
+
+    private boolean evaluateExpressionsResult(String sequence){
+        String substr;
+        int equalPosition = sequence.lastIndexOf("=");
+        substr = sequence.substring(equalPosition+1, sequence.length());
+        boolean retorno = !substr.equals("false");
+        return retorno;
     }
 }
