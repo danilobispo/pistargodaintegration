@@ -338,9 +338,8 @@ examples.achievabilityExample = function(){
 		data: {
 			"content": model
 		},
-		success: function () {
-			// window.location.href = 'prism.zip';
-			alert("Deu bom!");
+		success: function (data, xhr) {
+			alert(data);
 		},
 		error: function () {
 			alert("Error!");

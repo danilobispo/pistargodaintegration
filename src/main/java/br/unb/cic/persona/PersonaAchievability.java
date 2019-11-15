@@ -1,6 +1,7 @@
 package br.unb.cic.persona;
 
 import br.unb.cic.goda.model.Goal;
+import br.unb.cic.goda.model.Persona;
 import br.unb.cic.goda.model.Plan;
 
 import java.util.ArrayList;
@@ -46,20 +47,24 @@ public class PersonaAchievability {
         System.out.println(this.rootGoal);
     }
 
-    public void run() {
+    public boolean run() {
         // Caso assertion condition na raiz:
         System.out.println("Goal " + this.rootGoal.getName() + " is being evaluated");
         if (this.rootGoal.getCreationProperty() != null) { // significa que tem assertionCondition
             if (!evaluateGoalExpression(this.rootGoal)) {
                 System.out.println("The current persona does not meet the CGM context conditions");
+                return false;
             }
         } else {
             if (!iterateThroughGoalsAndPlans(this.rootGoal)) {
                 System.out.println("The current persona meets the CGM context conditions!");
+                return true;
             } else {
                 System.out.println("The current persona does not meet the CGM context conditions");
+                return false;
             }
         }
+        return true;
     }
 
     private boolean iterateThroughGoalsAndPlans(Goal targetGoal) {
@@ -187,5 +192,20 @@ public class PersonaAchievability {
 
     public void informTotalFailure(String failedNodeName) {
         System.out.println("Error at " + failedNodeName + ".Conditions not met for persona");
+    }
+
+    public String personaAchievabilityFailure(Persona persona){
+        return "The current persona does not meet the CGM context conditions\n" +
+                "Persona info: \n" +
+                "Name: "+ persona.getName() + "\n" +
+                "Description: " + persona.getDescription() + "\n" +
+                "Failed node: " + this.failedNodeName;
+    }
+
+    public String personaAchievabilitySuccess(Persona persona){
+        return "The current persona meets the CGM context conditions\n" +
+                "Persona info: \n" +
+                "Name: "+ persona.getName() + "\n" +
+                "Description: " + persona.getDescription();
     }
 }
