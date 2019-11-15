@@ -40,43 +40,57 @@ public class Controller {
         Set<Goal> selectedGoals = new HashSet<>();
         transformToTao4meEntities(model, selectedActors, selectedGoals);
 
-//        PersonaAchievability achievability = new PersonaAchievability(selectedGoals);
+        ArrayList<String> contextsMock = new ArrayList<String>();
+//        contextsMock.add("c1");
+//        contextsMock.add("c2");
+        contextsMock.add("c3");
+//        contextsMock.add("c4");
+
+//        TreeBooleanEvaluator evaluator = new TreeBooleanEvaluator(contextsMock);
+//        boolean result = evaluator.doIt(evaluator, "c1 & c2 & c3 & c4");
+//        System.out.println("Resultado expressão: " + result);
+//        contextsMock.remove("c4");
+//        evaluator = new TreeBooleanEvaluator(contextsMock);
+//        result = evaluator.doIt(evaluator, "c1 & c2 & c3 & c4");
+//        System.out.println("Resultado expressão: " + result);
+//        result = evaluator.doIt(evaluator, "c1 & c2 & (c3 | c4)");
+//        System.out.println("Resultado expressão: " + result);
+//        result = evaluator.doIt(evaluator, "c1 & (c4 | c2) & c3");
+//        System.out.println("Resultado expressão: " + result);
+//        result = evaluator.doIt(evaluator, "c2");
+//        System.out.println("Resultado expressão: " + result);
+//        result = evaluator.doIt(evaluator, "c4");
+//        System.out.println("Resultado expressão: " + result);
+
+        PersonaAchievability achievability = new PersonaAchievability(selectedGoals, contextsMock);
+        achievability.run();
 //        String persona = requestParams.get("persona");
 //        Persona personaModel = new Persona(persona);
 //        System.out.println(personaModel);
 //        TreeBooleanEvaluator evaluator = new TreeBooleanEvaluator(personaModel.getContexts());
+
+//        result = evaluator.doIt(evaluator, "(T & T) | ( F & T )");
+//        System.out.println("Resultado expressão: " + result);
+    }
+
+    @RequestMapping(value = "/achievability-example", method = RequestMethod.POST)
+    public void AchievabilityExample(@RequestParam(value = "content") String content) throws IOException {
+        Gson gson = new GsonBuilder().create();
+        PistarModel model = gson.fromJson(content, PistarModel.class);
+        Set<Actor> selectedActors = new HashSet<>();
+        Set<Goal> selectedGoals = new HashSet<>();
+        transformToTao4meEntities(model, selectedActors, selectedGoals);
         ArrayList<String> contextsMock = new ArrayList<String>();
         contextsMock.add("c1");
         contextsMock.add("c2");
         contextsMock.add("c3");
         contextsMock.add("c4");
-        TreeBooleanEvaluator evaluator = new TreeBooleanEvaluator(contextsMock);
-
-        boolean result = evaluator.doIt(evaluator, "c1 & c2 & c3 & c4");
-        System.out.println("Resultado expressão: " + result);
-        contextsMock.remove("c4");
-        evaluator = new TreeBooleanEvaluator(contextsMock);
-        result = evaluator.doIt(evaluator, "c1 & c2 & c3 & c4");
-        System.out.println("Resultado expressão: " + result);
-        result = evaluator.doIt(evaluator, "c1 & c2 & (c3 | c4)");
-        System.out.println("Resultado expressão: " + result);
-        result = evaluator.doIt(evaluator, "c1 & (c4 | c2) & c3");
-        System.out.println("Resultado expressão: " + result);
-        result = evaluator.doIt(evaluator, "c2");
-        System.out.println("Resultado expressão: " + result);
-        result = evaluator.doIt(evaluator, "c4");
-        System.out.println("Resultado expressão: " + result);
-
-//        result = evaluator.doIt(evaluator, "(T & T) | ( F & T )");
-//        System.out.println("Resultado expressão: " + result);
-
-        System.out.println(model);
-//        System.out.println(persona);
-        System.out.print("Selected actors: ");
-        System.out.println(selectedActors);
-        System.out.print("Selected goals: ");
-        System.out.println(selectedGoals);
+        Persona persona = new Persona("Mary Collins", "An old persona", contextsMock);
+        PersonaAchievability achievability = new PersonaAchievability(selectedGoals, contextsMock);
+        achievability.run();
     }
+
+
 
     @RequestMapping(value = "/prism-dtmc", method = RequestMethod.POST)
     public void prism(@RequestParam(value = "content") String content) {

@@ -22,21 +22,30 @@
           "text": "G3: Manual data is sent [G9#G8]",
           "type": "istar.Goal",
           "x": 251,
-          "y": 244
+          "y": 244,
+          "customProperties": {
+            "creationProperty": "assertion condition c2 | c3 | c4"
+        }
         },
         {
           "id": "4c01389a-bcde-42f8-8d99-d3b7cbaa2b9f",
           "text": "G4: Automatic data is sent",
           "type": "istar.Goal",
           "x": 477,
-          "y": 245
+          "y": 245,
+          "customProperties": {
+            "creationProperty": "assertion condition c1 | c3 | c4"
+          }
         },
         {
           "id": "1288f213-9ad0-4d93-a9aa-5d6ca396100d",
           "text": "G9: Qualification is collected",
           "type": "istar.Goal",
           "x": 164,
-          "y": 337
+          "y": 337,
+          "customProperties": {
+            "creationProperty": "assertion condition c1 | c3"
+          }
         },
         {
           "id": "c281eb93-abc0-4466-b469-698a26b5b82e",
@@ -59,7 +68,7 @@
           "x": 327,
           "y": 432,
           "customProperties": {
-            "creationProperty": "assertion condition c1 | c3"
+            "creationProperty": "assertion condition c2 | c4"
           }
         },
         {
@@ -69,7 +78,7 @@
           "x": 165,
           "y": 435,
           "customProperties": {
-            "creationProperty": "assertion condition c2 | c3 | c4"
+            "creationProperty": "assertion condition c2 & c4"
           }
         },
         {

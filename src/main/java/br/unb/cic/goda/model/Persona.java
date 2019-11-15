@@ -54,4 +54,10 @@ public class Persona {
         }
         System.out.println(this.contexts);
     }
+
+    public Persona(String name, String description, ArrayList<String> contexts) {
+        this.name = name;
+        this.description = description;
+        this.contexts = contexts;
+    }
 }
