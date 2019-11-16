@@ -347,6 +347,520 @@ examples.achievabilityExample = function(){
 	});
 };
 
+examples.mpers = function () {
+	loadModel("{\n" +
+		"  \"actors\": [\n" +
+		"    {\n" +
+		"      \"id\": \"3a151d60-5de7-4857-b5a3-5d55d84e70d4\",\n" +
+		"      \"text\": \"Actor\",\n" +
+		"      \"type\": \"istar.Actor\",\n" +
+		"      \"x\": 192,\n" +
+		"      \"y\": 71,\n" +
+		"      \"nodes\": [\n" +
+		"        {\n" +
+		"          \"id\": \"cba54c7f-d4a2-4127-9500-361d1f7a1c9b\",\n" +
+		"          \"text\": \"G1: Respond to emergency\",\n" +
+		"          \"type\": \"istar.Goal\",\n" +
+		"          \"x\": 728,\n" +
+		"          \"y\": 71\n" +
+		"        },\n" +
+		"        {\n" +
+		"          \"id\": \"2459a35d-7c65-45aa-a1ac-0d95d5c20135\",\n" +
+		"          \"text\": \"G2: emergency is detected\",\n" +
+		"          \"type\": \"istar.Goal\",\n" +
+		"          \"x\": 451,\n" +
+		"          \"y\": 193\n" +
+		"        },\n" +
+		"        {\n" +
+		"          \"id\": \"e4234541-6d69-4052-aea3-cdecee80f21d\",\n" +
+		"          \"text\": \"G3: is notified about emergency\",\n" +
+		"          \"type\": \"istar.Goal\",\n" +
+		"          \"x\": 725,\n" +
+		"          \"y\": 176\n" +
+		"        },\n" +
+		"        {\n" +
+		"          \"id\": \"6d01fb9a-73dc-41a2-9b37-369ee19bc821\",\n" +
+		"          \"text\": \"G6: call for help is accepted\",\n" +
+		"          \"type\": \"istar.Goal\",\n" +
+		"          \"x\": 348,\n" +
+		"          \"y\": 291\n" +
+		"        },\n" +
+		"        {\n" +
+		"          \"id\": \"e399543c-8434-4c0c-ae5f-ed7b0022a9a5\",\n" +
+		"          \"text\": \"Task\",\n" +
+		"          \"type\": \"istar.Task\",\n" +
+		"          \"x\": 646,\n" +
+		"          \"y\": 239\n" +
+		"        },\n" +
+		"        {\n" +
+		"          \"id\": \"2a7677aa-85bf-4991-bd4e-d1395df7439f\",\n" +
+		"          \"text\": \"Task\",\n" +
+		"          \"type\": \"istar.Task\",\n" +
+		"          \"x\": 710,\n" +
+		"          \"y\": 285\n" +
+		"        },\n" +
+		"        {\n" +
+		"          \"id\": \"dd1922fb-324a-43c1-9940-cfb756059df0\",\n" +
+		"          \"text\": \"Task\",\n" +
+		"          \"type\": \"istar.Task\",\n" +
+		"          \"x\": 810,\n" +
+		"          \"y\": 285\n" +
+		"        },\n" +
+		"        {\n" +
+		"          \"id\": \"1bc3839c-78bc-41d3-a210-877a0e04822f\",\n" +
+		"          \"text\": \"Task\",\n" +
+		"          \"type\": \"istar.Task\",\n" +
+		"          \"x\": 843,\n" +
+		"          \"y\": 232\n" +
+		"        },\n" +
+		"        {\n" +
+		"          \"id\": \"4498bbda-f3b8-4c05-9c98-bea1d31741be\",\n" +
+		"          \"text\": \"G4: central receives info\",\n" +
+		"          \"type\": \"istar.Goal\",\n" +
+		"          \"x\": 1004,\n" +
+		"          \"y\": 234\n" +
+		"        },\n" +
+		"        {\n" +
+		"          \"id\": \"ff953162-160a-4627-ae96-b663eea53534\",\n" +
+		"          \"text\": \"G11: recives emergency button call\",\n" +
+		"          \"type\": \"istar.Goal\",\n" +
+		"          \"x\": 282,\n" +
+		"          \"y\": 363\n" +
+		"        },\n" +
+		"        {\n" +
+		"          \"id\": \"8b8a2b21-9ce0-4172-ae92-b41b48f00fe8\",\n" +
+		"          \"text\": \"Task\",\n" +
+		"          \"type\": \"istar.Task\",\n" +
+		"          \"x\": 192,\n" +
+		"          \"y\": 464\n" +
+		"        },\n" +
+		"        {\n" +
+		"          \"id\": \"e71af902-cacb-45a5-9517-2ee4a0be1592\",\n" +
+		"          \"text\": \"Task\",\n" +
+		"          \"type\": \"istar.Task\",\n" +
+		"          \"x\": 309,\n" +
+		"          \"y\": 472\n" +
+		"        },\n" +
+		"        {\n" +
+		"          \"id\": \"398d7878-79d1-4268-96ec-a36b30325134\",\n" +
+		"          \"text\": \"G12: false alarms is checked\",\n" +
+		"          \"type\": \"istar.Goal\",\n" +
+		"          \"x\": 458,\n" +
+		"          \"y\": 461\n" +
+		"        },\n" +
+		"        {\n" +
+		"          \"id\": \"baffc9fa-0ce9-4cf9-bc52-58997444dc25\",\n" +
+		"          \"text\": \"Task\",\n" +
+		"          \"type\": \"istar.Task\",\n" +
+		"          \"x\": 416,\n" +
+		"          \"y\": 538\n" +
+		"        },\n" +
+		"        {\n" +
+		"          \"id\": \"c68762d4-8325-4c3a-aa51-5fd199b66e5f\",\n" +
+		"          \"text\": \"G16: is contacted\",\n" +
+		"          \"type\": \"istar.Goal\",\n" +
+		"          \"x\": 542,\n" +
+		"          \"y\": 536\n" +
+		"        },\n" +
+		"        {\n" +
+		"          \"id\": \"cfaa55c9-2250-453b-8a12-5a3724583cd2\",\n" +
+		"          \"text\": \"Task\",\n" +
+		"          \"type\": \"istar.Task\",\n" +
+		"          \"x\": 610,\n" +
+		"          \"y\": 604\n" +
+		"        },\n" +
+		"        {\n" +
+		"          \"id\": \"5c224df2-4bfa-4c5f-b25c-b7268231cabd\",\n" +
+		"          \"text\": \"G7: Situations are identified\",\n" +
+		"          \"type\": \"istar.Goal\",\n" +
+		"          \"x\": 531,\n" +
+		"          \"y\": 297\n" +
+		"        },\n" +
+		"        {\n" +
+		"          \"id\": \"946cd4e2-89ca-40f2-a8cb-13ebfcd8f783\",\n" +
+		"          \"text\": \"Task\",\n" +
+		"          \"type\": \"istar.Task\",\n" +
+		"          \"x\": 469,\n" +
+		"          \"y\": 365\n" +
+		"        },\n" +
+		"        {\n" +
+		"          \"id\": \"7d81fd0d-c7b8-42f8-84f2-687c2b53006c\",\n" +
+		"          \"text\": \"Task\",\n" +
+		"          \"type\": \"istar.Task\",\n" +
+		"          \"x\": 626,\n" +
+		"          \"y\": 348\n" +
+		"        },\n" +
+		"        {\n" +
+		"          \"id\": \"94198605-ac87-4fe3-a41a-bd133d879e35\",\n" +
+		"          \"text\": \"G13: vital signs are monitored\",\n" +
+		"          \"type\": \"istar.Goal\",\n" +
+		"          \"x\": 575,\n" +
+		"          \"y\": 400\n" +
+		"        },\n" +
+		"        {\n" +
+		"          \"id\": \"fd93789b-7af2-4d6d-8776-81b19832f4b2\",\n" +
+		"          \"text\": \"Task\",\n" +
+		"          \"type\": \"istar.Task\",\n" +
+		"          \"x\": 558,\n" +
+		"          \"y\": 476\n" +
+		"        },\n" +
+		"        {\n" +
+		"          \"id\": \"83f0e4a4-c0b7-4281-9112-3e6971e0978a\",\n" +
+		"          \"text\": \"Task\",\n" +
+		"          \"type\": \"istar.Task\",\n" +
+		"          \"x\": 676,\n" +
+		"          \"y\": 467\n" +
+		"        },\n" +
+		"        {\n" +
+		"          \"id\": \"39fad55f-1807-42d8-903d-dd04f4f8cb6f\",\n" +
+		"          \"text\": \"G8: info is sent to emergency\",\n" +
+		"          \"type\": \"istar.Goal\",\n" +
+		"          \"x\": 958,\n" +
+		"          \"y\": 304\n" +
+		"        },\n" +
+		"        {\n" +
+		"          \"id\": \"658f6679-89d2-44b6-bf86-d5d5c3d2eebb\",\n" +
+		"          \"text\": \"Task\",\n" +
+		"          \"type\": \"istar.Task\",\n" +
+		"          \"x\": 803,\n" +
+		"          \"y\": 420\n" +
+		"        },\n" +
+		"        {\n" +
+		"          \"id\": \"e520324e-13e2-480c-b3f2-406600cb4897\",\n" +
+		"          \"text\": \"Task\",\n" +
+		"          \"type\": \"istar.Task\",\n" +
+		"          \"x\": 968,\n" +
+		"          \"y\": 425\n" +
+		"        },\n" +
+		"        {\n" +
+		"          \"id\": \"350d61aa-aa14-4e40-aefb-d4bba1254a8e\",\n" +
+		"          \"text\": \"G9: info is prepared\",\n" +
+		"          \"type\": \"istar.Goal\",\n" +
+		"          \"x\": 1166,\n" +
+		"          \"y\": 306\n" +
+		"        },\n" +
+		"        {\n" +
+		"          \"id\": \"00a9c4e0-94c7-4c41-9108-b5a2bc631853\",\n" +
+		"          \"text\": \"G15: contact responsible for\",\n" +
+		"          \"type\": \"istar.Goal\",\n" +
+		"          \"x\": 1296,\n" +
+		"          \"y\": 387\n" +
+		"        },\n" +
+		"        {\n" +
+		"          \"id\": \"9ae56eda-97ec-4597-8321-d337c8033f35\",\n" +
+		"          \"text\": \"G14: setup automated info\",\n" +
+		"          \"type\": \"istar.Goal\",\n" +
+		"          \"x\": 1109,\n" +
+		"          \"y\": 432\n" +
+		"        },\n" +
+		"        {\n" +
+		"          \"id\": \"7c1f84d1-9835-4f18-8bcb-9676f64f2b70\",\n" +
+		"          \"text\": \"Task\",\n" +
+		"          \"type\": \"istar.Task\",\n" +
+		"          \"x\": 1262,\n" +
+		"          \"y\": 461\n" +
+		"        },\n" +
+		"        {\n" +
+		"          \"id\": \"c4d7c504-c4eb-47d3-b3d2-7b7c64356c44\",\n" +
+		"          \"text\": \"G17: location is identified\",\n" +
+		"          \"type\": \"istar.Goal\",\n" +
+		"          \"x\": 989,\n" +
+		"          \"y\": 568\n" +
+		"        },\n" +
+		"        {\n" +
+		"          \"id\": \"765a6e8a-24d8-404e-8120-36daf5c99b43\",\n" +
+		"          \"text\": \"G18: situation data is recovered\",\n" +
+		"          \"type\": \"istar.Goal\",\n" +
+		"          \"x\": 1200,\n" +
+		"          \"y\": 555\n" +
+		"        },\n" +
+		"        {\n" +
+		"          \"id\": \"975ecdb9-a2e5-4d6b-9afa-d7b408af6ea8\",\n" +
+		"          \"text\": \"Task\",\n" +
+		"          \"type\": \"istar.Task\",\n" +
+		"          \"x\": 1238,\n" +
+		"          \"y\": 624\n" +
+		"        },\n" +
+		"        {\n" +
+		"          \"id\": \"bc72241e-a5b1-4969-a781-8550d22e45a2\",\n" +
+		"          \"text\": \"Task\",\n" +
+		"          \"type\": \"istar.Task\",\n" +
+		"          \"x\": 878,\n" +
+		"          \"y\": 615\n" +
+		"        },\n" +
+		"        {\n" +
+		"          \"id\": \"7cad0696-fdc2-4611-9d41-e641d6c55c5c\",\n" +
+		"          \"text\": \"Task\",\n" +
+		"          \"type\": \"istar.Task\",\n" +
+		"          \"x\": 928,\n" +
+		"          \"y\": 667\n" +
+		"        },\n" +
+		"        {\n" +
+		"          \"id\": \"c7e26c5f-09e6-430f-92cc-966ccb9a1071\",\n" +
+		"          \"text\": \"Task\",\n" +
+		"          \"type\": \"istar.Task\",\n" +
+		"          \"x\": 1033,\n" +
+		"          \"y\": 667\n" +
+		"        },\n" +
+		"        {\n" +
+		"          \"id\": \"ca9807dc-e45c-433e-a87f-6361bca4347b\",\n" +
+		"          \"text\": \"Task\",\n" +
+		"          \"type\": \"istar.Task\",\n" +
+		"          \"x\": 1085,\n" +
+		"          \"y\": 618\n" +
+		"        },\n" +
+		"        {\n" +
+		"          \"id\": \"489194fb-5a70-4876-9909-411e78de76e6\",\n" +
+		"          \"text\": \"G10: ambulance is dispatched to location\",\n" +
+		"          \"type\": \"istar.Goal\",\n" +
+		"          \"x\": 1468,\n" +
+		"          \"y\": 228\n" +
+		"        },\n" +
+		"        {\n" +
+		"          \"id\": \"577020f0-c5bd-4844-8c7f-ffec33beabce\",\n" +
+		"          \"text\": \"G5: medical care reaches\",\n" +
+		"          \"type\": \"istar.Goal\",\n" +
+		"          \"x\": 1218,\n" +
+		"          \"y\": 180\n" +
+		"        }\n" +
+		"      ]\n" +
+		"    }\n" +
+		"  ],\n" +
+		"  \"dependencies\": [],\n" +
+		"  \"links\": [\n" +
+		"    {\n" +
+		"      \"id\": \"f5c1a2ca-f6c8-4097-98f8-83d61e734b4c\",\n" +
+		"      \"type\": \"istar.OrRefinementLink\",\n" +
+		"      \"source\": \"e399543c-8434-4c0c-ae5f-ed7b0022a9a5\",\n" +
+		"      \"target\": \"e4234541-6d69-4052-aea3-cdecee80f21d\"\n" +
+		"    },\n" +
+		"    {\n" +
+		"      \"id\": \"f54486a7-8cec-4f40-850e-d1b1e1b91721\",\n" +
+		"      \"type\": \"istar.OrRefinementLink\",\n" +
+		"      \"source\": \"2a7677aa-85bf-4991-bd4e-d1395df7439f\",\n" +
+		"      \"target\": \"e4234541-6d69-4052-aea3-cdecee80f21d\"\n" +
+		"    },\n" +
+		"    {\n" +
+		"      \"id\": \"79dab48c-d65a-4a20-8418-7cda4a54418e\",\n" +
+		"      \"type\": \"istar.OrRefinementLink\",\n" +
+		"      \"source\": \"1bc3839c-78bc-41d3-a210-877a0e04822f\",\n" +
+		"      \"target\": \"e4234541-6d69-4052-aea3-cdecee80f21d\"\n" +
+		"    },\n" +
+		"    {\n" +
+		"      \"id\": \"2c3486ca-f4f3-44ed-8de2-8f2a7fae9bf5\",\n" +
+		"      \"type\": \"istar.OrRefinementLink\",\n" +
+		"      \"source\": \"dd1922fb-324a-43c1-9940-cfb756059df0\",\n" +
+		"      \"target\": \"e4234541-6d69-4052-aea3-cdecee80f21d\"\n" +
+		"    },\n" +
+		"    {\n" +
+		"      \"id\": \"cb0d4e7e-e29f-4d22-b2ea-cc4837c0c5a2\",\n" +
+		"      \"type\": \"istar.OrRefinementLink\",\n" +
+		"      \"source\": \"8b8a2b21-9ce0-4172-ae92-b41b48f00fe8\",\n" +
+		"      \"target\": \"ff953162-160a-4627-ae96-b663eea53534\"\n" +
+		"    },\n" +
+		"    {\n" +
+		"      \"id\": \"2e0358b7-32f8-41df-8592-3eef37ac9456\",\n" +
+		"      \"type\": \"istar.OrRefinementLink\",\n" +
+		"      \"source\": \"e71af902-cacb-45a5-9517-2ee4a0be1592\",\n" +
+		"      \"target\": \"ff953162-160a-4627-ae96-b663eea53534\"\n" +
+		"    },\n" +
+		"    {\n" +
+		"      \"id\": \"9c17a8d4-81c9-4740-8064-cf84e17b9c1b\",\n" +
+		"      \"type\": \"istar.AndRefinementLink\",\n" +
+		"      \"source\": \"ff953162-160a-4627-ae96-b663eea53534\",\n" +
+		"      \"target\": \"6d01fb9a-73dc-41a2-9b37-369ee19bc821\"\n" +
+		"    },\n" +
+		"    {\n" +
+		"      \"id\": \"1ba9ca9e-fdd6-4cff-b682-5d451a3971df\",\n" +
+		"      \"type\": \"istar.OrRefinementLink\",\n" +
+		"      \"source\": \"6d01fb9a-73dc-41a2-9b37-369ee19bc821\",\n" +
+		"      \"target\": \"2459a35d-7c65-45aa-a1ac-0d95d5c20135\"\n" +
+		"    },\n" +
+		"    {\n" +
+		"      \"id\": \"8fd4c4b0-73b9-45b9-aa8f-aa5045fa0b2d\",\n" +
+		"      \"type\": \"istar.AndRefinementLink\",\n" +
+		"      \"source\": \"398d7878-79d1-4268-96ec-a36b30325134\",\n" +
+		"      \"target\": \"6d01fb9a-73dc-41a2-9b37-369ee19bc821\"\n" +
+		"    },\n" +
+		"    {\n" +
+		"      \"id\": \"f427ea0d-72c6-49f0-a806-10692a1e9c0e\",\n" +
+		"      \"type\": \"istar.OrRefinementLink\",\n" +
+		"      \"source\": \"baffc9fa-0ce9-4cf9-bc52-58997444dc25\",\n" +
+		"      \"target\": \"398d7878-79d1-4268-96ec-a36b30325134\"\n" +
+		"    },\n" +
+		"    {\n" +
+		"      \"id\": \"060f9795-b21a-4961-aaca-4e6c550d3cdc\",\n" +
+		"      \"type\": \"istar.OrRefinementLink\",\n" +
+		"      \"source\": \"c68762d4-8325-4c3a-aa51-5fd199b66e5f\",\n" +
+		"      \"target\": \"398d7878-79d1-4268-96ec-a36b30325134\"\n" +
+		"    },\n" +
+		"    {\n" +
+		"      \"id\": \"3c783db9-f04c-4a9f-b4eb-e2a695fb10e8\",\n" +
+		"      \"type\": \"istar.AndRefinementLink\",\n" +
+		"      \"source\": \"cfaa55c9-2250-453b-8a12-5a3724583cd2\",\n" +
+		"      \"target\": \"c68762d4-8325-4c3a-aa51-5fd199b66e5f\"\n" +
+		"    },\n" +
+		"    {\n" +
+		"      \"id\": \"36d16925-e444-417e-9a59-9d94530ad117\",\n" +
+		"      \"type\": \"istar.OrRefinementLink\",\n" +
+		"      \"source\": \"5c224df2-4bfa-4c5f-b25c-b7268231cabd\",\n" +
+		"      \"target\": \"2459a35d-7c65-45aa-a1ac-0d95d5c20135\"\n" +
+		"    },\n" +
+		"    {\n" +
+		"      \"id\": \"80117252-ae19-4940-a913-e766ca890d0d\",\n" +
+		"      \"type\": \"istar.AndRefinementLink\",\n" +
+		"      \"source\": \"946cd4e2-89ca-40f2-a8cb-13ebfcd8f783\",\n" +
+		"      \"target\": \"5c224df2-4bfa-4c5f-b25c-b7268231cabd\"\n" +
+		"    },\n" +
+		"    {\n" +
+		"      \"id\": \"dd25d613-631b-439b-bcab-747d67e60bd2\",\n" +
+		"      \"type\": \"istar.AndRefinementLink\",\n" +
+		"      \"source\": \"7d81fd0d-c7b8-42f8-84f2-687c2b53006c\",\n" +
+		"      \"target\": \"5c224df2-4bfa-4c5f-b25c-b7268231cabd\"\n" +
+		"    },\n" +
+		"    {\n" +
+		"      \"id\": \"bd2d0a18-b95a-428f-a3c4-8a450ab49075\",\n" +
+		"      \"type\": \"istar.AndRefinementLink\",\n" +
+		"      \"source\": \"94198605-ac87-4fe3-a41a-bd133d879e35\",\n" +
+		"      \"target\": \"5c224df2-4bfa-4c5f-b25c-b7268231cabd\"\n" +
+		"    },\n" +
+		"    {\n" +
+		"      \"id\": \"8294c635-f32b-4cd8-a120-4589e3494a75\",\n" +
+		"      \"type\": \"istar.AndRefinementLink\",\n" +
+		"      \"source\": \"fd93789b-7af2-4d6d-8776-81b19832f4b2\",\n" +
+		"      \"target\": \"94198605-ac87-4fe3-a41a-bd133d879e35\"\n" +
+		"    },\n" +
+		"    {\n" +
+		"      \"id\": \"6859d617-ff39-4850-8efd-35ec70649961\",\n" +
+		"      \"type\": \"istar.AndRefinementLink\",\n" +
+		"      \"source\": \"83f0e4a4-c0b7-4281-9112-3e6971e0978a\",\n" +
+		"      \"target\": \"94198605-ac87-4fe3-a41a-bd133d879e35\"\n" +
+		"    },\n" +
+		"    {\n" +
+		"      \"id\": \"600fcd5d-855e-456b-bfed-219ad508bdbf\",\n" +
+		"      \"type\": \"istar.AndRefinementLink\",\n" +
+		"      \"source\": \"2459a35d-7c65-45aa-a1ac-0d95d5c20135\",\n" +
+		"      \"target\": \"cba54c7f-d4a2-4127-9500-361d1f7a1c9b\"\n" +
+		"    },\n" +
+		"    {\n" +
+		"      \"id\": \"8294412d-4729-4a94-a043-94610712feca\",\n" +
+		"      \"type\": \"istar.AndRefinementLink\",\n" +
+		"      \"source\": \"e4234541-6d69-4052-aea3-cdecee80f21d\",\n" +
+		"      \"target\": \"cba54c7f-d4a2-4127-9500-361d1f7a1c9b\"\n" +
+		"    },\n" +
+		"    {\n" +
+		"      \"id\": \"31340cb5-6c59-4e86-ae77-fd88adb2a197\",\n" +
+		"      \"type\": \"istar.AndRefinementLink\",\n" +
+		"      \"source\": \"4498bbda-f3b8-4c05-9c98-bea1d31741be\",\n" +
+		"      \"target\": \"cba54c7f-d4a2-4127-9500-361d1f7a1c9b\"\n" +
+		"    },\n" +
+		"    {\n" +
+		"      \"id\": \"ba2c2b3c-232a-4a06-9996-feeac328fbcc\",\n" +
+		"      \"type\": \"istar.OrRefinementLink\",\n" +
+		"      \"source\": \"658f6679-89d2-44b6-bf86-d5d5c3d2eebb\",\n" +
+		"      \"target\": \"39fad55f-1807-42d8-903d-dd04f4f8cb6f\"\n" +
+		"    },\n" +
+		"    {\n" +
+		"      \"id\": \"68f3b029-3d47-49c6-b714-17d97969304d\",\n" +
+		"      \"type\": \"istar.OrRefinementLink\",\n" +
+		"      \"source\": \"e520324e-13e2-480c-b3f2-406600cb4897\",\n" +
+		"      \"target\": \"39fad55f-1807-42d8-903d-dd04f4f8cb6f\"\n" +
+		"    },\n" +
+		"    {\n" +
+		"      \"id\": \"a3d4066e-f848-4eae-9191-d25bcda77908\",\n" +
+		"      \"type\": \"istar.AndRefinementLink\",\n" +
+		"      \"source\": \"39fad55f-1807-42d8-903d-dd04f4f8cb6f\",\n" +
+		"      \"target\": \"4498bbda-f3b8-4c05-9c98-bea1d31741be\"\n" +
+		"    },\n" +
+		"    {\n" +
+		"      \"id\": \"667f93b0-6873-4ff7-9eda-9603c4bd4967\",\n" +
+		"      \"type\": \"istar.OrRefinementLink\",\n" +
+		"      \"source\": \"9ae56eda-97ec-4597-8321-d337c8033f35\",\n" +
+		"      \"target\": \"350d61aa-aa14-4e40-aefb-d4bba1254a8e\"\n" +
+		"    },\n" +
+		"    {\n" +
+		"      \"id\": \"5aee3b4d-7af2-4eef-998d-3db2152919fa\",\n" +
+		"      \"type\": \"istar.OrRefinementLink\",\n" +
+		"      \"source\": \"00a9c4e0-94c7-4c41-9108-b5a2bc631853\",\n" +
+		"      \"target\": \"350d61aa-aa14-4e40-aefb-d4bba1254a8e\"\n" +
+		"    },\n" +
+		"    {\n" +
+		"      \"id\": \"eda3a41e-d12e-4099-9564-fd9addd1d1ac\",\n" +
+		"      \"type\": \"istar.AndRefinementLink\",\n" +
+		"      \"source\": \"350d61aa-aa14-4e40-aefb-d4bba1254a8e\",\n" +
+		"      \"target\": \"4498bbda-f3b8-4c05-9c98-bea1d31741be\"\n" +
+		"    },\n" +
+		"    {\n" +
+		"      \"id\": \"956c2f4d-4eee-4a9d-a713-fd5176144adb\",\n" +
+		"      \"type\": \"istar.OrRefinementLink\",\n" +
+		"      \"source\": \"7c1f84d1-9835-4f18-8bcb-9676f64f2b70\",\n" +
+		"      \"target\": \"00a9c4e0-94c7-4c41-9108-b5a2bc631853\"\n" +
+		"    },\n" +
+		"    {\n" +
+		"      \"id\": \"e8695ac2-af5b-48cf-8ba1-fc9c1aa4dc5c\",\n" +
+		"      \"type\": \"istar.AndRefinementLink\",\n" +
+		"      \"source\": \"c4d7c504-c4eb-47d3-b3d2-7b7c64356c44\",\n" +
+		"      \"target\": \"9ae56eda-97ec-4597-8321-d337c8033f35\"\n" +
+		"    },\n" +
+		"    {\n" +
+		"      \"id\": \"0fdf4a01-72b9-4e26-805b-b01d5ce151e9\",\n" +
+		"      \"type\": \"istar.AndRefinementLink\",\n" +
+		"      \"source\": \"765a6e8a-24d8-404e-8120-36daf5c99b43\",\n" +
+		"      \"target\": \"9ae56eda-97ec-4597-8321-d337c8033f35\"\n" +
+		"    },\n" +
+		"    {\n" +
+		"      \"id\": \"005360bf-8421-45db-80a2-6172ac1c5d76\",\n" +
+		"      \"type\": \"istar.AndRefinementLink\",\n" +
+		"      \"source\": \"975ecdb9-a2e5-4d6b-9afa-d7b408af6ea8\",\n" +
+		"      \"target\": \"765a6e8a-24d8-404e-8120-36daf5c99b43\"\n" +
+		"    },\n" +
+		"    {\n" +
+		"      \"id\": \"2304e089-f606-41f0-a11d-772a301af5f2\",\n" +
+		"      \"type\": \"istar.OrRefinementLink\",\n" +
+		"      \"source\": \"bc72241e-a5b1-4969-a781-8550d22e45a2\",\n" +
+		"      \"target\": \"c4d7c504-c4eb-47d3-b3d2-7b7c64356c44\"\n" +
+		"    },\n" +
+		"    {\n" +
+		"      \"id\": \"412792ac-d60b-4524-b883-1af68e695aab\",\n" +
+		"      \"type\": \"istar.OrRefinementLink\",\n" +
+		"      \"source\": \"7cad0696-fdc2-4611-9d41-e641d6c55c5c\",\n" +
+		"      \"target\": \"c4d7c504-c4eb-47d3-b3d2-7b7c64356c44\"\n" +
+		"    },\n" +
+		"    {\n" +
+		"      \"id\": \"2099e111-d2ca-4e54-9aee-91417e8da701\",\n" +
+		"      \"type\": \"istar.OrRefinementLink\",\n" +
+		"      \"source\": \"c7e26c5f-09e6-430f-92cc-966ccb9a1071\",\n" +
+		"      \"target\": \"c4d7c504-c4eb-47d3-b3d2-7b7c64356c44\"\n" +
+		"    },\n" +
+		"    {\n" +
+		"      \"id\": \"a4f4dc24-c887-4fbb-998d-ed39b08af4a4\",\n" +
+		"      \"type\": \"istar.OrRefinementLink\",\n" +
+		"      \"source\": \"ca9807dc-e45c-433e-a87f-6361bca4347b\",\n" +
+		"      \"target\": \"c4d7c504-c4eb-47d3-b3d2-7b7c64356c44\"\n" +
+		"    },\n" +
+		"    {\n" +
+		"      \"id\": \"f6f0a768-8609-49fc-bb76-b737a60db415\",\n" +
+		"      \"type\": \"istar.AndRefinementLink\",\n" +
+		"      \"source\": \"577020f0-c5bd-4844-8c7f-ffec33beabce\",\n" +
+		"      \"target\": \"cba54c7f-d4a2-4127-9500-361d1f7a1c9b\"\n" +
+		"    },\n" +
+		"    {\n" +
+		"      \"id\": \"3f5b4b1e-dd79-491e-a1b7-68d646ddbf9f\",\n" +
+		"      \"type\": \"istar.AndRefinementLink\",\n" +
+		"      \"source\": \"489194fb-5a70-4876-9909-411e78de76e6\",\n" +
+		"      \"target\": \"577020f0-c5bd-4844-8c7f-ffec33beabce\"\n" +
+		"    }\n" +
+		"  ],\n" +
+		"  \"tool\": \"pistar.1.0.0\",\n" +
+		"  \"istar\": \"2.0\",\n" +
+		"  \"saveDate\": \"Sat, 16 Nov 2019 04:44:26 GMT\",\n" +
+		"  \"diagram\": {\n" +
+		"    \"width\": 1881,\n" +
+		"    \"height\": 1172\n" +
+		"  }\n" +
+		"}");
+};
+
 examples.util = {};
 examples.util.randomIntegerFromMinToMax = function(min, max) {
 	//min (included)
