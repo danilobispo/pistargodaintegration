@@ -77,7 +77,7 @@ public class Controller {
         contextsMock.remove("c2");
         contextsMock.remove("c3");
         contextsMock.remove("c1");
-        // Persona 2: Without c2. Meant to fail in testModel.
+        // Persona 2: Without c1, c2 and c3. Meant to fail in testModel.
         Persona persona2 = new Persona("Mary Collins", "An old persona", contextsMock);
         achievability = new PersonaAchievability(selectedGoals, persona2.getContexts());
 
@@ -86,7 +86,7 @@ public class Controller {
                 achievability.personaAchievabilityFailure(persona1);
 
         System.out.println(stringReturn);
-        return new ResponseEntity<String>(stringReturn, HttpStatus.OK);
+
 //
 //        String stringReturn;
 //        boolean isSuccess = achievability.run();
@@ -100,6 +100,7 @@ public class Controller {
 //        Persona persona3 = new Persona("Mary Collins", "An old persona", contextsMock);
 //        achievability = new PersonaAchievability(selectedGoals, persona3.getContexts());
 //        achievability.run();
+        return new ResponseEntity<String>(stringReturn, HttpStatus.OK);
     }
 
 

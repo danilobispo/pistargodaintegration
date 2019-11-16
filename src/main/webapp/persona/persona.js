@@ -244,9 +244,9 @@ function exampleAchievability() {
             data: {
                 "content": model
             },
-            success: function () {
+            success: function (data) {
                 // window.location.href = 'prism.zip';
-                alert("Deu bom!");
+                alert(data);
             },
             error: function () {
                 alert("Error!");

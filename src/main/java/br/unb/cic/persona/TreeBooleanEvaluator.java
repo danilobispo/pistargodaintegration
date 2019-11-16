@@ -7,6 +7,8 @@ import java.util.List;
 import com.fathzer.soft.javaluator.*;
 
 public class TreeBooleanEvaluator extends AbstractEvaluator<String> {
+    /** The negate unary operator.*/
+    final static Operator NEGATE = new Operator("!", 1, Operator.Associativity.RIGHT, 3);
     /** The logical AND operator.*/
     final static Operator AND = new Operator("&", 2, Operator.Associativity.LEFT, 2);
     /** The logical OR operator.*/
@@ -23,6 +25,7 @@ public class TreeBooleanEvaluator extends AbstractEvaluator<String> {
         // Add the supported operators
         PARAMETERS.add(AND);
         PARAMETERS.add(OR);
+        PARAMETERS.add(NEGATE);
         // Add the parentheses
         PARAMETERS.addExpressionBracket(BracketPair.PARENTHESES);
     }
@@ -50,18 +53,27 @@ public class TreeBooleanEvaluator extends AbstractEvaluator<String> {
         List<String> tree = (List<String>) evaluationContext;
 
         String o1 = operands.next();
-        String o2;
-        if(!operands.hasNext()){ o2 = o1; }
-        else{ o2 = operands.next(); }
+        String o2 = "";
+        if(operator != NEGATE){
+            o2 = operands.hasNext() ? operands.next() : o1;
+        }
+        String eval;
         Boolean result;
-        if (operator == OR) {
+        if(operator == NEGATE) {
+            result = !getValue(o1);
+        }
+        else if (operator == OR) {
             result = getValue(o1) || getValue(o2);
         } else if (operator == AND) {
             result = getValue(o1) && getValue(o2);
         } else {
             throw new IllegalArgumentException();
         }
-        String eval = "("+o1+" "+operator.getSymbol()+" "+o2+")="+result;
+        if(operator != NEGATE){
+            eval = "("+o1+" "+operator.getSymbol()+" "+o2+")="+result;
+        } else {
+            eval = "("+operator.getSymbol()+" "+o1+")="+result;
+        }
         tree.add(eval);
         return eval;
     }
@@ -73,7 +85,7 @@ public class TreeBooleanEvaluator extends AbstractEvaluator<String> {
 //    }
 
     public boolean doIt(TreeBooleanEvaluator evaluator, String expression) {
-        if(!expression.contains("&") && !expression.contains("|")){
+        if(!expression.contains("&") && !expression.contains("|") && !expression.contains("!")){
             expression = correctExpression(expression);
         }
         List<String> sequence = new ArrayList<String>();

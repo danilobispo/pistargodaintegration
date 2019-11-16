@@ -199,7 +199,7 @@ examples.achievabilityExample = function(){
 		"          \"x\": 477,\n" +
 		"          \"y\": 245,\n" +
 		"          \"customProperties\": {\n" +
-		"            \"creationProperty\": \"assertion condition c1 | c3 | c4\"\n" +
+		"            \"creationProperty\": \"assertion condition c1 & !c2\"\n" +
 		"          }\n" +
 		"        },\n" +
 		"        {\n" +
