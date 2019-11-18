@@ -132,7 +132,6 @@ public class PersonaAchievability {
 
 
     public boolean iterateThroughEndPlans(Plan targetPlan) {
-        String failedNodeName;
         boolean isAnd = targetPlan.isAndDecomposition();
         boolean flagFailure = false;
         int flagCount = 0;
