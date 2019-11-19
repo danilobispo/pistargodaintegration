@@ -102,7 +102,8 @@ public class PersonaAchievability {
                     }
                 }
             }
-        } else if (targetGoalMeansToAndEndPlansSize > 0) {
+        }
+        if (targetGoalMeansToAndEndPlansSize > 0) {
             for (Plan childPlan : targetGoal.getMeansToAnEndPlans()) {
                 if (!flagFailure) {
                     System.out.println("Task " + childPlan.getName() + " is being evaluated");

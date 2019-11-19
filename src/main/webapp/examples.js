@@ -352,7 +352,7 @@ examples.mpers = function () {
 		"  \"actors\": [\n" +
 		"    {\n" +
 		"      \"id\": \"3a151d60-5de7-4857-b5a3-5d55d84e70d4\",\n" +
-		"      \"text\": \"Actor\",\n" +
+		"      \"text\": \"Mobile Personal Emergency Response\",\n" +
 		"      \"type\": \"istar.Actor\",\n" +
 		"      \"x\": 192,\n" +
 		"      \"y\": 71,\n" +
@@ -362,7 +362,10 @@ examples.mpers = function () {
 		"          \"text\": \"G1: Respond to emergency\",\n" +
 		"          \"type\": \"istar.Goal\",\n" +
 		"          \"x\": 728,\n" +
-		"          \"y\": 71\n" +
+		"          \"y\": 71,\n" +
+		"          \"customProperties\": {\n" +
+		"            \"selected\": \"true\"\n" +
+		"          }   \n" +
 		"        },\n" +
 		"        {\n" +
 		"          \"id\": \"2459a35d-7c65-45aa-a1ac-0d95d5c20135\",\n" +
@@ -387,31 +390,37 @@ examples.mpers = function () {
 		"        },\n" +
 		"        {\n" +
 		"          \"id\": \"e399543c-8434-4c0c-ae5f-ed7b0022a9a5\",\n" +
-		"          \"text\": \"Task\",\n" +
+		"          \"text\": \"T1: notifies by mobile vibration\",\n" +
 		"          \"type\": \"istar.Task\",\n" +
 		"          \"x\": 646,\n" +
-		"          \"y\": 239\n" +
+		"          \"y\": 239,\n" +
+		"          \"customProperties\": {\n" +
+		"            \"creationProperty\": \"assertion condition ct\"\n" +
+		"          }   \n" +
 		"        },\n" +
 		"        {\n" +
 		"          \"id\": \"2a7677aa-85bf-4991-bd4e-d1395df7439f\",\n" +
-		"          \"text\": \"Task\",\n" +
+		"          \"text\": \"T2: notifies by sound alert\",\n" +
 		"          \"type\": \"istar.Task\",\n" +
 		"          \"x\": 710,\n" +
 		"          \"y\": 285\n" +
 		"        },\n" +
 		"        {\n" +
 		"          \"id\": \"dd1922fb-324a-43c1-9940-cfb756059df0\",\n" +
-		"          \"text\": \"Task\",\n" +
+		"          \"text\": \"T3: notifies by light alert\",\n" +
 		"          \"type\": \"istar.Task\",\n" +
 		"          \"x\": 810,\n" +
 		"          \"y\": 285\n" +
 		"        },\n" +
 		"        {\n" +
 		"          \"id\": \"1bc3839c-78bc-41d3-a210-877a0e04822f\",\n" +
-		"          \"text\": \"Task\",\n" +
+		"          \"text\": \"T4: central calls\",\n" +
 		"          \"type\": \"istar.Task\",\n" +
 		"          \"x\": 843,\n" +
-		"          \"y\": 232\n" +
+		"          \"y\": 232,\n" +
+		"          \"customProperties\": {\n" +
+		"            \"creationProperty\": \"assertion condition ct & cha\"\n" +
+		"          }\n" +
 		"        },\n" +
 		"        {\n" +
 		"          \"id\": \"4498bbda-f3b8-4c05-9c98-bea1d31741be\",\n" +
@@ -422,21 +431,24 @@ examples.mpers = function () {
 		"        },\n" +
 		"        {\n" +
 		"          \"id\": \"ff953162-160a-4627-ae96-b663eea53534\",\n" +
-		"          \"text\": \"G11: recives emergency button call\",\n" +
+		"          \"text\": \"G11: receives emergency button call\",\n" +
 		"          \"type\": \"istar.Goal\",\n" +
 		"          \"x\": 282,\n" +
 		"          \"y\": 363\n" +
 		"        },\n" +
 		"        {\n" +
 		"          \"id\": \"8b8a2b21-9ce0-4172-ae92-b41b48f00fe8\",\n" +
-		"          \"text\": \"Task\",\n" +
+		"          \"text\": \"T9:notify central by sms\",\n" +
 		"          \"type\": \"istar.Task\",\n" +
 		"          \"x\": 192,\n" +
-		"          \"y\": 464\n" +
+		"          \"y\": 464,\n" +
+		"          \"customProperties\": {\n" +
+		"            \"creationProperty\": \"assertion condition !ct | cha\"\n" +
+		"          }\n" +
 		"        },\n" +
 		"        {\n" +
 		"          \"id\": \"e71af902-cacb-45a5-9517-2ee4a0be1592\",\n" +
-		"          \"text\": \"Task\",\n" +
+		"          \"text\": \"T10: notify central by internet\",\n" +
 		"          \"type\": \"istar.Task\",\n" +
 		"          \"x\": 309,\n" +
 		"          \"y\": 472\n" +
@@ -450,21 +462,27 @@ examples.mpers = function () {
 		"        },\n" +
 		"        {\n" +
 		"          \"id\": \"baffc9fa-0ce9-4cf9-bc52-58997444dc25\",\n" +
-		"          \"text\": \"Task\",\n" +
+		"          \"text\": \"T11: accepts emergency\",\n" +
 		"          \"type\": \"istar.Task\",\n" +
 		"          \"x\": 416,\n" +
-		"          \"y\": 538\n" +
+		"          \"y\": 538,\n" +
+		"          \"customProperties\": {\n" +
+		"            \"creationProperty\": \"assertion condition cha & !ct\"\n" +
+		"          }\n" +
 		"        },\n" +
 		"        {\n" +
 		"          \"id\": \"c68762d4-8325-4c3a-aa51-5fd199b66e5f\",\n" +
 		"          \"text\": \"G16: is contacted\",\n" +
 		"          \"type\": \"istar.Goal\",\n" +
 		"          \"x\": 542,\n" +
-		"          \"y\": 536\n" +
+		"          \"y\": 536,\n" +
+		"          \"customProperties\": {\n" +
+		"            \"creationProperty\": \"assertion condition cha & !ct\"\n" +
+		"          }\n" +
 		"        },\n" +
 		"        {\n" +
 		"          \"id\": \"cfaa55c9-2250-453b-8a12-5a3724583cd2\",\n" +
-		"          \"text\": \"Task\",\n" +
+		"          \"text\": \"T15: confirms emergency by call\",\n" +
 		"          \"type\": \"istar.Task\",\n" +
 		"          \"x\": 610,\n" +
 		"          \"y\": 604\n" +
@@ -478,35 +496,41 @@ examples.mpers = function () {
 		"        },\n" +
 		"        {\n" +
 		"          \"id\": \"946cd4e2-89ca-40f2-a8cb-13ebfcd8f783\",\n" +
-		"          \"text\": \"Task\",\n" +
+		"          \"text\": \"T5: processes sensors data\",\n" +
 		"          \"type\": \"istar.Task\",\n" +
 		"          \"x\": 469,\n" +
 		"          \"y\": 365\n" +
 		"        },\n" +
 		"        {\n" +
 		"          \"id\": \"7d81fd0d-c7b8-42f8-84f2-687c2b53006c\",\n" +
-		"          \"text\": \"Task\",\n" +
+		"          \"text\": \"T6: identifies situation\",\n" +
 		"          \"type\": \"istar.Task\",\n" +
 		"          \"x\": 626,\n" +
-		"          \"y\": 348\n" +
+		"          \"y\": 348,\n" +
+		"          \"customProperties\": {\n" +
+		"            \"creationProperty\": \"assertion condition ch | ca\"\n" +
+		"          }\n" +
 		"        },\n" +
 		"        {\n" +
 		"          \"id\": \"94198605-ac87-4fe3-a41a-bd133d879e35\",\n" +
 		"          \"text\": \"G13: vital signs are monitored\",\n" +
 		"          \"type\": \"istar.Goal\",\n" +
 		"          \"x\": 575,\n" +
-		"          \"y\": 400\n" +
+		"          \"y\": 400,\n" +
+		"          \"customProperties\": {\n" +
+		"            \"creationProperty\": \"assertion condition ch | ca\"\n" +
+		"          }\n" +
 		"        },\n" +
 		"        {\n" +
 		"          \"id\": \"fd93789b-7af2-4d6d-8776-81b19832f4b2\",\n" +
-		"          \"text\": \"Task\",\n" +
+		"          \"text\": \"T12: persists data to database\",\n" +
 		"          \"type\": \"istar.Task\",\n" +
 		"          \"x\": 558,\n" +
 		"          \"y\": 476\n" +
 		"        },\n" +
 		"        {\n" +
 		"          \"id\": \"83f0e4a4-c0b7-4281-9112-3e6971e0978a\",\n" +
-		"          \"text\": \"Task\",\n" +
+		"          \"text\": \"T13: collects data from sensors\",\n" +
 		"          \"type\": \"istar.Task\",\n" +
 		"          \"x\": 676,\n" +
 		"          \"y\": 467\n" +
@@ -520,17 +544,23 @@ examples.mpers = function () {
 		"        },\n" +
 		"        {\n" +
 		"          \"id\": \"658f6679-89d2-44b6-bf86-d5d5c3d2eebb\",\n" +
-		"          \"text\": \"Task\",\n" +
+		"          \"text\": \"T7: send info by SMS\",\n" +
 		"          \"type\": \"istar.Task\",\n" +
 		"          \"x\": 803,\n" +
-		"          \"y\": 420\n" +
+		"          \"y\": 420,\n" +
+		"          \"customProperties\": {\n" +
+		"            \"creationProperty\": \"assertion condition !ct\"\n" +
+		"           }\n" +
 		"        },\n" +
 		"        {\n" +
 		"          \"id\": \"e520324e-13e2-480c-b3f2-406600cb4897\",\n" +
-		"          \"text\": \"Task\",\n" +
+		"          \"text\": \"T8: send info by internet\",\n" +
 		"          \"type\": \"istar.Task\",\n" +
 		"          \"x\": 968,\n" +
-		"          \"y\": 425\n" +
+		"          \"y\": 425,\n" +
+		"          \"customProperties\": {\n" +
+		"            \"creationProperty\": \"assertion condition !ct\"\n" +
+		"          }\n" +
 		"        },\n" +
 		"        {\n" +
 		"          \"id\": \"350d61aa-aa14-4e40-aefb-d4bba1254a8e\",\n" +
@@ -555,7 +585,7 @@ examples.mpers = function () {
 		"        },\n" +
 		"        {\n" +
 		"          \"id\": \"7c1f84d1-9835-4f18-8bcb-9676f64f2b70\",\n" +
-		"          \"text\": \"Task\",\n" +
+		"          \"text\": \"T14: get info from responsible for\",\n" +
 		"          \"type\": \"istar.Task\",\n" +
 		"          \"x\": 1262,\n" +
 		"          \"y\": 461\n" +
@@ -576,45 +606,60 @@ examples.mpers = function () {
 		"        },\n" +
 		"        {\n" +
 		"          \"id\": \"975ecdb9-a2e5-4d6b-9afa-d7b408af6ea8\",\n" +
-		"          \"text\": \"Task\",\n" +
+		"          \"text\": \"T20: access data from database\",\n" +
 		"          \"type\": \"istar.Task\",\n" +
 		"          \"x\": 1238,\n" +
 		"          \"y\": 624\n" +
 		"        },\n" +
 		"        {\n" +
 		"          \"id\": \"bc72241e-a5b1-4969-a781-8550d22e45a2\",\n" +
-		"          \"text\": \"Task\",\n" +
+		"          \"text\": \"T16: consider last known location\",\n" +
 		"          \"type\": \"istar.Task\",\n" +
 		"          \"x\": 878,\n" +
-		"          \"y\": 615\n" +
+		"          \"y\": 615,\n" +
+		"          \"customProperties\": {\n" +
+		"            \"creationProperty\": \"assertion condition !cm\"\n" +
+		"          }\n" +
 		"        },\n" +
 		"        {\n" +
 		"          \"id\": \"7cad0696-fdc2-4611-9d41-e641d6c55c5c\",\n" +
-		"          \"text\": \"Task\",\n" +
+		"          \"text\": \"T17: identifies location by voice call\",\n" +
 		"          \"type\": \"istar.Task\",\n" +
 		"          \"x\": 928,\n" +
-		"          \"y\": 667\n" +
+		"          \"y\": 667,\n" +
+		"          \"customProperties\": {\n" +
+		"                                \"creationProperty\": \"assertion condition cha | !ct\"\n" +
+		"                      }\n" +
 		"        },\n" +
 		"        {\n" +
 		"          \"id\": \"c7e26c5f-09e6-430f-92cc-966ccb9a1071\",\n" +
-		"          \"text\": \"Task\",\n" +
+		"          \"text\": \"T18: access location from triangulation\",\n" +
 		"          \"type\": \"istar.Task\",\n" +
 		"          \"x\": 1033,\n" +
-		"          \"y\": 667\n" +
+		"          \"y\": 667,\n" +
+		"          \"customProperties\": {\n" +
+		"            \"creationProperty\": \"assertion condition cm | !ct\"\n" +
+		"          }\n" +
 		"        },\n" +
 		"        {\n" +
 		"          \"id\": \"ca9807dc-e45c-433e-a87f-6361bca4347b\",\n" +
-		"          \"text\": \"Task\",\n" +
+		"          \"text\": \"T19: access location from a GPS\",\n" +
 		"          \"type\": \"istar.Task\",\n" +
 		"          \"x\": 1085,\n" +
-		"          \"y\": 618\n" +
+		"          \"y\": 618,\n" +
+		"          \"customProperties\": {\n" +
+		"            \"creationProperty\": \"assertion condition cm | !ct\"    \n" +
+		"          }\n" +
 		"        },\n" +
 		"        {\n" +
 		"          \"id\": \"489194fb-5a70-4876-9909-411e78de76e6\",\n" +
 		"          \"text\": \"G10: ambulance is dispatched to location\",\n" +
 		"          \"type\": \"istar.Goal\",\n" +
 		"          \"x\": 1468,\n" +
-		"          \"y\": 228\n" +
+		"          \"y\": 228,\n" +
+		"          \"customProperties\": {\n" +
+		"            \"creationProperty\": \"assertion condition ch\"\n" +
+		"          }\n" +
 		"        },\n" +
 		"        {\n" +
 		"          \"id\": \"577020f0-c5bd-4844-8c7f-ffec33beabce\",\n" +
@@ -629,223 +674,223 @@ examples.mpers = function () {
 		"  \"dependencies\": [],\n" +
 		"  \"links\": [\n" +
 		"    {\n" +
-		"      \"id\": \"f5c1a2ca-f6c8-4097-98f8-83d61e734b4c\",\n" +
+		"      \"id\": \"e5409e21-a826-4990-9423-6617c1f90ed3\",\n" +
 		"      \"type\": \"istar.OrRefinementLink\",\n" +
 		"      \"source\": \"e399543c-8434-4c0c-ae5f-ed7b0022a9a5\",\n" +
 		"      \"target\": \"e4234541-6d69-4052-aea3-cdecee80f21d\"\n" +
 		"    },\n" +
 		"    {\n" +
-		"      \"id\": \"f54486a7-8cec-4f40-850e-d1b1e1b91721\",\n" +
+		"      \"id\": \"e14907c1-7ed8-4ebe-bda1-2a9fa45b8df7\",\n" +
 		"      \"type\": \"istar.OrRefinementLink\",\n" +
 		"      \"source\": \"2a7677aa-85bf-4991-bd4e-d1395df7439f\",\n" +
 		"      \"target\": \"e4234541-6d69-4052-aea3-cdecee80f21d\"\n" +
 		"    },\n" +
 		"    {\n" +
-		"      \"id\": \"79dab48c-d65a-4a20-8418-7cda4a54418e\",\n" +
+		"      \"id\": \"360483b9-88e6-44a3-8fa7-da1f56e92c43\",\n" +
 		"      \"type\": \"istar.OrRefinementLink\",\n" +
 		"      \"source\": \"1bc3839c-78bc-41d3-a210-877a0e04822f\",\n" +
 		"      \"target\": \"e4234541-6d69-4052-aea3-cdecee80f21d\"\n" +
 		"    },\n" +
 		"    {\n" +
-		"      \"id\": \"2c3486ca-f4f3-44ed-8de2-8f2a7fae9bf5\",\n" +
+		"      \"id\": \"ecbc390c-9430-434a-a43e-76d6a8e51df1\",\n" +
 		"      \"type\": \"istar.OrRefinementLink\",\n" +
 		"      \"source\": \"dd1922fb-324a-43c1-9940-cfb756059df0\",\n" +
 		"      \"target\": \"e4234541-6d69-4052-aea3-cdecee80f21d\"\n" +
 		"    },\n" +
 		"    {\n" +
-		"      \"id\": \"cb0d4e7e-e29f-4d22-b2ea-cc4837c0c5a2\",\n" +
+		"      \"id\": \"2654e9d4-29e5-4043-a1e9-3ea2a749ea16\",\n" +
 		"      \"type\": \"istar.OrRefinementLink\",\n" +
 		"      \"source\": \"8b8a2b21-9ce0-4172-ae92-b41b48f00fe8\",\n" +
 		"      \"target\": \"ff953162-160a-4627-ae96-b663eea53534\"\n" +
 		"    },\n" +
 		"    {\n" +
-		"      \"id\": \"2e0358b7-32f8-41df-8592-3eef37ac9456\",\n" +
+		"      \"id\": \"b0887573-b350-414e-adc7-e03f36fbdbbf\",\n" +
 		"      \"type\": \"istar.OrRefinementLink\",\n" +
 		"      \"source\": \"e71af902-cacb-45a5-9517-2ee4a0be1592\",\n" +
 		"      \"target\": \"ff953162-160a-4627-ae96-b663eea53534\"\n" +
 		"    },\n" +
 		"    {\n" +
-		"      \"id\": \"9c17a8d4-81c9-4740-8064-cf84e17b9c1b\",\n" +
+		"      \"id\": \"4a319363-615b-46dd-bb63-3afb8483cafe\",\n" +
 		"      \"type\": \"istar.AndRefinementLink\",\n" +
 		"      \"source\": \"ff953162-160a-4627-ae96-b663eea53534\",\n" +
 		"      \"target\": \"6d01fb9a-73dc-41a2-9b37-369ee19bc821\"\n" +
 		"    },\n" +
 		"    {\n" +
-		"      \"id\": \"1ba9ca9e-fdd6-4cff-b682-5d451a3971df\",\n" +
+		"      \"id\": \"c336ef54-03df-42c7-9477-d558caa279b2\",\n" +
 		"      \"type\": \"istar.OrRefinementLink\",\n" +
 		"      \"source\": \"6d01fb9a-73dc-41a2-9b37-369ee19bc821\",\n" +
 		"      \"target\": \"2459a35d-7c65-45aa-a1ac-0d95d5c20135\"\n" +
 		"    },\n" +
 		"    {\n" +
-		"      \"id\": \"8fd4c4b0-73b9-45b9-aa8f-aa5045fa0b2d\",\n" +
+		"      \"id\": \"2007daf5-2b16-4d15-9cbb-1bf626858c4e\",\n" +
 		"      \"type\": \"istar.AndRefinementLink\",\n" +
 		"      \"source\": \"398d7878-79d1-4268-96ec-a36b30325134\",\n" +
 		"      \"target\": \"6d01fb9a-73dc-41a2-9b37-369ee19bc821\"\n" +
 		"    },\n" +
 		"    {\n" +
-		"      \"id\": \"f427ea0d-72c6-49f0-a806-10692a1e9c0e\",\n" +
+		"      \"id\": \"dae2802a-9b51-463c-9f35-076c43803eaa\",\n" +
 		"      \"type\": \"istar.OrRefinementLink\",\n" +
 		"      \"source\": \"baffc9fa-0ce9-4cf9-bc52-58997444dc25\",\n" +
 		"      \"target\": \"398d7878-79d1-4268-96ec-a36b30325134\"\n" +
 		"    },\n" +
 		"    {\n" +
-		"      \"id\": \"060f9795-b21a-4961-aaca-4e6c550d3cdc\",\n" +
+		"      \"id\": \"14d9e473-5e16-4a9a-a72a-efce0736c734\",\n" +
 		"      \"type\": \"istar.OrRefinementLink\",\n" +
 		"      \"source\": \"c68762d4-8325-4c3a-aa51-5fd199b66e5f\",\n" +
 		"      \"target\": \"398d7878-79d1-4268-96ec-a36b30325134\"\n" +
 		"    },\n" +
 		"    {\n" +
-		"      \"id\": \"3c783db9-f04c-4a9f-b4eb-e2a695fb10e8\",\n" +
+		"      \"id\": \"92e7c8b0-eb93-4a18-89f0-d1086a21ee35\",\n" +
 		"      \"type\": \"istar.AndRefinementLink\",\n" +
 		"      \"source\": \"cfaa55c9-2250-453b-8a12-5a3724583cd2\",\n" +
 		"      \"target\": \"c68762d4-8325-4c3a-aa51-5fd199b66e5f\"\n" +
 		"    },\n" +
 		"    {\n" +
-		"      \"id\": \"36d16925-e444-417e-9a59-9d94530ad117\",\n" +
+		"      \"id\": \"ba2e82d6-035b-4e63-a92e-6b386ae3d3c6\",\n" +
 		"      \"type\": \"istar.OrRefinementLink\",\n" +
 		"      \"source\": \"5c224df2-4bfa-4c5f-b25c-b7268231cabd\",\n" +
 		"      \"target\": \"2459a35d-7c65-45aa-a1ac-0d95d5c20135\"\n" +
 		"    },\n" +
 		"    {\n" +
-		"      \"id\": \"80117252-ae19-4940-a913-e766ca890d0d\",\n" +
+		"      \"id\": \"6fbd72ac-ef2d-49c5-b808-d1368cceb7a6\",\n" +
 		"      \"type\": \"istar.AndRefinementLink\",\n" +
 		"      \"source\": \"946cd4e2-89ca-40f2-a8cb-13ebfcd8f783\",\n" +
 		"      \"target\": \"5c224df2-4bfa-4c5f-b25c-b7268231cabd\"\n" +
 		"    },\n" +
 		"    {\n" +
-		"      \"id\": \"dd25d613-631b-439b-bcab-747d67e60bd2\",\n" +
+		"      \"id\": \"1be16029-d3a8-41aa-8a36-50547e052baf\",\n" +
 		"      \"type\": \"istar.AndRefinementLink\",\n" +
 		"      \"source\": \"7d81fd0d-c7b8-42f8-84f2-687c2b53006c\",\n" +
 		"      \"target\": \"5c224df2-4bfa-4c5f-b25c-b7268231cabd\"\n" +
 		"    },\n" +
 		"    {\n" +
-		"      \"id\": \"bd2d0a18-b95a-428f-a3c4-8a450ab49075\",\n" +
+		"      \"id\": \"4611cfd4-3dee-442f-96f3-b140fae9f2d7\",\n" +
 		"      \"type\": \"istar.AndRefinementLink\",\n" +
 		"      \"source\": \"94198605-ac87-4fe3-a41a-bd133d879e35\",\n" +
 		"      \"target\": \"5c224df2-4bfa-4c5f-b25c-b7268231cabd\"\n" +
 		"    },\n" +
 		"    {\n" +
-		"      \"id\": \"8294c635-f32b-4cd8-a120-4589e3494a75\",\n" +
+		"      \"id\": \"06f84d41-e314-4569-b4cc-74c87aaefc58\",\n" +
 		"      \"type\": \"istar.AndRefinementLink\",\n" +
 		"      \"source\": \"fd93789b-7af2-4d6d-8776-81b19832f4b2\",\n" +
 		"      \"target\": \"94198605-ac87-4fe3-a41a-bd133d879e35\"\n" +
 		"    },\n" +
 		"    {\n" +
-		"      \"id\": \"6859d617-ff39-4850-8efd-35ec70649961\",\n" +
+		"      \"id\": \"70adfd1d-e535-4e0f-ac2c-3debe298fd47\",\n" +
 		"      \"type\": \"istar.AndRefinementLink\",\n" +
 		"      \"source\": \"83f0e4a4-c0b7-4281-9112-3e6971e0978a\",\n" +
 		"      \"target\": \"94198605-ac87-4fe3-a41a-bd133d879e35\"\n" +
 		"    },\n" +
 		"    {\n" +
-		"      \"id\": \"600fcd5d-855e-456b-bfed-219ad508bdbf\",\n" +
+		"      \"id\": \"0c0bc841-9701-44b2-b8c9-d4b34bc4e5a1\",\n" +
 		"      \"type\": \"istar.AndRefinementLink\",\n" +
 		"      \"source\": \"2459a35d-7c65-45aa-a1ac-0d95d5c20135\",\n" +
 		"      \"target\": \"cba54c7f-d4a2-4127-9500-361d1f7a1c9b\"\n" +
 		"    },\n" +
 		"    {\n" +
-		"      \"id\": \"8294412d-4729-4a94-a043-94610712feca\",\n" +
+		"      \"id\": \"93f54610-27d0-40da-8854-1b698795db07\",\n" +
 		"      \"type\": \"istar.AndRefinementLink\",\n" +
 		"      \"source\": \"e4234541-6d69-4052-aea3-cdecee80f21d\",\n" +
 		"      \"target\": \"cba54c7f-d4a2-4127-9500-361d1f7a1c9b\"\n" +
 		"    },\n" +
 		"    {\n" +
-		"      \"id\": \"31340cb5-6c59-4e86-ae77-fd88adb2a197\",\n" +
+		"      \"id\": \"e5550860-60c1-4a44-b065-72c2a1264ed4\",\n" +
 		"      \"type\": \"istar.AndRefinementLink\",\n" +
 		"      \"source\": \"4498bbda-f3b8-4c05-9c98-bea1d31741be\",\n" +
 		"      \"target\": \"cba54c7f-d4a2-4127-9500-361d1f7a1c9b\"\n" +
 		"    },\n" +
 		"    {\n" +
-		"      \"id\": \"ba2c2b3c-232a-4a06-9996-feeac328fbcc\",\n" +
+		"      \"id\": \"5dfad255-3c6a-4cfc-8504-fe2bc83ad199\",\n" +
 		"      \"type\": \"istar.OrRefinementLink\",\n" +
 		"      \"source\": \"658f6679-89d2-44b6-bf86-d5d5c3d2eebb\",\n" +
 		"      \"target\": \"39fad55f-1807-42d8-903d-dd04f4f8cb6f\"\n" +
 		"    },\n" +
 		"    {\n" +
-		"      \"id\": \"68f3b029-3d47-49c6-b714-17d97969304d\",\n" +
+		"      \"id\": \"f09cc692-cb3c-4464-9d11-6c5a961175a6\",\n" +
 		"      \"type\": \"istar.OrRefinementLink\",\n" +
 		"      \"source\": \"e520324e-13e2-480c-b3f2-406600cb4897\",\n" +
 		"      \"target\": \"39fad55f-1807-42d8-903d-dd04f4f8cb6f\"\n" +
 		"    },\n" +
 		"    {\n" +
-		"      \"id\": \"a3d4066e-f848-4eae-9191-d25bcda77908\",\n" +
+		"      \"id\": \"a8a0f591-4750-49cb-9b19-8b1850bea100\",\n" +
 		"      \"type\": \"istar.AndRefinementLink\",\n" +
 		"      \"source\": \"39fad55f-1807-42d8-903d-dd04f4f8cb6f\",\n" +
 		"      \"target\": \"4498bbda-f3b8-4c05-9c98-bea1d31741be\"\n" +
 		"    },\n" +
 		"    {\n" +
-		"      \"id\": \"667f93b0-6873-4ff7-9eda-9603c4bd4967\",\n" +
+		"      \"id\": \"557359a1-aa1b-416c-b276-195e8e237d65\",\n" +
 		"      \"type\": \"istar.OrRefinementLink\",\n" +
 		"      \"source\": \"9ae56eda-97ec-4597-8321-d337c8033f35\",\n" +
 		"      \"target\": \"350d61aa-aa14-4e40-aefb-d4bba1254a8e\"\n" +
 		"    },\n" +
 		"    {\n" +
-		"      \"id\": \"5aee3b4d-7af2-4eef-998d-3db2152919fa\",\n" +
+		"      \"id\": \"ff92598a-5952-4662-9b85-269ccd9004e8\",\n" +
 		"      \"type\": \"istar.OrRefinementLink\",\n" +
 		"      \"source\": \"00a9c4e0-94c7-4c41-9108-b5a2bc631853\",\n" +
 		"      \"target\": \"350d61aa-aa14-4e40-aefb-d4bba1254a8e\"\n" +
 		"    },\n" +
 		"    {\n" +
-		"      \"id\": \"eda3a41e-d12e-4099-9564-fd9addd1d1ac\",\n" +
+		"      \"id\": \"cc9c802f-fd21-4d01-8449-e9d29c8c249f\",\n" +
 		"      \"type\": \"istar.AndRefinementLink\",\n" +
 		"      \"source\": \"350d61aa-aa14-4e40-aefb-d4bba1254a8e\",\n" +
 		"      \"target\": \"4498bbda-f3b8-4c05-9c98-bea1d31741be\"\n" +
 		"    },\n" +
 		"    {\n" +
-		"      \"id\": \"956c2f4d-4eee-4a9d-a713-fd5176144adb\",\n" +
+		"      \"id\": \"7d8b839d-b05a-4ec8-8d6d-c5e5760a41fc\",\n" +
 		"      \"type\": \"istar.OrRefinementLink\",\n" +
 		"      \"source\": \"7c1f84d1-9835-4f18-8bcb-9676f64f2b70\",\n" +
 		"      \"target\": \"00a9c4e0-94c7-4c41-9108-b5a2bc631853\"\n" +
 		"    },\n" +
 		"    {\n" +
-		"      \"id\": \"e8695ac2-af5b-48cf-8ba1-fc9c1aa4dc5c\",\n" +
+		"      \"id\": \"263e4f19-25c3-47a8-82db-48e14c19a6b3\",\n" +
 		"      \"type\": \"istar.AndRefinementLink\",\n" +
 		"      \"source\": \"c4d7c504-c4eb-47d3-b3d2-7b7c64356c44\",\n" +
 		"      \"target\": \"9ae56eda-97ec-4597-8321-d337c8033f35\"\n" +
 		"    },\n" +
 		"    {\n" +
-		"      \"id\": \"0fdf4a01-72b9-4e26-805b-b01d5ce151e9\",\n" +
+		"      \"id\": \"3915bbac-bb45-4d98-a4d8-6b07f4cde52d\",\n" +
 		"      \"type\": \"istar.AndRefinementLink\",\n" +
 		"      \"source\": \"765a6e8a-24d8-404e-8120-36daf5c99b43\",\n" +
 		"      \"target\": \"9ae56eda-97ec-4597-8321-d337c8033f35\"\n" +
 		"    },\n" +
 		"    {\n" +
-		"      \"id\": \"005360bf-8421-45db-80a2-6172ac1c5d76\",\n" +
+		"      \"id\": \"6ac66cc3-788f-4146-b242-795ab408cad8\",\n" +
 		"      \"type\": \"istar.AndRefinementLink\",\n" +
 		"      \"source\": \"975ecdb9-a2e5-4d6b-9afa-d7b408af6ea8\",\n" +
 		"      \"target\": \"765a6e8a-24d8-404e-8120-36daf5c99b43\"\n" +
 		"    },\n" +
 		"    {\n" +
-		"      \"id\": \"2304e089-f606-41f0-a11d-772a301af5f2\",\n" +
+		"      \"id\": \"8c528f66-1a89-440f-b54d-cd058459544d\",\n" +
 		"      \"type\": \"istar.OrRefinementLink\",\n" +
 		"      \"source\": \"bc72241e-a5b1-4969-a781-8550d22e45a2\",\n" +
 		"      \"target\": \"c4d7c504-c4eb-47d3-b3d2-7b7c64356c44\"\n" +
 		"    },\n" +
 		"    {\n" +
-		"      \"id\": \"412792ac-d60b-4524-b883-1af68e695aab\",\n" +
+		"      \"id\": \"b2501af2-787a-4ebc-99b5-6cd548fe4c4d\",\n" +
 		"      \"type\": \"istar.OrRefinementLink\",\n" +
 		"      \"source\": \"7cad0696-fdc2-4611-9d41-e641d6c55c5c\",\n" +
 		"      \"target\": \"c4d7c504-c4eb-47d3-b3d2-7b7c64356c44\"\n" +
 		"    },\n" +
 		"    {\n" +
-		"      \"id\": \"2099e111-d2ca-4e54-9aee-91417e8da701\",\n" +
+		"      \"id\": \"23cccc7e-63b3-48de-b4fa-488878b90759\",\n" +
 		"      \"type\": \"istar.OrRefinementLink\",\n" +
 		"      \"source\": \"c7e26c5f-09e6-430f-92cc-966ccb9a1071\",\n" +
 		"      \"target\": \"c4d7c504-c4eb-47d3-b3d2-7b7c64356c44\"\n" +
 		"    },\n" +
 		"    {\n" +
-		"      \"id\": \"a4f4dc24-c887-4fbb-998d-ed39b08af4a4\",\n" +
+		"      \"id\": \"b9d33983-fd05-4d02-b490-12aad627fa06\",\n" +
 		"      \"type\": \"istar.OrRefinementLink\",\n" +
 		"      \"source\": \"ca9807dc-e45c-433e-a87f-6361bca4347b\",\n" +
 		"      \"target\": \"c4d7c504-c4eb-47d3-b3d2-7b7c64356c44\"\n" +
 		"    },\n" +
 		"    {\n" +
-		"      \"id\": \"f6f0a768-8609-49fc-bb76-b737a60db415\",\n" +
+		"      \"id\": \"38178471-4270-4329-a135-5cf457a85fe4\",\n" +
 		"      \"type\": \"istar.AndRefinementLink\",\n" +
 		"      \"source\": \"577020f0-c5bd-4844-8c7f-ffec33beabce\",\n" +
 		"      \"target\": \"cba54c7f-d4a2-4127-9500-361d1f7a1c9b\"\n" +
 		"    },\n" +
 		"    {\n" +
-		"      \"id\": \"3f5b4b1e-dd79-491e-a1b7-68d646ddbf9f\",\n" +
+		"      \"id\": \"ced9ab56-b6eb-4d1a-b64b-2a17811007ed\",\n" +
 		"      \"type\": \"istar.AndRefinementLink\",\n" +
 		"      \"source\": \"489194fb-5a70-4876-9909-411e78de76e6\",\n" +
 		"      \"target\": \"577020f0-c5bd-4844-8c7f-ffec33beabce\"\n" +
@@ -853,12 +898,95 @@ examples.mpers = function () {
 		"  ],\n" +
 		"  \"tool\": \"pistar.1.0.0\",\n" +
 		"  \"istar\": \"2.0\",\n" +
-		"  \"saveDate\": \"Sat, 16 Nov 2019 04:44:26 GMT\",\n" +
+		"  \"saveDate\": \"Tue, 19 Nov 2019 13:28:41 GMT\",\n" +
 		"  \"diagram\": {\n" +
 		"    \"width\": 1881,\n" +
 		"    \"height\": 1172\n" +
 		"  }\n" +
 		"}");
+	var model = saveModel();
+	var maryCollins = new app.Persona(
+		{
+			id:0,
+			personaName:"Mary Collins",
+			personaDescription:"mary",
+			personaContexts:[
+				{"id":0,"contextName":"ch","decompositionExpression":"f1"},
+				{"id":1,"contextName":"cha","decompositionExpression":"f2"},
+				{"id":2,"contextName":"ct","decompositionExpression":"f3"}
+				]});
+	maryCollins = JSON.stringify(maryCollins);
+	$.ajax({
+		type: "POST",
+		url: '/achievability',
+		data: {
+			"content": model,
+			"persona": maryCollins
+		},
+		success: function (data) {
+			alert(data);
+			if(confirm("Do you want to continue on to the next Persona?")){
+				var jenniferSmith = new app.Persona(
+					{
+						id:0,
+						personaName:"Jennifer Smith",
+						personaDescription:"Jennifer Smith",
+						personaContexts:[
+							{"id":0,"contextName":"ch","decompositionExpression":"f1"},
+							{"id":1,"contextName":"cha","decompositionExpression":"f2"},
+							{"id":2,"contextName":"ca","decompositionExpression":"f3"}
+						]});
+				jenniferSmith = JSON.stringify(jenniferSmith);
+
+				$.ajax({
+					type: "POST",
+					url: '/achievability',
+					data: {
+						"content": model,
+						"persona": jenniferSmith
+					},
+					success: function (data) {
+						alert(data);
+						if(confirm("Do you want to continue on to the next Persona?")){
+							var dorothyWilliams = new app.Persona(
+								{
+									id:0,
+									personaName:"Dorothy Williams",
+									personaDescription:"Dorothy Williams",
+									personaContexts:[
+										{"id":0,"contextName":"ch","decompositionExpression":"f1"},
+										{"id":1,"contextName":"cm","decompositionExpression":"f2"},
+										{"id":2,"contextName":"cha","decompositionExpression":"f3"},
+										{"id":3,"contextName":"ca","decompositionExpression":"f3"}
+									]});
+							dorothyWilliams = JSON.stringify(dorothyWilliams);
+
+							$.ajax({
+								type: "POST",
+								url: '/achievability',
+								data: {
+									"content": model,
+									"persona": dorothyWilliams
+								},
+								success: function (data) {
+									alert(data);
+								},
+								error: function () {
+									alert("Error!");
+								}
+							});
+						}
+					},
+					error: function () {
+						alert("Error!");
+					}
+				});
+			}
+		},
+		error: function () {
+			alert("Error!");
+		}
+	});
 };
 
 examples.util = {};

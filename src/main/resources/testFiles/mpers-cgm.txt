@@ -1,0 +1,556 @@
+{
+  "actors": [
+    {
+      "id": "3a151d60-5de7-4857-b5a3-5d55d84e70d4",
+      "text": "Mobile Personal Emergency Response",
+      "type": "istar.Actor",
+      "x": 192,
+      "y": 71,
+      "nodes": [
+        {
+          "id": "cba54c7f-d4a2-4127-9500-361d1f7a1c9b",
+          "text": "G1: Respond to emergency",
+          "type": "istar.Goal",
+          "x": 728,
+          "y": 71,
+          "customProperties": {
+            "selected": "true"
+          }
+        },
+        {
+          "id": "2459a35d-7c65-45aa-a1ac-0d95d5c20135",
+          "text": "G2: emergency is detected",
+          "type": "istar.Goal",
+          "x": 451,
+          "y": 193
+        },
+        {
+          "id": "e4234541-6d69-4052-aea3-cdecee80f21d",
+          "text": "G3: is notified about emergency",
+          "type": "istar.Goal",
+          "x": 725,
+          "y": 176
+        },
+        {
+          "id": "6d01fb9a-73dc-41a2-9b37-369ee19bc821",
+          "text": "G6: call for help is accepted",
+          "type": "istar.Goal",
+          "x": 348,
+          "y": 291
+        },
+        {
+          "id": "e399543c-8434-4c0c-ae5f-ed7b0022a9a5",
+          "text": "T1: notifies by mobile vibration",
+          "type": "istar.Task",
+          "x": 646,
+          "y": 239,
+          "customProperties": {
+            "creationProperty": "assertion condition ct"
+          }
+        },
+        {
+          "id": "2a7677aa-85bf-4991-bd4e-d1395df7439f",
+          "text": "T2: notifies by sound alert",
+          "type": "istar.Task",
+          "x": 710,
+          "y": 285
+        },
+        {
+          "id": "dd1922fb-324a-43c1-9940-cfb756059df0",
+          "text": "T3: notifies by light alert",
+          "type": "istar.Task",
+          "x": 810,
+          "y": 285
+        },
+        {
+          "id": "1bc3839c-78bc-41d3-a210-877a0e04822f",
+          "text": "T4: central calls",
+          "type": "istar.Task",
+          "x": 843,
+          "y": 232,
+          "customProperties": {
+            "creationProperty": "assertion condition ct & cha"
+          }
+        },
+        {
+          "id": "4498bbda-f3b8-4c05-9c98-bea1d31741be",
+          "text": "G4: central receives info",
+          "type": "istar.Goal",
+          "x": 1004,
+          "y": 234
+        },
+        {
+          "id": "ff953162-160a-4627-ae96-b663eea53534",
+          "text": "G11: receives emergency button call",
+          "type": "istar.Goal",
+          "x": 282,
+          "y": 363
+        },
+        {
+          "id": "8b8a2b21-9ce0-4172-ae92-b41b48f00fe8",
+          "text": "T9:notify central by sms",
+          "type": "istar.Task",
+          "x": 192,
+          "y": 464,
+          "customProperties": {
+            "creationProperty": "assertion condition !ct | cha"
+          }
+        },
+        {
+          "id": "e71af902-cacb-45a5-9517-2ee4a0be1592",
+          "text": "T10: notify central by internet",
+          "type": "istar.Task",
+          "x": 309,
+          "y": 472
+        },
+        {
+          "id": "398d7878-79d1-4268-96ec-a36b30325134",
+          "text": "G12: false alarms is checked",
+          "type": "istar.Goal",
+          "x": 458,
+          "y": 461
+        },
+        {
+          "id": "baffc9fa-0ce9-4cf9-bc52-58997444dc25",
+          "text": "T11: accepts emergency",
+          "type": "istar.Task",
+          "x": 416,
+          "y": 538,
+          "customProperties": {
+            "creationProperty": "assertion condition cha & !ct"
+          }
+        },
+        {
+          "id": "c68762d4-8325-4c3a-aa51-5fd199b66e5f",
+          "text": "G16: is contacted",
+          "type": "istar.Goal",
+          "x": 542,
+          "y": 536,
+          "customProperties": {
+            "creationProperty": "assertion condition cha & !ct"
+          }
+        },
+        {
+          "id": "cfaa55c9-2250-453b-8a12-5a3724583cd2",
+          "text": "T15: confirms emergency by call",
+          "type": "istar.Task",
+          "x": 610,
+          "y": 604
+        },
+        {
+          "id": "5c224df2-4bfa-4c5f-b25c-b7268231cabd",
+          "text": "G7: Situations are identified",
+          "type": "istar.Goal",
+          "x": 531,
+          "y": 297
+        },
+        {
+          "id": "946cd4e2-89ca-40f2-a8cb-13ebfcd8f783",
+          "text": "T5: processes sensors data",
+          "type": "istar.Task",
+          "x": 469,
+          "y": 365
+        },
+        {
+          "id": "7d81fd0d-c7b8-42f8-84f2-687c2b53006c",
+          "text": "T6: identifies situation",
+          "type": "istar.Task",
+          "x": 626,
+          "y": 348,
+          "customProperties": {
+            "creationProperty": "assertion condition ch | ca"
+          }
+        },
+        {
+          "id": "94198605-ac87-4fe3-a41a-bd133d879e35",
+          "text": "G13: vital signs are monitored",
+          "type": "istar.Goal",
+          "x": 575,
+          "y": 400,
+          "customProperties": {
+            "creationProperty": "assertion condition ch | ca"
+          }
+        },
+        {
+          "id": "fd93789b-7af2-4d6d-8776-81b19832f4b2",
+          "text": "T12: persists data to database",
+          "type": "istar.Task",
+          "x": 558,
+          "y": 476
+        },
+        {
+          "id": "83f0e4a4-c0b7-4281-9112-3e6971e0978a",
+          "text": "T13: collects data from sensors",
+          "type": "istar.Task",
+          "x": 676,
+          "y": 467
+        },
+        {
+          "id": "39fad55f-1807-42d8-903d-dd04f4f8cb6f",
+          "text": "G8: info is sent to emergency",
+          "type": "istar.Goal",
+          "x": 958,
+          "y": 304
+        },
+        {
+          "id": "658f6679-89d2-44b6-bf86-d5d5c3d2eebb",
+          "text": "T7: send info by SMS",
+          "type": "istar.Task",
+          "x": 803,
+          "y": 420,
+          "customProperties": {
+            "creationProperty": "assertion condition !ct"
+           }
+        },
+        {
+          "id": "e520324e-13e2-480c-b3f2-406600cb4897",
+          "text": "T8: send info by internet",
+          "type": "istar.Task",
+          "x": 968,
+          "y": 425,
+          "customProperties": {
+            "creationProperty": "assertion condition !ct"
+          }
+        },
+        {
+          "id": "350d61aa-aa14-4e40-aefb-d4bba1254a8e",
+          "text": "G9: info is prepared",
+          "type": "istar.Goal",
+          "x": 1166,
+          "y": 306
+        },
+        {
+          "id": "00a9c4e0-94c7-4c41-9108-b5a2bc631853",
+          "text": "G15: contact responsible for",
+          "type": "istar.Goal",
+          "x": 1296,
+          "y": 387
+        },
+        {
+          "id": "9ae56eda-97ec-4597-8321-d337c8033f35",
+          "text": "G14: setup automated info",
+          "type": "istar.Goal",
+          "x": 1109,
+          "y": 432
+        },
+        {
+          "id": "7c1f84d1-9835-4f18-8bcb-9676f64f2b70",
+          "text": "T14: get info from responsible for",
+          "type": "istar.Task",
+          "x": 1262,
+          "y": 461
+        },
+        {
+          "id": "c4d7c504-c4eb-47d3-b3d2-7b7c64356c44",
+          "text": "G17: location is identified",
+          "type": "istar.Goal",
+          "x": 989,
+          "y": 568
+        },
+        {
+          "id": "765a6e8a-24d8-404e-8120-36daf5c99b43",
+          "text": "G18: situation data is recovered",
+          "type": "istar.Goal",
+          "x": 1200,
+          "y": 555
+        },
+        {
+          "id": "975ecdb9-a2e5-4d6b-9afa-d7b408af6ea8",
+          "text": "T20: access data from database",
+          "type": "istar.Task",
+          "x": 1238,
+          "y": 624
+        },
+        {
+          "id": "bc72241e-a5b1-4969-a781-8550d22e45a2",
+          "text": "T16: consider last known location",
+          "type": "istar.Task",
+          "x": 878,
+          "y": 615,
+          "customProperties": {
+            "creationProperty": "assertion condition !cm"
+          }
+        },
+        {
+          "id": "7cad0696-fdc2-4611-9d41-e641d6c55c5c",
+          "text": "T17: identifies location by voice call",
+          "type": "istar.Task",
+          "x": 928,
+          "y": 667,
+          "customProperties": {
+                                "creationProperty": "assertion condition cha | !ct"
+                      }
+        },
+        {
+          "id": "c7e26c5f-09e6-430f-92cc-966ccb9a1071",
+          "text": "T18: access location from triangulation",
+          "type": "istar.Task",
+          "x": 1033,
+          "y": 667,
+          "customProperties": {
+            "creationProperty": "assertion condition cm | !ct"
+          }
+        },
+        {
+          "id": "ca9807dc-e45c-433e-a87f-6361bca4347b",
+          "text": "T19: access location from a GPS",
+          "type": "istar.Task",
+          "x": 1085,
+          "y": 618,
+          "customProperties": {
+            "creationProperty": "assertion condition cm | !ct"
+          }
+        },
+        {
+          "id": "489194fb-5a70-4876-9909-411e78de76e6",
+          "text": "G10: ambulance is dispatched to location",
+          "type": "istar.Goal",
+          "x": 1468,
+          "y": 228,
+          "customProperties": {
+            "creationProperty": "assertion condition ch"
+          }
+        },
+        {
+          "id": "577020f0-c5bd-4844-8c7f-ffec33beabce",
+          "text": "G5: medical care reaches",
+          "type": "istar.Goal",
+          "x": 1218,
+          "y": 180
+        }
+      ]
+    }
+  ],
+  "dependencies": [],
+  "links": [
+    {
+      "id": "e5409e21-a826-4990-9423-6617c1f90ed3",
+      "type": "istar.OrRefinementLink",
+      "source": "e399543c-8434-4c0c-ae5f-ed7b0022a9a5",
+      "target": "e4234541-6d69-4052-aea3-cdecee80f21d"
+    },
+    {
+      "id": "e14907c1-7ed8-4ebe-bda1-2a9fa45b8df7",
+      "type": "istar.OrRefinementLink",
+      "source": "2a7677aa-85bf-4991-bd4e-d1395df7439f",
+      "target": "e4234541-6d69-4052-aea3-cdecee80f21d"
+    },
+    {
+      "id": "360483b9-88e6-44a3-8fa7-da1f56e92c43",
+      "type": "istar.OrRefinementLink",
+      "source": "1bc3839c-78bc-41d3-a210-877a0e04822f",
+      "target": "e4234541-6d69-4052-aea3-cdecee80f21d"
+    },
+    {
+      "id": "ecbc390c-9430-434a-a43e-76d6a8e51df1",
+      "type": "istar.OrRefinementLink",
+      "source": "dd1922fb-324a-43c1-9940-cfb756059df0",
+      "target": "e4234541-6d69-4052-aea3-cdecee80f21d"
+    },
+    {
+      "id": "2654e9d4-29e5-4043-a1e9-3ea2a749ea16",
+      "type": "istar.OrRefinementLink",
+      "source": "8b8a2b21-9ce0-4172-ae92-b41b48f00fe8",
+      "target": "ff953162-160a-4627-ae96-b663eea53534"
+    },
+    {
+      "id": "b0887573-b350-414e-adc7-e03f36fbdbbf",
+      "type": "istar.OrRefinementLink",
+      "source": "e71af902-cacb-45a5-9517-2ee4a0be1592",
+      "target": "ff953162-160a-4627-ae96-b663eea53534"
+    },
+    {
+      "id": "4a319363-615b-46dd-bb63-3afb8483cafe",
+      "type": "istar.AndRefinementLink",
+      "source": "ff953162-160a-4627-ae96-b663eea53534",
+      "target": "6d01fb9a-73dc-41a2-9b37-369ee19bc821"
+    },
+    {
+      "id": "c336ef54-03df-42c7-9477-d558caa279b2",
+      "type": "istar.OrRefinementLink",
+      "source": "6d01fb9a-73dc-41a2-9b37-369ee19bc821",
+      "target": "2459a35d-7c65-45aa-a1ac-0d95d5c20135"
+    },
+    {
+      "id": "2007daf5-2b16-4d15-9cbb-1bf626858c4e",
+      "type": "istar.AndRefinementLink",
+      "source": "398d7878-79d1-4268-96ec-a36b30325134",
+      "target": "6d01fb9a-73dc-41a2-9b37-369ee19bc821"
+    },
+    {
+      "id": "dae2802a-9b51-463c-9f35-076c43803eaa",
+      "type": "istar.OrRefinementLink",
+      "source": "baffc9fa-0ce9-4cf9-bc52-58997444dc25",
+      "target": "398d7878-79d1-4268-96ec-a36b30325134"
+    },
+    {
+      "id": "14d9e473-5e16-4a9a-a72a-efce0736c734",
+      "type": "istar.OrRefinementLink",
+      "source": "c68762d4-8325-4c3a-aa51-5fd199b66e5f",
+      "target": "398d7878-79d1-4268-96ec-a36b30325134"
+    },
+    {
+      "id": "92e7c8b0-eb93-4a18-89f0-d1086a21ee35",
+      "type": "istar.AndRefinementLink",
+      "source": "cfaa55c9-2250-453b-8a12-5a3724583cd2",
+      "target": "c68762d4-8325-4c3a-aa51-5fd199b66e5f"
+    },
+    {
+      "id": "ba2e82d6-035b-4e63-a92e-6b386ae3d3c6",
+      "type": "istar.OrRefinementLink",
+      "source": "5c224df2-4bfa-4c5f-b25c-b7268231cabd",
+      "target": "2459a35d-7c65-45aa-a1ac-0d95d5c20135"
+    },
+    {
+      "id": "6fbd72ac-ef2d-49c5-b808-d1368cceb7a6",
+      "type": "istar.AndRefinementLink",
+      "source": "946cd4e2-89ca-40f2-a8cb-13ebfcd8f783",
+      "target": "5c224df2-4bfa-4c5f-b25c-b7268231cabd"
+    },
+    {
+      "id": "1be16029-d3a8-41aa-8a36-50547e052baf",
+      "type": "istar.AndRefinementLink",
+      "source": "7d81fd0d-c7b8-42f8-84f2-687c2b53006c",
+      "target": "5c224df2-4bfa-4c5f-b25c-b7268231cabd"
+    },
+    {
+      "id": "4611cfd4-3dee-442f-96f3-b140fae9f2d7",
+      "type": "istar.AndRefinementLink",
+      "source": "94198605-ac87-4fe3-a41a-bd133d879e35",
+      "target": "5c224df2-4bfa-4c5f-b25c-b7268231cabd"
+    },
+    {
+      "id": "06f84d41-e314-4569-b4cc-74c87aaefc58",
+      "type": "istar.AndRefinementLink",
+      "source": "fd93789b-7af2-4d6d-8776-81b19832f4b2",
+      "target": "94198605-ac87-4fe3-a41a-bd133d879e35"
+    },
+    {
+      "id": "70adfd1d-e535-4e0f-ac2c-3debe298fd47",
+      "type": "istar.AndRefinementLink",
+      "source": "83f0e4a4-c0b7-4281-9112-3e6971e0978a",
+      "target": "94198605-ac87-4fe3-a41a-bd133d879e35"
+    },
+    {
+      "id": "0c0bc841-9701-44b2-b8c9-d4b34bc4e5a1",
+      "type": "istar.AndRefinementLink",
+      "source": "2459a35d-7c65-45aa-a1ac-0d95d5c20135",
+      "target": "cba54c7f-d4a2-4127-9500-361d1f7a1c9b"
+    },
+    {
+      "id": "93f54610-27d0-40da-8854-1b698795db07",
+      "type": "istar.AndRefinementLink",
+      "source": "e4234541-6d69-4052-aea3-cdecee80f21d",
+      "target": "cba54c7f-d4a2-4127-9500-361d1f7a1c9b"
+    },
+    {
+      "id": "e5550860-60c1-4a44-b065-72c2a1264ed4",
+      "type": "istar.AndRefinementLink",
+      "source": "4498bbda-f3b8-4c05-9c98-bea1d31741be",
+      "target": "cba54c7f-d4a2-4127-9500-361d1f7a1c9b"
+    },
+    {
+      "id": "5dfad255-3c6a-4cfc-8504-fe2bc83ad199",
+      "type": "istar.OrRefinementLink",
+      "source": "658f6679-89d2-44b6-bf86-d5d5c3d2eebb",
+      "target": "39fad55f-1807-42d8-903d-dd04f4f8cb6f"
+    },
+    {
+      "id": "f09cc692-cb3c-4464-9d11-6c5a961175a6",
+      "type": "istar.OrRefinementLink",
+      "source": "e520324e-13e2-480c-b3f2-406600cb4897",
+      "target": "39fad55f-1807-42d8-903d-dd04f4f8cb6f"
+    },
+    {
+      "id": "a8a0f591-4750-49cb-9b19-8b1850bea100",
+      "type": "istar.AndRefinementLink",
+      "source": "39fad55f-1807-42d8-903d-dd04f4f8cb6f",
+      "target": "4498bbda-f3b8-4c05-9c98-bea1d31741be"
+    },
+    {
+      "id": "557359a1-aa1b-416c-b276-195e8e237d65",
+      "type": "istar.OrRefinementLink",
+      "source": "9ae56eda-97ec-4597-8321-d337c8033f35",
+      "target": "350d61aa-aa14-4e40-aefb-d4bba1254a8e"
+    },
+    {
+      "id": "ff92598a-5952-4662-9b85-269ccd9004e8",
+      "type": "istar.OrRefinementLink",
+      "source": "00a9c4e0-94c7-4c41-9108-b5a2bc631853",
+      "target": "350d61aa-aa14-4e40-aefb-d4bba1254a8e"
+    },
+    {
+      "id": "cc9c802f-fd21-4d01-8449-e9d29c8c249f",
+      "type": "istar.AndRefinementLink",
+      "source": "350d61aa-aa14-4e40-aefb-d4bba1254a8e",
+      "target": "4498bbda-f3b8-4c05-9c98-bea1d31741be"
+    },
+    {
+      "id": "7d8b839d-b05a-4ec8-8d6d-c5e5760a41fc",
+      "type": "istar.OrRefinementLink",
+      "source": "7c1f84d1-9835-4f18-8bcb-9676f64f2b70",
+      "target": "00a9c4e0-94c7-4c41-9108-b5a2bc631853"
+    },
+    {
+      "id": "263e4f19-25c3-47a8-82db-48e14c19a6b3",
+      "type": "istar.AndRefinementLink",
+      "source": "c4d7c504-c4eb-47d3-b3d2-7b7c64356c44",
+      "target": "9ae56eda-97ec-4597-8321-d337c8033f35"
+    },
+    {
+      "id": "3915bbac-bb45-4d98-a4d8-6b07f4cde52d",
+      "type": "istar.AndRefinementLink",
+      "source": "765a6e8a-24d8-404e-8120-36daf5c99b43",
+      "target": "9ae56eda-97ec-4597-8321-d337c8033f35"
+    },
+    {
+      "id": "6ac66cc3-788f-4146-b242-795ab408cad8",
+      "type": "istar.AndRefinementLink",
+      "source": "975ecdb9-a2e5-4d6b-9afa-d7b408af6ea8",
+      "target": "765a6e8a-24d8-404e-8120-36daf5c99b43"
+    },
+    {
+      "id": "8c528f66-1a89-440f-b54d-cd058459544d",
+      "type": "istar.OrRefinementLink",
+      "source": "bc72241e-a5b1-4969-a781-8550d22e45a2",
+      "target": "c4d7c504-c4eb-47d3-b3d2-7b7c64356c44"
+    },
+    {
+      "id": "b2501af2-787a-4ebc-99b5-6cd548fe4c4d",
+      "type": "istar.OrRefinementLink",
+      "source": "7cad0696-fdc2-4611-9d41-e641d6c55c5c",
+      "target": "c4d7c504-c4eb-47d3-b3d2-7b7c64356c44"
+    },
+    {
+      "id": "23cccc7e-63b3-48de-b4fa-488878b90759",
+      "type": "istar.OrRefinementLink",
+      "source": "c7e26c5f-09e6-430f-92cc-966ccb9a1071",
+      "target": "c4d7c504-c4eb-47d3-b3d2-7b7c64356c44"
+    },
+    {
+      "id": "b9d33983-fd05-4d02-b490-12aad627fa06",
+      "type": "istar.OrRefinementLink",
+      "source": "ca9807dc-e45c-433e-a87f-6361bca4347b",
+      "target": "c4d7c504-c4eb-47d3-b3d2-7b7c64356c44"
+    },
+    {
+      "id": "38178471-4270-4329-a135-5cf457a85fe4",
+      "type": "istar.AndRefinementLink",
+      "source": "577020f0-c5bd-4844-8c7f-ffec33beabce",
+      "target": "cba54c7f-d4a2-4127-9500-361d1f7a1c9b"
+    },
+    {
+      "id": "ced9ab56-b6eb-4d1a-b64b-2a17811007ed",
+      "type": "istar.AndRefinementLink",
+      "source": "489194fb-5a70-4876-9909-411e78de76e6",
+      "target": "577020f0-c5bd-4844-8c7f-ffec33beabce"
+    }
+  ],
+  "tool": "pistar.1.0.0",
+  "istar": "2.0",
+  "saveDate": "Tue, 19 Nov 2019 13:28:41 GMT",
+  "diagram": {
+    "width": 1881,
+    "height": 1172
+  }
+}

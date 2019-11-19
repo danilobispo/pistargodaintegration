@@ -58,12 +58,23 @@ public class Controller {
         Set<Actor> selectedActors = new HashSet<>();
         Set<Goal> selectedGoals = new HashSet<>();
         transformToTao4meEntities(model, selectedActors, selectedGoals);
+
         ArrayList<String> contextsMock = new ArrayList<String>();
-        contextsMock.add("c1");
-        contextsMock.add("c2");
-        contextsMock.add("c3");
-        contextsMock.add("c4");
-        // Persona 1: All contexts. Meant to be a success in testModel.
+        // Health risk
+        contextsMock.add("ch");
+        // Mobility issue
+        contextsMock.add("cm");
+        // Technology aversion
+        contextsMock.add("ct");
+        // Home Assistance
+        contextsMock.add("cha");
+        // Physical activity
+        contextsMock.add("ca");
+
+        // Persona 1: Mary Collins
+        // Mary ContextSet:{Ch, Cha, Ct}
+        contextsMock.remove("cm");
+        contextsMock.remove("ca");
         Persona persona1 = new Persona("Mary Collins", "An old persona", contextsMock);
         PersonaAchievability achievability = new PersonaAchievability(selectedGoals, persona1.getContexts());
 
@@ -73,19 +84,19 @@ public class Controller {
                 achievability.personaAchievabilityFailure(persona1);
 
         System.out.println(stringReturn);
-
-        contextsMock.remove("c2");
-        contextsMock.remove("c3");
-        contextsMock.remove("c1");
-        // Persona 2: Without c1, c2 and c3. Meant to fail in testModel.
-        Persona persona2 = new Persona("Mary Collins", "An old persona", contextsMock);
-        achievability = new PersonaAchievability(selectedGoals, persona2.getContexts());
-
-        isSuccess = achievability.run();
-        stringReturn = isSuccess? achievability.personaAchievabilitySuccess(persona1) :
-                achievability.personaAchievabilityFailure(persona1);
-
-        System.out.println(stringReturn);
+//
+//        contextsMock.remove("c2");
+//        contextsMock.remove("c3");
+//        contextsMock.remove("c1");
+//        // Persona 2: Without c1, c2 and c3. Meant to fail in testModel.
+//        Persona persona2 = new Persona("Mary Collins", "An old persona", contextsMock);
+//        achievability = new PersonaAchievability(selectedGoals, persona2.getContexts());
+//
+//        isSuccess = achievability.run();
+//        stringReturn = isSuccess? achievability.personaAchievabilitySuccess(persona1) :
+//                achievability.personaAchievabilityFailure(persona1);
+//
+//        System.out.println(stringReturn);
 
 //
 //        String stringReturn;
