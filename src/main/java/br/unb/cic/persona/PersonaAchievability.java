@@ -73,9 +73,9 @@ public class PersonaAchievability {
         int flagCount = 0;
         int targetGoalSizeDecompListSize = targetGoal.getDecompositionList().size();
         int targetGoalMeansToAndEndPlansSize = targetGoal.getMeansToAnEndPlans().size();
+        int allChildrenSize = targetGoalMeansToAndEndPlansSize + targetGoalSizeDecompListSize;
         if (targetGoalSizeDecompListSize > 0) {
             // Se for and, todas as assertivas daqui pra baixo tem que dar true
-
             for (Goal childGoal : targetGoal.getDecompositionList()) {
                 if (!flagFailure) {
                     System.out.println("Goal " + childGoal.getName() + " is being evaluated");
@@ -92,10 +92,6 @@ public class PersonaAchievability {
                             informFailure(this.failedNodeName);
                             flagCount++;
                         }
-                    }
-                    if (flagCount == targetGoalSizeDecompListSize) { // Falhou em todos os Or's de um filho, falhou total
-                        flagFailure = true;
-                        informTotalFailure(this.failedNodeName);
                     }
                     if (!flagFailure) {
                         flagFailure = iterateThroughGoalsAndPlans(childGoal);
@@ -120,13 +116,15 @@ public class PersonaAchievability {
                             flagCount++;
                         }
                     }
-                    if (flagCount == targetGoalMeansToAndEndPlansSize) { // Falhou em todos os Or's de um filho, falhou total
-                        flagFailure = true;
-                        informTotalFailure(this.failedNodeName);
+                    if(!flagFailure) {
+                        flagFailure = iterateThroughEndPlans(childPlan);
                     }
-                    flagFailure = iterateThroughEndPlans(childPlan);
                 }
             }
+        }
+        if(flagCount == allChildrenSize && allChildrenSize != 0 && this.failedNodeName != null) {
+          flagFailure = true;
+          informTotalFailure(this.failedNodeName);
         }
         return flagFailure;
     }
@@ -151,19 +149,18 @@ public class PersonaAchievability {
                         } else if (!evaluationExpression && !isAnd) {// caso que não passou mas é OR
                             this.failedNodeName = childPlan.getName();
                             informFailure(this.failedNodeName);
-                            flagFailure = true;
                             flagCount++;
                         }
-                    }
-                    if (flagCount == targetPlanEndPlansSize) { // Falhou em todos os Or's de um filho, falhou total
-                        flagFailure = true;
-                        informTotalFailure(this.failedNodeName);
                     }
                     if (!flagFailure) {
                         flagFailure = iterateThroughEndPlans(childPlan);
                     }
                 }
             }
+        }
+        if (flagCount == targetPlanEndPlansSize && targetPlanEndPlansSize != 0 && this.failedNodeName != null) { // Falhou em todos os Or's de um filho, falhou total
+            flagFailure = true;
+            informTotalFailure(this.failedNodeName);
         }
         return flagFailure;
     }

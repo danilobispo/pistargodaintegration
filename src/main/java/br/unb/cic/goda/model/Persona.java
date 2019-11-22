@@ -35,14 +35,15 @@ public class Persona {
     }
 
     public Persona(String personaJSON) {
-
         JsonObject jsonObject = new JsonParser().parse(personaJSON).getAsJsonObject();
-        System.out.println(jsonObject);
+//        DEBUG
+//        System.out.println(jsonObject);
         this.name = jsonObject.get("personaName").getAsString();
         this.description = jsonObject.get("personaDescription").getAsString();
         JsonArray contextArray = jsonObject.get("personaContexts").getAsJsonArray();
-        System.out.println(this.name);
-        System.out.println(this.description);
+//        DEBUG
+        System.out.println("Persona name: " + this.name);
+        System.out.println("Persona description: " + this.description);
         int i;
         this.contexts = new ArrayList<String>();
         for(i = 0; i < contextArray.size(); i++){
@@ -52,7 +53,8 @@ public class Persona {
                 this.contexts.add(contextName);
             }
         }
-        System.out.println(this.contexts);
+//        DEBUG
+        System.out.println("Persona contexts: " + this.contexts);
     }
 
     public Persona(String name, String description, ArrayList<String> contexts) {
