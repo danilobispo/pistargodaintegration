@@ -135,6 +135,8 @@ $('#personaArea').on('show.bs.collapse', function () {
     }).render();
     app.runAchievabilityAlgorithmButton.$el.click(runAchievability());
 });
+$("#runAchievabilityButton").on("click", runAchievability());
+
 $('#personaArea').on('hide.bs.collapse', function () {
     $('#personaButton').removeClass('active');
     app.factViewButton.hide();

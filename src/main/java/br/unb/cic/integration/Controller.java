@@ -60,22 +60,14 @@ public class Controller {
         transformToTao4meEntities(model, selectedActors, selectedGoals);
 
         ArrayList<String> contextsMock = new ArrayList<String>();
-        // Health risk
-        contextsMock.add("ch");
-        // Mobility issue
-        contextsMock.add("cm");
-        // Technology aversion
-        contextsMock.add("ct");
-        // Home Assistance
-        contextsMock.add("cha");
-        // Physical activity
-        contextsMock.add("ca");
+        contextsMock.add("c1");
+        contextsMock.add("c2");
+        contextsMock.add("c3");
+        contextsMock.add("c4");
 
-        // Persona 1: Mary Collins
-        // Mary ContextSet:{Ch, Cha, Ct}
         contextsMock.remove("cm");
         contextsMock.remove("ca");
-        Persona persona1 = new Persona("Mary Collins", "An old persona", contextsMock);
+        Persona persona1 = new Persona("Test Persona", "An persona as example", contextsMock);
         PersonaAchievability achievability = new PersonaAchievability(selectedGoals, persona1.getContexts());
 
         String stringReturn;

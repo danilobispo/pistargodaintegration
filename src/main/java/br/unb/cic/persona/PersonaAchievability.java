@@ -195,6 +195,7 @@ public class PersonaAchievability {
                 "Persona info: \n" +
                 "Name: "+ persona.getName() + "\n" +
                 "Description: " + persona.getDescription() + "\n" +
+                "Contexts: " + persona.getContexts() + "\n" +
                 "Failed node: " + this.failedNodeName;
     }
 
@@ -202,6 +203,7 @@ public class PersonaAchievability {
         return "The current persona meets the CGM context conditions\n" +
                 "Persona info: \n" +
                 "Name: "+ persona.getName() + "\n" +
-                "Description: " + persona.getDescription();
+                "Description: " + persona.getDescription() + "\n" +
+                "Contexts: " + persona.getContexts();
     }
 }
